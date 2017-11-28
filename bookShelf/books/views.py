@@ -36,8 +36,8 @@ def index(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	print(jsc.path_to_dict("../../database")['database'])
-	context = jsc.path_to_dict('../../database')['database']
+	print(jsc.path_to_dict("../../database"))
+	context = jsc.path_to_dict('../../database')
 	# print(os.getcwd())
 	return render(request,'books/index.html',context)
 
@@ -45,14 +45,14 @@ def indexl(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	context = jsc.path_to_dict('../../database')['database']
+	context = jsc.path_to_dict('../../database')
 	return render(request,'books/indexl.html',context)
 
 # def display(request):
 # 	all_departments=Department.objects.order_by('dept')
 # 	all_courses=Course_code.objects.order_by('code')
-# 	department_id=request.GET.get('department','None')
-# 	#course_code_id=request.GET.get('course_code','None')
+	department_id=request.GET.get('department','None')
+	course_code_id=request.GET.get('course_code','None')
 # 	try:
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
