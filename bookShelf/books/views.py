@@ -23,6 +23,8 @@ from django.contrib.auth import authenticate, login, logout
 # from rest_framework.response import Response
 # from rest_framework import status
 # from .serializers import *
+DATABASE_DIR = "../media/database"
+UNAPPROVED_DIR = "../media/unapproved"
 
 def track_hits(request,template_path,context,co):
         try:
@@ -36,8 +38,8 @@ def index(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	print(jsc.path_to_dict("../../database"))
-	list = jsc.path_to_dict('../../database')
+	print(jsc.path_to_dict(DATABASE_DIR))
+	list = jsc.path_to_dict(DATABASE_DIR)
 	# print(os.getcwd())
 	return render(request,'books/index.html',{"list":list})
 
@@ -45,7 +47,7 @@ def indexl(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	list = jsc.path_to_dict('../../database')
+	list = jsc.path_to_dict(DATABASE_DIR)
 	return render(request,'books/indexl.html',{"list":list})
 
 def display(request):
@@ -57,9 +59,7 @@ def display(request):
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
-	list = jsc.path_to_dict('../../database')
-	print (department_id)
-	print (list)
+	list = jsc.path_to_dict(DATABASE_DIR)
 	if department_id not in list:
 		return render(request,'books/index.html',{"list":list})
 	elif course_code_id not in list[department_id]:
@@ -88,7 +88,7 @@ def displayl(request):
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
-	list = jsc.path_to_dict('../../database')
+	list = jsc.path_to_dict(DATABASE_DIR)
 	if department_id not in list:
 		return render(request,'books/indexl.html',{"list":list})
 	elif course_code_id not in list[department_id]:
@@ -113,7 +113,7 @@ def model_form_upload(request):
 		prof 		= request.POST.get('professor',"None")
 		document 	= request.FILES['document']
 
-		destination = open("../../unapproved/"+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
@@ -132,7 +132,7 @@ def model_form_uploadl(request):
 		prof 		= request.POST.get('professor',"None")
 		document 	= request.FILES['document']
 
-		destination = open("../../unapproved/"+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
@@ -149,10 +149,10 @@ def approve(request):
 	# unapproved_documents = txtfile.readlines()
 	# txtfile.close
 	unapproved_documents = []
-	for path, subdirs, files in os.walk("../../unapproved/"):
+	for path, subdirs, files in os.walk(UNAPPROVED_DIR):
 		for filename in files:
 			f = os.path.join(path, filename)
-			unapproved_documents.append(str(f))
+			unapproved_documents.append(str(f)[str(f).rindex("/")+1:])
 	return render(request, 'books/approve.html', {'unapproved_documents':unapproved_documents})
 
 # @login_required
