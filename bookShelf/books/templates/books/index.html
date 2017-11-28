@@ -25,12 +25,12 @@
 <!--******SIDEBAR********-->
 	
   <div class="sidebar"> 
-	<a style="text-decoration:none" href="/study/"><h1 style="color:white;font-size:3vw; ">Study Portal</h1></a>
+	<a style="text-decoration:none" href="/books/"><h1 style="color:white;font-size:3vw; ">Study Portal</h1></a>
 	{% block sidebar %}
 	
 
 	<div class="input">
-	<form action="/study/view/" id='course_with_code' method='get'>
+	<form action="/books/view/" id='course_with_code' method='get'>
 	
 	<div class="form-group">
 	<label for="course_code" style="color:white;">Department</label>		
@@ -57,7 +57,7 @@
 	{% endblock %}
 	<br/>
 	<br/>
-	<a href="/study/upload" class="btn btn-primary btn-lg upload-button">Upload a new file</a> 
+	<a href="/books/upload" class="btn btn-primary btn-lg upload-button">Upload a new file</a> 
 	
 <!--<img src="{% static 'studapp/iitlogo.png' %}" alt="IITD Logo" height="320" width="320">-->
 	<h2 class="text-primary" style="color:#f9f9f9; font-size:1.5vw; position: fixed; bottom: 10vh; margin-top: 10vh;">Powered by <a href="https://devclub-iitd.github.io/devClubWebsite/">IITD DevClub</a><h2>
@@ -77,12 +77,12 @@
       <a class="navbar-brand" href="#">WebSiteName</a>
     </div>-->
     <ol class="nav navbar-nav" style='font-size:1.5vw; display: inline-block;float: left;'>
-      <li style="display: inline-block;"><a href="/study/">Home</a></li>
+      <li style="display: inline-block;"><a href="/books/">Home</a></li>
       <!--<li><a href="#">Page 1</a></li>
       <li><a href="#">Page 2</a></li>
       <li><a href="#">Page 3</a></li>-->
     </ol>
-    		<a style="text-decoration:none; float:right;" href="/study/light/"><h4 style="color:white;font-size:1vw;">SWITCH THEME</h4></a>
+    		<a style="text-decoration:none; float:right;" href="/books/light/"><h4 style="color:white;font-size:1vw;">SWITCH THEME</h4></a>
  
   </div>
 </nav>
@@ -101,10 +101,10 @@
   		</div>
   			<ul class="features">
 					{% for course in codes %}
-					<li><a class="course" href="/study/view/?department={{ dept }}&course_code={{ course }}" style="color: #003459">{{ course }}</a></li>
+					<li><a class="course" href="/books/view/?department={{ dept }}&course_code={{ course }}" style="color: #003459">{{ course }}</a></li>
 	  				 {% endfor %}  					
  			 </ul>
- 		 <button onclick="window.location.href='/study/view/?department={{ dept }}&course_code=0'">View All</button>
+ 		 <button onclick="window.location.href='/books/view/?department={{ dept }}&course_code=0'">View All</button>
 	</div>
 	{% endif %}
 {% endfor %}
