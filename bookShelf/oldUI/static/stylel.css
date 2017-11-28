@@ -1,0 +1,384 @@
+{% load static %}
+
+*{
+
+	box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding:0;
+	
+}
+
+.sidebar{
+	width: 30vw;
+    height: 100vh;
+    /* width: 300px; Removed*/
+    /* float:left  Removed*/
+    left:0; /* Added */
+    top:0; /* Added */
+    position: fixed; /*Changed from absolute*/
+	padding: 1%;
+	/*background-color: #1a9ccd;*/
+	background-image: url("blue_2.jpg");
+	background-repeat: repeat-y;
+  background-size: cover;
+
+}
+.content{
+	width:70%;
+	padding:10vh 3vw;
+	min-height:100vh;
+	background-color: #faf5f7;
+	
+
+    /* width: 630px; Removed*/
+	margin-left: 30% ;/* Added */
+	/*padding: 50px 5% 5% 60px;*/
+	/*background-repeat: repeat-y;*/
+  background-size: cover;
+
+}
+
+a{
+    /*color: #0060B6; Removed*/
+	color: White;
+	text-decoration: none;
+}
+
+
+.course:hover 
+{
+     color:#00A0C6;
+	
+     text-decoration:none; 
+     cursor:pointer;  
+}
+
+h1 {
+color: White;
+font-family: 'Slabo 27px', serif;
+width: 100%;
+}
+
+
+
+select {
+padding: 5px;
+margin: 10px 0px;
+width: 100%;
+}
+
+.input{
+padding-top: 20%;
+}
+
+input{
+margin: 10px;
+padding: 5px;
+}
+
+h1,h2 {
+color: rgb(0,0,0);
+font-family: 'Slabo 27px', serif;
+}
+
+h2 {
+font-size: 1.5vw;
+}
+
+h3 {
+font-size: 1.4vw;
+width: 300px;
+font-family: 'Slabo 27px', serif;
+color: #006e90;
+}
+
+.p {
+color: Black;
+font-family: Lato;
+}
+
+.upload {
+background-color: White;
+color: rgb(0,50,112);
+font-size: 24px;
+font-family: 'Slabo 27px', serif;
+/* position: absolute;
+bottom: 50px;*/
+position: absolute;
+top: 80%;
+left: 24%;
+width: 52%;
+padding: 10px;
+text-transform: uppercase;
+font-weight: 800;
+}
+
+strong {
+color: rgb(0,0,0);
+font-family: 'Slabo 27px', serif;
+font-size: 20px;
+}
+
+
+
+/*here is the css cards additional css*/
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
+html {
+  background: rgb(244, 246, 246);
+}
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1vw;
+  font-weight: 400;  
+}
+.promos {
+  width: 67vw;
+/* org 800 */
+  /*margin: 0 auto;
+  margin-top: 50px;
+	padding-left:0px;*/
+}
+.promo {
+  width: 20vw;
+  /* org 250 */
+  /* background: #0f1012; original */
+	background-color: #d9d9d9;
+  color: #f9f9f9;
+  float: left;
+  margin: 2vh 1vw;
+}
+
+.navbar-inverse{
+  background-color: #303036;
+  font-color: #000;
+}
+
+.promo:hover{
+  transform: scale(1.02);
+  box-shadow: 0 0 4px 1px rgba(20, 20, 20, 0.8);
+}
+
+.deal {
+  background: #303036;
+  padding: 1vh 0;
+  text-align: center;
+  width: 100%;
+}
+
+/*
+
+.promo .price {
+  display: block;
+  width: 350px;  
+  background: #292b2e;
+  margin: 15px 0 10px 0;
+  text-align: center;
+  font-size: 23px;
+  padding: 17px 0 17px 0;
+}*/
+
+.features {
+  display: block;
+  margin: 10px 0 10px 0;
+  padding: 0;
+  font-size: 1.2vw; 
+  list-style-type: none;
+  text-align: center;
+  color: #999999;
+  height: 18vh;
+  max-height: 20vw;
+  overflow: auto;
+}
+li {
+  display: block;
+  margin: 10px 0 0 0;
+}
+button {
+  font-size: 1vw;
+  border: none;
+  border-radius: 2vw;
+  background: #006e90;
+  color: #f9f9f9;
+  padding: 0.5vw 1vw;
+  width: 6vw;
+  margin: 1vh 7vw 1vh 7vw;
+}
+
+/*
+.scale{
+  transform: scale(1.05);
+  box-shadow: 0 0 4px 1px rgba(20, 20, 20, 0.8);
+}*/
+
+.scale button {
+  background: #64AAA4;
+}
+.scale .price {
+  color: #64AAA4;
+}
+
+/****************scrollbar*/
+::-webkit-scrollbar {
+    width: 8px;
+	
+}
+/* this one hides the scrollbar in ul but still scrollable*/
+ul::-webkit-scrollbar {
+	display: none;
+}
+/*on mouse hover, this class makes the scrollbar visible*/
+ul:hover::-webkit-scrollbar {
+	display: unset;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.8);*/ 
+    -webkit-border-radius: 10px;
+    background-color:#fff;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background:#666; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+.section {
+width: 96%;
+margin: 10px 2%;
+padding: 0px 10px;
+float: left;
+background-color: #fff;
+display: block;
+border: 2px solid #006e90;
+border-radius: 5px;
+}
+
+.uploadform select option, .uploadform select, .uploadform input {
+font-size: 0.75em;
+}
+
+.uploadform label {
+width: 10vw;
+font-size: 0.75em;
+}
+
+@media (max-width:900px)
+{
+    .dept-title {
+    font-size: 1.4vw;
+    }
+    .features li a {
+    font-size: 1.2vw;
+    }
+    .upload-button {
+    font-size: 1.4vw;
+    }
+    #select1, #select2 {
+    font-size: 1.2vw;
+    margin: 0px;
+    }
+    label {
+    font-size: 1.4vw;
+    }
+    .department {
+    font-size: 2vw;
+    }
+    .deal {
+    height: 5%;
+    }
+}
+
+@media (min-width:900px and max-width:1025px)
+{
+    .dept-title {
+    font-size: 16px;
+    }
+    .features li a {
+    font-size: 14px;
+    }
+    .upload-button {
+    font-size: 18px;
+    }
+    #select1, #select2 {
+    font-size: 14px;
+    margin: 0px;
+    }
+    label {
+    font-size: 16px;
+    }
+    .department {
+    font-size: 30px;
+    }
+    .deal {
+    height: 5%;
+    }
+}
+
+@media (min-width:1025px)
+{
+    .dept-title {
+    font-size: 16px;
+    }
+    .features li a {
+    font-size: 14px;
+    }
+    .upload-button {
+    font-size: 18px;
+    }
+    #select1, #select2 {
+    font-size: 14px;
+    margin: 0px;
+    }
+    label {
+    font-size: 16px;
+    }
+    .department {
+    font-size: 30px;
+    }
+}
+.navbar-inverse .navbar-nav > li > a{
+  color : black !important;
+  font-family: 'Poiret One', cursive;
+}
+.navbar-inverse{
+  border: none;
+  box-shadow: 0px 4px 3px rgba(0,0,0,0.4), 0px  8px 13px rgba(0,0,0,0.1), 0px 18px 23px rgba(0,0,0,0.1);
+  
+  background: #f2f2f2; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#ffffff, #e5e5e5); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#ffffff, #e5e5e5); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#ffffff, #e5e5e5); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#ffffff, #e5e5e5); /* Standard syntax */
+}
+.navbar-inverse .container-fluid a{
+  color: black !important;
+}
+
+.desc .description {
+position: absolute;
+display: none;
+background: #464646;
+border-radius: 5px;
+max-width: 250px;
+color: #fff;
+padding: 5px;
+}
+
+.desc:hover>.description {
+display: block;
+z-index: 2;
+}
+
+.helptext {
+float: right;
+width: 35vw;
+min-width: 200px;
+}

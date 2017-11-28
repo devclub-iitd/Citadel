@@ -1,0 +1,133 @@
+{% load static %}
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+	<link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+	<link type="text/css" rel="stylesheet" href="{% static 'style.css' %}"/>
+	<script src="{% static 'bootstrap.min.js' %}"></script>
+	<link href="https://fonts.googleapis.com/css?family=Lato|Open+Sans|Slabo+27px" rel="stylesheet">
+	<title>{% block title %}StudyPortal-Home{% endblock %}</title>
+	<!-- Global Site Tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106130907-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments)};
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-106130907-1');
+	</script>
+</head>
+<body>
+<!--******SIDEBAR********-->
+
+  <div class="sidebar"> 
+	<a style="text-decoration:none" href="/study/"><h1 style="color:white;font-size:3vw; ">Study Portal</h1></a>
+	{% block sidebar %}
+	
+
+	<div class="input">
+	<form action="/study/view/" id='course_with_code' method='get'>
+	
+	<div class="form-group">
+	<label for="course_code" style="color:white;">Department</label>		
+	<select class='form-control' name="department" form="course_with_code" id='select1'>
+		 <option value="0" selected="selected">Select a department</option>
+		 {% for dept in departments %}
+		 <option value= {{ dept.id }}>{{ dept.dept }}({{dept.code}})</option>
+		 {% endfor %}		 
+	</select>
+	<!-- DONE We have to change so that the second list is dynamically updated based on first one -->
+	<label for="course_code" style="color:white;">Course Code</label>	
+	<input type='text' class='form-control' list='course_code' name="course_code" form="course_with_code" autocomplete="off" id='select2' placeholder="Search or use the dropdown" >
+	<datalist id="course_code">
+		
+		 {% for course in courses %}
+		 <option   value="{{course.code}}">{{ course.code }}</option>
+		 {% endfor %}
+	</datalist>
+ 	<input  type="submit" class="btn btn-success btn-lg" style="font-size:1.2vw;"></div></form></div>
+	{% endblock %}
+	<br/>
+	<br/>
+	<a href="/study/upload" class="btn btn-primary btn-lg upload-button">Upload a new file</a> 
+	
+<!--<img src="{% static 'studapp/iitlogo.png' %}" alt="IITD Logo" height="320" width="320">-->
+	<h2 class="text-primary" style="color:#f9f9f9; font-size:1.5vw; position: fixed; bottom: 10vh; margin-top: 10vh;">Powered by <a href="https://devclub-iitd.github.io/devClubWebsite/">IITD DevClub</a><h2>
+  </div>
+<!--***************** SIDEBAR DONE ****************-->
+
+
+<!--***************** CONTENT ****************-->
+  <div class="content container"> 
+	
+<!--***************** NAVIGATION****************-->
+{% block navbar %}
+
+<nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;border-radius:0px;left:30vw;">
+  <div class="container-fluid">
+    <!--<div class="navbar-header">
+      <a class="navbar-brand" href="#">WebSiteName</a>
+    </div>-->
+    <ol class="nav navbar-nav" style='font-size:1.5vw; display: inline-block;float: left;'>
+      <li style="display: inline-block;"><a href="/study/">Home</a></li>
+      <!--<li><a href="#">Page 1</a></li>
+      <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li>-->
+    </ol>
+    		<a style="text-decoration:none; float:right;" href="/study/light/"><h4 style="color:white;font-size:1vw;">SWITCH THEME</h4></a>
+
+  </div>
+</nav>
+
+
+{% endblock %}
+<!--***************** NAVIGATION BAR DONE ****************-->
+{% block content %}
+<!--CSS cards for courses-->
+<div class="promos">
+{% for dept in departments %}
+	<div class="promo">
+  		<div class="deal">
+   			 <span class="dept-title">{{dept.dept}}<br/>({{dept.code}})</span>
+    			
+  		</div>
+  			<ul class="features">
+					{% for course in dept.course_code_set.all%}
+					<li><a class="course" href="/study/view/?department={{ dept.id }}&course_code={{ course.code }}" style="color: #003459">{{ course.code }}</a></li>
+	  				 {% endfor %}  					
+ 			 </ul>
+ 		 <button onclick="window.location.href='/study/view/?department={{ dept.id }}&course_code=0'">View All</button>
+	</div>
+{% endfor %}
+</div>
+
+
+
+
+	<!--<h1 style="font-family:Monotype Corsiva">All Courses</h1>-->
+	<!--{% for dept in departments %}   THIS WAS THE ORIGINAL TABULAR REPRESENTATION. SAD FOR IT ITS no MORE
+		<table>
+			<tr>
+				<th>{{ dept.dept }}</th>
+			</tr>
+			{% for course in dept.course_code_set.all%}
+			<tr>
+				<td><a class="course" href="/studapp/view/?department={{ dept.id }}&course_code={{ course.id }}">{{ course.code }}</a></td>
+			</tr>
+			{% endfor %}
+			<br /></table>
+	{% endfor %}-->
+	{% endblock %}
+<!--*********CONTENT DONE**********-->
+ </div>
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+	{% block js %}
+	<script src="{% static 'index.js' %}"></script>
+	{% endblock %}
+	<script src="{% static 'list_update.js' %}"></script>
+</body>
+</html>

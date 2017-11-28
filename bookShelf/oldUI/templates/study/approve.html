@@ -1,0 +1,46 @@
+{% extends 'study/index.html' %}
+{% load static %}
+{%block title%}Approve{% endblock %}
+{% block navbar %}
+<nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;border-radius:0px;left:30vw;">
+  <div class="container-fluid">
+    <!--<div class="navbar-header">
+      <a class="navbar-brand" href="#">WebSiteName</a>
+    </div>-->
+    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px; display: inline-block;float: left;'>
+      <li style="display: inline-block;"><a href="/study/light/">Home</a></li>
+	<li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/study/light/">></a></li>
+<li class='nav_li' style="display: inline-block;"><a href="/study/light/thanks/">Approve</a></li>
+      <!--<li><a href="#">Page 1</a></li>
+      <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li>-->
+    </ol>
+    <a style="float:right;margin-right: 20px" href="/study/userlogout"><h4 style="font-size:1vw; ">Logout</h4></a>
+
+  </div>
+</nav>
+
+<!--<ol class="breadcrumb" style="background-color:#000;position:fixed;left:29vw;top:0px;width:71vw;font-size:1.5vw;">
+	<li><a href="/studapp/">Home</a></li>
+	<li class='active'><a href="/studapp/thanks/">Thanks</a></li>
+</ol>-->
+
+{% endblock %}
+{% block content %}
+<h2 id='h2_1'>Approve</h2>
+
+<h1>{{doc}}</h1>
+{% for doc in unapproved_documents%}
+	<a id="unapproved_document" href="/study/media/unapproved_documents/{{ doc }}">{{ doc }}</a>
+	<a style="position: absolute;right: 30%" id="unapproved_document" href="/study/approve_unapproved_document?name={{doc}}">Approve</a>
+
+	<a style="position: absolute;right: 20%" id="unapproved_document" href="/study/remove_unapproved_document?name={{doc}}">Remove</a>
+	<br>
+	<br>
+{% endfor %}
+
+
+{% endblock %}
+{% block js %}
+	<script src="{% static 'thanks.js' %}"></script>
+	{% endblock %}
