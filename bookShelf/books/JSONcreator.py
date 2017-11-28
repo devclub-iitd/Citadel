@@ -19,7 +19,7 @@ def generate_path(path):
     if os.path.isdir(path):
         # d['type'] = "directory"
         for x in os.listdir(path):
-          d[x]=path_to_dict(os.path.join(path,x))
+          d[x]=generate_path(os.path.join(path,x))
     #    d[os.path.basename(path)] = [path_to_dict(os.path.join(path,x)) for x in os.listdir(path)]
     else:
         return "file"
@@ -35,6 +35,7 @@ def path_to_dict(path):
             # print(heirarchy)
             f = open("paths.txt","w+")
             f.write(json.dumps(heirarchy))
+            f.close()
         return heirarchy
 
 def recreate_path(path):
