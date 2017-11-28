@@ -37,9 +37,9 @@
 	<select class='form-control' name="department" form="course_with_code" id='select1'>
 		 <option value="0" selected="selected">Select a department</option>
 		 {% for dept,code in list.items %}
-		 	
+		 	{% if code %}
 		 		<option value= {{ dept }}>{{ dept }}</option>
-		 	
+		 	{% endif %}
 		 {% endfor %}		 
 	</select>
 	<!-- DONE We have to change so that the second list is dynamically updated based on first one -->
@@ -94,6 +94,7 @@
 <!--CSS cards for courses-->
 <div class="promos">
 {% for dept, codes in list.items %}
+	{% if codes %}
 	<div class="promo">
   		<div class="deal">
    			 <span class="dept-title">{{dept}}</span>
@@ -105,6 +106,7 @@
  			 </ul>
  		 <button onclick="window.location.href='/study/view/?department={{ dept }}&course_code=0'">View All</button>
 	</div>
+	{% endif %}
 {% endfor %}
 </div>
 
