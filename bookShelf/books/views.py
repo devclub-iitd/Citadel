@@ -60,7 +60,7 @@ def display(request):
 	list = jsc.path_to_dict('../../database')
 	if department_id not in list:
 		return render(request,'books/index.html',{"list":list})
-	else if course_code_id not in list[department_id]:
+	elif course_code_id not in list[department_id]:
 		return render(request,'books/get_course_codes.html',{"list":list[department_id]})
 	else:
 		return render(request,'books/get_papers.html',{"list":list[department_id][course_code_id]})
@@ -75,15 +75,22 @@ def display(request):
 # 		course=Course_code.objects.get(pk=course_code_id)
 # 		return track_hits(request,'books/get_papers.html',{'course':course,'departments':all_departments,'courses':all_courses},course)
 
-# def displayl(request):
+def displayl(request):
 # 	all_departments=Department.objects.order_by('dept')
 # 	all_courses=Course_code.objects.order_by('code')
-# 	department_id=request.GET.get('department','None')
-# 	#course_code_id=request.GET.get('course_code','None')
+	department_id=request.GET.get('department','None')
+	course_code_id=request.GET.get('course_code','None')
 # 	try:
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
+	list = jsc.path_to_dict('../../database')
+	if department_id not in list:
+		return render(request,'books/indexl.html',{"list":list})
+	elif course_code_id not in list[department_id]:
+		return render(request,'books/get_course_codesl.html',{"list":list,"department_id":department_id})
+	else:
+		return render(request,'books/get_papersl.html',{"list":list,"department_id":department_id,"course_code_id":course_code_id})
 # 	if department_id=='0' and course_code_id=='0':
 # 		return render(request,'books/indexl.html',{'departments':all_departments,'courses':all_courses})
 # 	elif course_code_id=='0':
@@ -106,10 +113,10 @@ def display(request):
 # #         return render(request,'books/uploadl.html', context)
 
 # ####upload file
-# def thanks(request):
-# 	return render(request,'books/thanks.html')
-# def thanksl(request):
-# 	return render(request,'books/thanksl.html')
+def thanks(request):
+	return render(request,'books/thanks.html')
+def thanksl(request):
+	return render(request,'books/thanksl.html')
 
 # # def model_form_upload(request):
 # # 	if request.method == 'POST':
