@@ -37,9 +37,9 @@
 	<label for="course_code" style="color:white;">Department</label>		
 	<select class='form-control' name="department" form="course_with_code" id='select1'>
 		 <option value="0" selected="selected">Select a department</option>
-		 {% for dept in departments %}
+		 {% for dept in list %}
 		 <!-- <option value= {{ dept.id }}>{{ dept.code }}</option> -->
-		 <option value= {{ dept.id }}>{{ dept.dept }}({{dept.code}})</option>
+		 <option value= {{ dept }}>{{ dept }}({{dept}})</option>
 		 
 		 {% endfor %}		 
 	</select>
@@ -48,8 +48,10 @@
 	<input type='text' class='form-control' list='course_code' name="course_code" form="course_with_code" autocomplete="off" id='select2' placeholder="Search or use the dropdown" >
 	<datalist id="course_code">
 		
-		 {% for course in courses %}
-		 <option   value="{{course.code}}">{{ course.code }}</option>
+		 {% for dept,codes in list.items %}
+		 	{% for course in codes %}
+		 		<option   value="{{course}}">{{ course }}</option>
+	 		{% endfor %}
 		 {% endfor %}
 	</datalist>
  	<input  type="submit" class="btn btn-success btn-lg" style="font-size:1.2vw;"></div></form></div>
@@ -92,18 +94,17 @@
 {% block content %}
 <!--CSS cards for courses-->
 <div class="promos">
-{% for dept in departments %}
+{% for dept, codes in list.items %}
 	<div class="promo">
   		<div class="deal">
-   			 <span class="dept-title">{{dept.dept}}<br/>({{dept.code}})</span>
-    			
+   			 <span class="dept-title">{{ dept }}</span>
   		</div>
   			<ul class="features">
-					{% for course in dept.course_code_set.all %}
-					<li><a class="course" href="/study/light/view/?department={{ dept.id }}&course_code={{ course.code }}" style="color: #003459">{{ course.code }}</a></li>
+					{% for course in codes %}
+					<li><a class="course" href="/study/view/?department={{ dept }}&course_code={{ course }}" style="color: #003459">{{ course }}</a></li>
 	  				 {% endfor %}  					
  			 </ul>
- 		 <button onclick="window.location.href='/study/light/view/?department={{ dept.id }}&course_code=0'">View All</button>
+ 		 <button onclick="window.location.href='/study/view/?department={{ dept }}&course_code=0'">View All</button>
 	</div>
 {% endfor %}
 </div>
