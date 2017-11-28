@@ -110,10 +110,10 @@ def model_form_upload(request):
 		prof 		= request.POST.get('professor')
 		document 	= request.FILES['document']
 
-		destination = open("../../unapproved/"+course_code+sem+year+type_exam+prof+document.name[request.FILES['document'].name.rindex('.'):])
+		destination = open("../../unapproved/"+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):])
 		for chunk in document.chunks():
-        	destination.write(chunk)
-   		destination.close()
+			destination.write(chunk)
+		destination.close()
 # 		doc = Document(course_code = request.POST.get('course_code'),sem = request.POST.get('sem'),year = request.POST.get('year'),type_exam = request.POST.get('type_exam'))
 # 		doc.document = request.FILES['document']
 # 		doc.save()

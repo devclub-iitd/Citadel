@@ -10,8 +10,8 @@ urlpatterns = [
     url(r'^dark/view/$', views.display ,name='display'),
     url(r'^light/view/$', views.displayl ,name='displayl'),
     
-	# url(r'^dark/upload/$', views.model_form_upload ,name='upload'),
- #    url(r'^light/upload/$', views.model_form_uploadl ,name='uploadl'),
+	url(r'^dark/upload/$', views.model_form_upload ,name='upload'),
+    # url(r'^light/upload/$', views.model_form_uploadl ,name='uploadl'),
 	url(r'^light/thanks/$', views.thanksl ,name='thanksl'),
 	url(r'^dark/thanks/$', views.thanks ,name='thanks'),
 
