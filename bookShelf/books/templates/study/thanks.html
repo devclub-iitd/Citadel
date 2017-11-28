@@ -1,0 +1,34 @@
+{% extends 'study/index.html' %}
+{% load static %}
+{%block title%}Thanks{% endblock %}
+{% block navbar %}
+<nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;border-radius:0px;left:30vw;">
+  <div class="container-fluid">
+    <!--<div class="navbar-header">
+      <a class="navbar-brand" href="#">WebSiteName</a>
+    </div>-->
+    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px;display: inline-block;float: left;'>
+      <li style="display: inline-block;"><a href="/study/">Home</a></li>
+	<li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/study/">></a></li>
+<li class='nav_li' style="display: inline-block;"><a href="/study/thanks/">Thanks</a></li>
+      <!--<li><a href="#">Page 1</a></li>
+      <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li>-->
+    </ol>
+    <a style="text-decoration:none; float:right;" href="/study/light/"><h4 style="color:white;font-size:1vw; ">SWITCH THEME</h4></a>
+  </div>
+</nav>
+
+<!--<ol class="breadcrumb" style="background-color:#000;position:fixed;left:29vw;top:0px;width:71vw;font-size:1.5vw;">
+	<li><a href="/studapp/">Home</a></li>
+	<li class='active'><a href="/studapp/thanks/">Thanks</a></li>
+</ol>-->
+
+{% endblock %}
+{% block content %}
+<h2 id='h2_1'>Thank you for uploading.</h2>
+<h2 id='h2_2'> Our experts would soon put it on the website after scrutinising it.</h2>
+{% endblock %}
+{% block js %}
+	<script src="{% static 'thanks.js' %}"></script>
+	{% endblock %}
