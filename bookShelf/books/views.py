@@ -58,10 +58,14 @@ def display(request):
 # 	except:
 # 		course_code_id='0'
 	list = jsc.path_to_dict('../../database')
+	print (department_id)
+	print (list)
 	if department_id not in list:
 		return render(request,'books/index.html',{"list":list})
 	elif course_code_id not in list[department_id]:
-		return render(request,'books/get_course_codes.html',{"list":list,"sellist":list[department_id],"department_id":department_id})
+                print (course_code_id)
+                print (list[department_id])
+                return render(request,'books/get_course_codes.html',{"list":list,"sellist":list[department_id],"department_id":department_id})
 	else:
 		return render(request,'books/get_papers.html',{"list":list,"sellist":list[department_id][course_code_id],"department_id":department_id,"course_code_id":course_code_id})
 

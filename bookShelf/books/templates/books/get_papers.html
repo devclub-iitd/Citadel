@@ -37,19 +37,18 @@
 <span id='papers'>
 
 <ul class="nav nav-tabs">
-  {% for parameter,items in list.items.COL %}
+  {% for parameter,items in sellist.items %}
     {% if items %}
-    <!-- <li class="active"><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li> -->
-    <li class="active">{{parameter}}</li>
+    <li class="active"><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li>
+    <!-- <li class="active">{{parameter}}</li> -->
     {% endif %}
   {% endfor %}
 </ul>
 
 <div class="tab-content">
-  {% for parameter,items in list.department_id.course_code_id.items %}
+  {% for parameter,items in sellist.items %}
     {% if items %}
       <div id="{{parameter}}" class="tab-pane fade in active">
-        <h3>{{parameter}}</h3>
       {% for item in items %}
         <p>{{item}}</p>
       {% endfor %}

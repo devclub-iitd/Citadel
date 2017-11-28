@@ -37,7 +37,7 @@
 <span id='papers'>
 
 <ul class="nav nav-tabs">
-  {% for parameter,items in list[department_id][course_code_id] %}
+  {% for parameter,items in sellist.items %}
     {% if items %}
     <li class="active"><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li>
     {% endif %}
@@ -45,14 +45,21 @@
 </ul>
 
 <div class="tab-content">
-  {% for parameter,items in list[department_id][course_code_id] %}
+  {% for parameter,items in sellist.items %}
     {% if items %}
-      <div id="{{parameter}}" class="tab-pane fade in active">
-        <h3>{{parameter}}</h3>
-      {% for item in items %}
-        <p>{{item}}</p>
-      {% endfor %}
-      </div>
+      {% ifequal parameter sellist|first %}
+        <div id="{{parameter}}" class="tab-pane fade in active">
+        {% for item in items %}
+          <p>{{item}}</p>
+        {% endfor %}
+        </div>
+      {% else %}
+        <div id="{{parameter}}" class="tab-pane fade">
+        {% for item in items %}
+          <p>{{item}}</p>
+        {% endfor %}
+        </div>
+      {% endifequal %}
     {% endif %}
   {% endfor %}
 </div>
