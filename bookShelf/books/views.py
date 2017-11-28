@@ -61,9 +61,9 @@ def display(request):
 	if department_id not in list:
 		return render(request,'books/index.html',{"list":list})
 	elif course_code_id not in list[department_id]:
-		return render(request,'books/get_course_codes.html',{"list":list,"department_id":department_id})
+		return render(request,'books/get_course_codes.html',{"list":list,"sellist":list[department_id],"department_id":department_id})
 	else:
-		return render(request,'books/get_papers.html',{"list":list,"department_id":department_id,"course_code_id":course_code_id})
+		return render(request,'books/get_papers.html',{"list":list,"sellist":list[department_id][course_code_id],"department_id":department_id,"course_code_id":course_code_id})
 
 	# if department_id=='0' and course_code_id=='0':
 		# return render(request,'books/index.html',{'departments':all_departments,'courses':all_courses})
@@ -88,9 +88,9 @@ def displayl(request):
 	if department_id not in list:
 		return render(request,'books/indexl.html',{"list":list})
 	elif course_code_id not in list[department_id]:
-		return render(request,'books/get_course_codesl.html',{"list":list,"department_id":department_id})
+		return render(request,'books/get_course_codesl.html',{"list":list,"sellist":list[department_id],"department_id":department_id})
 	else:
-		return render(request,'books/get_papersl.html',{"list":list,"department_id":department_id,"course_code_id":course_code_id})
+		return render(request,'books/get_papersl.html',{"list":list,"sellist":list[department_id][course_code_id],"department_id":department_id,"course_code_id":course_code_id})
 
 
 # ####upload file
@@ -102,54 +102,54 @@ def thanksl(request):
 
 def model_form_upload(request):
 	if request.method == 'POST':
-
-		course_code = request.POST.get('course_code')
-		sem 		= request.POST.get('sem')
-		year		= request.POST.get('year')
-		type_exam 	= request.POST.get('type_exam')
-		prof 		= request.POST.get('professor')
+		course_code = request.POST.get('course_code',"None")
+		sem 		= request.POST.get('sem',"None")
+		year		= request.POST.get('year',"None")
+		type_exam 	= request.POST.get('type_exam',"None")
+		prof 		= request.POST.get('professor',"None")
 		document 	= request.FILES['document']
 
-		destination = open("../../unapproved/"+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):])
+		destination = open("../../unapproved/"+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
-# 		doc = Document(course_code = request.POST.get('course_code'),sem = request.POST.get('sem'),year = request.POST.get('year'),type_exam = request.POST.get('type_exam'))
-# 		doc.document = request.FILES['document']
-# 		doc.save()
-
-# 		txtfile = open('media/unapproved_documents/files.txt','a')
-# 		txtfile.write(request.POST.get('course_code','none')+'_'+request.POST.get('year','none')+'_sem'+request.POST.get('sem','none')+'_'+request.POST.get('type_exam','none')+request.FILES['document'].name[request.FILES['document'].name.rindex('.'):]+'\n')
-		
-# 		txtfile.close()
-# 		return render(request,'books/thanks.html')
+		return render(request,'books/thanks.html')
 
 	else:
 		return render(request, 'books/model_form_upload.html')
 
 
-# def model_form_uploadl(request):
-# 	if request.method == 'POST':
-		
-# 		doc = Document(course_code = request.POST.get('course_code'),sem = request.POST.get('sem'),year = request.POST.get('year'),type_exam = request.POST.get('type_exam'))
-# 		doc.document = request.FILES['document']
-# 		doc.save()
+def model_form_uploadl(request):
+	if request.method == 'POST':
+		course_code = request.POST.get('course_code',"None")
+		sem 		= request.POST.get('sem',"None")
+		year		= request.POST.get('year',"None")
+		type_exam 	= request.POST.get('type_exam',"None")
+		prof 		= request.POST.get('professor',"None")
+		document 	= request.FILES['document']
 
-# 		txtfile = open('media/unapproved_documents/files.txt','a')
-# 		txtfile.write(request.POST.get('course_code','none')+'_'+request.POST.get('year','none')+'_sem'+request.POST.get('sem','none')+'_'+request.POST.get('type_exam','none')+request.FILES['document'].name[request.FILES['document'].name.rindex('.'):]+'\n')
-		
-# 		txtfile.close()
-# 		return render(request,'books/thanksl.html')
+		destination = open("../../unapproved/"+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+		for chunk in document.chunks():
+			destination.write(chunk)
+		destination.close()
+		return render(request,'books/thanksl.html')
 
-# 	else:
-# 		return render(request, 'books/model_form_uploadl.html')
-# #approvals
-# @login_required
-# def approve(request):
-# 	txtfile = open('media/unapproved_documents/files.txt','r')
-# 	unapproved_documents = txtfile.readlines()
-# 	txtfile.close
-# 	return render(request, 'books/approve.html', {'unapproved_documents':unapproved_documents})
+
+	else:
+		return render(request, 'books/model_form_uploadl.html')
+
+#approvals
+@login_required
+def approve(request):
+	# txtfile = open('media/unapproved_documents/files.txt','r')
+	# unapproved_documents = txtfile.readlines()
+	# txtfile.close
+	unapproved_documents = []
+	for path, subdirs, files in os.walk("../../unapproved/"):
+		for filename in files:
+			f = os.path.join(path, filename)
+			unapproved_documents.append(str(f))
+	return render(request, 'books/approve.html', {'unapproved_documents':unapproved_documents})
 
 # @login_required
 # def remove_unapproved_document(request):
@@ -200,20 +200,19 @@ def model_form_upload(request):
 # 	except:
 # 		return HttpResponse('<h1> Such a course code does not exist</h1><h1>Ask the developers to add the course code and then try again</h1>')
 	
-# def userlogin(request):
-# 	if request.method=='POST':
-# 		user = authenticate(request,username=request.POST['username'],password=request.POST['password'])
-# 		if user is not None:
-# 			login(request,user)
-# 			return redirect('/books/approve')
-
-# 		else:
-# 			render(request,'books/login.html')
-# 	return render(request,'books/login.html')
-# def userlogout(request):
-# 	logout(request)
-# 	# return render(request,'books/login.html')
-# 	return redirect("/books/light/")
+def userlogin(request):
+	if request.method=='POST':
+		user = authenticate(request,username=request.POST['username'],password=request.POST['password'])
+		if user is not None:
+			login(request,user)
+			return redirect('/books/approve')
+		else:
+			render(request,'books/login.html')
+	return render(request,'books/login.html')
+def userlogout(request):
+	logout(request)
+	# return render(request,'books/login.html')
+	return redirect("/books/dark/")
 # #api
 
 # class DepartmentList(APIView):

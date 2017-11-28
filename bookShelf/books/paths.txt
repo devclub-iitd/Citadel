@@ -1,0 +1,1 @@
+{"urls.py": "file", "migrations": "file", "JSONcreator.py": "file", "views.py": "file", "apps.py": "file", "static": "file", "templates": "file", "models.py": "file", "__pycache__": "file", "__init__.py": "file", "admin.py": "file", "tests.py": "file"}
