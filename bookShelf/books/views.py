@@ -48,7 +48,7 @@ def indexl(request):
 	list = jsc.path_to_dict('../../database')
 	return render(request,'books/indexl.html',{"list":list})
 
-# def display(request):
+def display(request):
 # 	all_departments=Department.objects.order_by('dept')
 # 	all_courses=Course_code.objects.order_by('code')
 	department_id=request.GET.get('department','None')
@@ -57,8 +57,16 @@ def indexl(request):
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
-# 	if department_id=='0' and course_code_id=='0':
-# 		return render(request,'books/index.html',{'departments':all_departments,'courses':all_courses})
+	list = jsc.path_to_dict('../../database')
+	if department_id not in list:
+		return render(request,'books/index.html',{"list":list})
+	else if course_code_id not in list[department_id]:
+		return render(request,'books/get_course_codes.html',{"list":list[department_id]})
+	else:
+		return render(request,'books/get_papers.html',{"list":list[department_id][course_code_id]})
+
+	# if department_id=='0' and course_code_id=='0':
+		# return render(request,'books/index.html',{'departments':all_departments,'courses':all_courses})
 # 	elif course_code_id=='0':
 # 		dept=Department.objects.get(pk=department_id)
 # 		return render(request,'books/get_course_codes.html',{'department':dept,'departments':all_departments,'courses':all_courses})
