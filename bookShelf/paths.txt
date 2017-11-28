@@ -1,0 +1,1 @@
+{"APL": {"CML101": {"minor2": {}, "minor1": {}}, "CML100": {"minor2": {}, "minor1": {}}}, "ELL": {"CML101": {"minor2": {}, "minor1": {}}, "CML100": {"minor2": {}, "minor1": {}}}, "CML": {"CML101": {"minor2": {}, "minor1": {}}, "CML100": {"minor2": {}, "minor1": {}}}}
