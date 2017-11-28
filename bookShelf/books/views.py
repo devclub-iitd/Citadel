@@ -37,16 +37,16 @@ def index(request):
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
 	print(jsc.path_to_dict("../../database"))
-	context = jsc.path_to_dict('../../database')
+	list = jsc.path_to_dict('../../database')
 	# print(os.getcwd())
-	return render(request,'books/index.html',context)
+	return render(request,'books/index.html',{"list":list})
 
 def indexl(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	context = jsc.path_to_dict('../../database')
-	return render(request,'books/indexl.html',context)
+	list = jsc.path_to_dict('../../database')
+	return render(request,'books/indexl.html',{"list":list})
 
 # def display(request):
 # 	all_departments=Department.objects.order_by('dept')

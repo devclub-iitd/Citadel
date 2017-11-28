@@ -23,7 +23,7 @@
 </head>
 <body>
 <!--******SIDEBAR********-->
-
+	
   <div class="sidebar"> 
 	<a style="text-decoration:none" href="/study/"><h1 style="color:white;font-size:3vw; ">Study Portal</h1></a>
 	{% block sidebar %}
@@ -36,10 +36,10 @@
 	<label for="course_code" style="color:white;">Department</label>		
 	<select class='form-control' name="department" form="course_with_code" id='select1'>
 		 <option value="0" selected="selected">Select a department</option>
-		 {% for dept in list %}
-		 	{% for key in dept %}
-		 		<option value= {{ key }}>{{ key }}</option>
-		 	{% endfor %}
+		 {% for dept,code in list.items %}
+		 	
+		 		<option value= {{ dept }}>{{ dept }}</option>
+		 	
 		 {% endfor %}		 
 	</select>
 	<!-- DONE We have to change so that the second list is dynamically updated based on first one -->
