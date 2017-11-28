@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render,redirect
-
+from books import JSONcreator as jsc
 # Create your views here.
 from django.http import HttpResponse
 # from .models import *
@@ -11,6 +11,7 @@ from django.http import HttpResponse
 # from books.forms import *
 # from books.models import Document
 import os
+import json
 from django.core.files import File
 
 from django.contrib.auth.decorators import login_required
@@ -35,15 +36,16 @@ def index(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	context={}
-
+	# print(JSONcreator.path_to_dict("../../database"))
+	context = jsc.path_to_dict('../../database')
+	# print(os.getcwd())
 	return render(request,'books/index.html',context)
 
 def indexl(request):
-	departments=Department.objects.order_by('dept')
-	courses=Course_code.objects.order_by('code')
-	context={'departments':departments,'courses':courses}
-	return render(request,'books/indexl.html',context)
+	# departments=Department.objects.order_by('dept')
+	# courses=Course_code.objects.order_by('code')
+	# context={'departments':departments,'courses':courses}
+	return render(request,'books/indexl.html',{})
 
 # def display(request):
 # 	all_departments=Department.objects.order_by('dept')
