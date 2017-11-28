@@ -14,7 +14,7 @@
 import os
 import json
 
-def path_to_dict(path):
+def generate_path(path):
     d = {}
     if os.path.isdir(path):
         # d['type'] = "directory"
@@ -26,3 +26,20 @@ def path_to_dict(path):
     return d
 
 # print(json.dumps(path_to_dict('.')))
+def path_to_dict(path):
+        if os.path.isfile("paths.txt"):
+            f=open("paths.txt","r").read()
+            heirarchy=json.loads(f)
+        else:
+            heirarchy=generate_path(path)
+            # print(heirarchy)
+            f = open("paths.txt","w+")
+            f.write(json.dumps(heirarchy))
+        return heirarchy
+
+def recreate_path(path):
+    heirarchy=generate_path(path)
+    # print(heirarchy)
+    f = open("paths.txt","w+")
+    f.write(json.dumps(heirarchy))
+    return heirarchy
