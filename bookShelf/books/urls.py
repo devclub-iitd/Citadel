@@ -11,15 +11,15 @@ urlpatterns = [
     url(r'^light/view/$', views.displayl ,name='displayl'),
     
 	url(r'^dark/upload/$', views.model_form_upload ,name='upload'),
-    # url(r'^light/upload/$', views.model_form_uploadl ,name='uploadl'),
+    url(r'^light/upload/$', views.model_form_uploadl ,name='uploadl'),
 	url(r'^light/thanks/$', views.thanksl ,name='thanksl'),
 	url(r'^dark/thanks/$', views.thanks ,name='thanks'),
 
-	# url(r'^approve/$', views.approve ,name='approve'),
+	url(r'^approve/$', views.approve ,name='approve'),
  #    url(r'^remove_unapproved_document/$', views.remove_unapproved_document ,name='remove_unapproved_document'),
  #    url(r'^approve_unapproved_document/$', views.approve_unapproved_document ,name='approve_unapproved_document'),
- #    url(r'^userlogin/$', views.userlogin ,name='userlogin'),
- #    url(r'^userlogout/$', views.userlogout ,name='userlogout'),
+    url(r'^userlogin/$', views.userlogin ,name='userlogin'),
+    url(r'^userlogout/$', views.userlogout ,name='userlogout'),
 
  #    url(r'^api/departments/$', views.DepartmentList.as_view() ),
  #    url(r'^api/course_codes/$', views.Course_codeList.as_view() ),
