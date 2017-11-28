@@ -47,19 +47,11 @@
 <div class="tab-content">
   {% for parameter,items in sellist.items %}
     {% if items %}
-      {% ifequal parameter sellist|first %}
-        <div id="{{parameter}}" class="tab-pane fade in active">
-        {% for item in items %}
-          <p>{{item}}</p>
-        {% endfor %}
-        </div>
-      {% else %}
-        <div id="{{parameter}}" class="tab-pane fade">
-        {% for item in items %}
-          <p>{{item}}</p>
-        {% endfor %}
-        </div>
-      {% endifequal %}
+      <div id="{{parameter}}" class="tab-pane fade in active">
+      {% for item in items %}
+        <p>{{item}}</p>
+      {% endfor %}
+      </div>
     {% endif %}
   {% endfor %}
 </div>

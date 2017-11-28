@@ -26,21 +26,22 @@ def generate_path(path):
     return d
 
 # print(json.dumps(path_to_dict('.')))
-def path_to_dict(path):
-        if os.path.isfile("paths.txt"):
-            f=open("paths.txt","r").read()
+def path_to_dict(path,name_of_file):
+    ## checks if file with name exists and if it doesnt it recreates a all the heirarchy
+        if os.path.isfile(name_of_file):
+            f=open(name_of_file,"r").read()
             heirarchy=json.loads(f)
         else:
             heirarchy=generate_path(path)
             # print(heirarchy)
-            f = open("paths.txt","w+")
+            f = open(name_of_file,"w+")
             f.write(json.dumps(heirarchy))
-            f.close()
         return heirarchy
 
-def recreate_path(path):
+def recreate_path(path,name_of_file):
+    ##forces the recreation of heirarchy
     heirarchy=generate_path(path)
     # print(heirarchy)
-    f = open("paths.txt","w+")
+    f = open(name_of_file,"w+")
     f.write(json.dumps(heirarchy))
     return heirarchy
