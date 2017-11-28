@@ -61,9 +61,9 @@ def display(request):
 	if department_id not in list:
 		return render(request,'books/index.html',{"list":list})
 	elif course_code_id not in list[department_id]:
-		return render(request,'books/get_course_codes.html',{"list":list[department_id]})
+		return render(request,'books/get_course_codes.html',{"list":list,"department_id":department_id})
 	else:
-		return render(request,'books/get_papers.html',{"list":list[department_id][course_code_id]})
+		return render(request,'books/get_papers.html',{"list":list,"department_id":department_id,"course_code_id":course_code_id})
 
 	# if department_id=='0' and course_code_id=='0':
 		# return render(request,'books/index.html',{'departments':all_departments,'courses':all_courses})
@@ -91,26 +91,7 @@ def displayl(request):
 		return render(request,'books/get_course_codesl.html',{"list":list,"department_id":department_id})
 	else:
 		return render(request,'books/get_papersl.html',{"list":list,"department_id":department_id,"course_code_id":course_code_id})
-# 	if department_id=='0' and course_code_id=='0':
-# 		return render(request,'books/indexl.html',{'departments':all_departments,'courses':all_courses})
-# 	elif course_code_id=='0':
-# 		dept=Department.objects.get(pk=department_id)
-# 		return render(request,'books/get_course_codesl.html',{'department':dept,'departments':all_departments,'courses':all_courses})
-# 	else:
-# 		course=Course_code.objects.get(pk=course_code_id)
-# 		return track_hits(request,'books/get_papersl.html',{'course':course,'departments':all_departments,'courses':all_courses},course)
 
-# # def upload(request):
-# #         departments=Department.objects.order_by('dept')
-# # 	courses=Course_code.objects.order_by('code')
-# # 	context={'departments':departments,'courses':courses}
-# #         return render(request,'books/upload.html', context)
-
-# # def uploadl(request):
-# #         departments=Department.objects.order_by('dept')
-# # 	courses=Course_code.objects.order_by('code')
-# # 	context={'departments':departments,'courses':courses}
-# #         return render(request,'books/uploadl.html', context)
 
 # ####upload file
 def thanks(request):
@@ -118,25 +99,21 @@ def thanks(request):
 def thanksl(request):
 	return render(request,'books/thanksl.html')
 
-# # def model_form_upload(request):
-# # 	if request.method == 'POST':
-# # 		form = DocumentForm(request.POST, request.FILES)
-# # 		if form.is_valid():
-# # 			form.save()
-# # 			# return redirect('thanks')
-# # 			txtfile = open('media/unapproved_documents/files.txt','a')
-# # 			txtfile.write(request.POST.get('course_code','none')+'_'+request.POST.get('year','none')+'_sem'+request.POST.get('sem','none')+'_'+request.POST.get('type_exam','none')+request.FILES['document'].name[request.FILES['document'].name.rindex('.'):]+'\n')
-			
-# # 			txtfile.close()
 
-# # 			return render(request,'books/thanks.html')
+def model_form_upload(request):
+	if request.method == 'POST':
 
-# # 	else:
-# # 		form = DocumentForm()
-# # 	return render(request, 'books/model_form_upload.html', {'form': form})
-# def model_form_upload(request):
-# 	if request.method == 'POST':
+		course_code = request.POST.get('course_code')
+		sem 		= request.POST.get('sem')
+		year		= request.POST.get('year')
+		type_exam 	= request.POST.get('type_exam')
+		prof 		= request.POST.get('professor')
+		document 	= request.FILES['document']
 
+		destination = open("../../unapproved/"+course_code+sem+year+type_exam+prof+document.name[request.FILES['document'].name.rindex('.'):])
+		for chunk in document.chunks():
+        	destination.write(chunk)
+   		destination.close()
 # 		doc = Document(course_code = request.POST.get('course_code'),sem = request.POST.get('sem'),year = request.POST.get('year'),type_exam = request.POST.get('type_exam'))
 # 		doc.document = request.FILES['document']
 # 		doc.save()
@@ -147,8 +124,8 @@ def thanksl(request):
 # 		txtfile.close()
 # 		return render(request,'books/thanks.html')
 
-# 	else:
-# 		return render(request, 'books/model_form_upload.html')
+	else:
+		return render(request, 'books/model_form_upload.html')
 
 
 # def model_form_uploadl(request):
