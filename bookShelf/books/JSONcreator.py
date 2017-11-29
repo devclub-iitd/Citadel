@@ -17,14 +17,16 @@ def path_to_dict(path,name_of_file):
 
     """Checks if file with name exists and if it doesnt it recreates all the heirarchy."""
 
-        if os.path.isfile(name_of_file):
-            f=open(name_of_file,"r").read()
-            heirarchy=json.loads(f)
-        else:
-            heirarchy=generate_path(path)
-            f = open(name_of_file,"w+")
-            f.write(json.dumps(heirarchy))
-        return heirarchy
+    if os.path.isfile(name_of_file):
+        f=open(name_of_file,"r").read()
+        heirarchy=json.loads(f)
+        if(heirarchy=="file"):
+            heirarchy={}
+    else:
+        heirarchy=generate_path(path)
+        f = open(name_of_file,"w+")
+        f.write(json.dumps(heirarchy))
+    return heirarchy
 
 def recreate_path(path,name_of_file):
 
