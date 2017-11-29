@@ -40,7 +40,7 @@ def index(request):
 	# context={'departments':departments,'courses':courses}
 	# print(jsc.path_to_dict(DATABASE_DIR))
 	print("SDSDS")
-	list = jsc.path_to_dict(DATABASE_DIR)
+	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
 	# print(os.getcwd())
 	return render(request,'books/index.html',{"list":list})
 
@@ -48,7 +48,7 @@ def indexl(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	list = jsc.path_to_dict(DATABASE_DIR)
+	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
 	return render(request,'books/indexl.html',{"list":list})
 
 def display(request):
@@ -60,7 +60,7 @@ def display(request):
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
-	list = jsc.path_to_dict(DATABASE_DIR)
+	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
 	if department_id not in list:
 		return render(request,'books/index.html',{"list":list})
 	elif course_code_id not in list[department_id]:
@@ -89,7 +89,7 @@ def displayl(request):
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
-	list = jsc.path_to_dict(DATABASE_DIR)
+	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
 	if department_id not in list:
 		return render(request,'books/indexl.html',{"list":list})
 	elif course_code_id not in list[department_id]:
