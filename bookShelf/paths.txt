@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-{"APL": {"CML101": {"minor2": {}, "minor1": {}}, "CML100": {"minor2": {}, "minor1": {}}}, "ELL": {"CML101": {"minor2": {}, "minor1": {}}, "CML100": {"minor2": {}, "minor1": {}}}, "CML": {"CML101": {"minor2": {}, "minor1": {}}, "CML100": {"minor2": {}, "minor1": {}}}}
-=======
-{"APL": {}, "CML": {"CML100": {}, "CML103": {}}, "COL": {"COL100": {"Books": {"hi.txt": "file"}, "Others": {}, "Profs": {}, "QPaper": {"yo.txt.txt": "file"}}, "COL106": {}}}
->>>>>>> 0576f20a87339903758b5614161896a05bfac378

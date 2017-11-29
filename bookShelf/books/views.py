@@ -24,7 +24,7 @@ from django.contrib.auth import authenticate, login, logout
 # from rest_framework import status
 # from .serializers import *
 DATABASE_DIR = "../media/database"
-UNAPPROVED_DIR = "../media/unapproved"
+UNAPPROVED_DIR = "../media/unapproved/"
 
 def track_hits(request,template_path,context,co):
         try:
@@ -39,8 +39,8 @@ def index(request):
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
 	# print(jsc.path_to_dict(DATABASE_DIR))
-	print("SDSDS")
-	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
+	print(jsc.path_to_dict(DATABASE_DIR,"database.txt"))
+	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
 	# print(os.getcwd())
 	return render(request,'books/index.html',{"list":list})
 
@@ -48,7 +48,7 @@ def indexl(request):
 	# departments=Department.objects.order_by('dept')
 	# courses=Course_code.objects.order_by('code')
 	# context={'departments':departments,'courses':courses}
-	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
+	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
 	return render(request,'books/indexl.html',{"list":list})
 
 def display(request):
@@ -60,7 +60,7 @@ def display(request):
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
-	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
+	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
 	if department_id not in list:
 		return render(request,'books/index.html',{"list":list})
 	elif course_code_id not in list[department_id]:
@@ -89,7 +89,7 @@ def displayl(request):
 # 		course_code_id=Course_code.objects.get(code=request.GET.get('course_code','None').upper()).id
 # 	except:
 # 		course_code_id='0'
-	list = jsc.path_to_dict(DATABASE_DIR,"paths.txt")
+	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
 	if department_id not in list:
 		return render(request,'books/indexl.html',{"list":list})
 	elif course_code_id not in list[department_id]:
@@ -204,7 +204,7 @@ def approve(request):
 # 			return redirect('/books/remove_unapproved_document?name='+fileName)
 # 	except:
 # 		return HttpResponse('<h1> Such a course code does not exist</h1><h1>Ask the developers to add the course code and then try again</h1>')
-	
+
 def userlogin(request):
 	if request.method=='POST':
 		user = authenticate(request,username=request.POST['username'],password=request.POST['password'])
@@ -234,13 +234,13 @@ def userlogout(request):
 # 				return Response(serializer.data)
 # 			except:
 # 				# serializer  = Course_codeSerializer( many = False)
-# 				return Response(status=status.HTTP_400_BAD_REQUEST)	
+# 				return Response(status=status.HTTP_400_BAD_REQUEST)
 # 		else:
 # 			departments=Department.objects.all()
 # 			serializer  = DepartmentSerializer(departments, many = True)
 # 			return Response(serializer.data)
 
-	
+
 # class Course_codeList(APIView):
 # 	def get(self, request):
 # 		# course_codes = Course_code.objects.all()
@@ -252,14 +252,14 @@ def userlogout(request):
 # 				return Response(serializer.data)
 # 			except:
 # 				# serializer  = Course_codeSerializer( many = False)
-# 				return Response(status=status.HTTP_400_BAD_REQUEST)	
+# 				return Response(status=status.HTTP_400_BAD_REQUEST)
 # 		else:
 # 			courses=Course_code.objects.all()
 # 			serializer  = Course_codeSerializer(courses, many = True)
 # 			return Response(serializer.data)
 
 
-		
+
 # class DocumentList(APIView):
 # 	# def get(self, request):
 # 	# 	documents=Document.objects.all()
@@ -269,13 +269,13 @@ def userlogout(request):
 
 # 	def post(self, request):
 # 		serializer = DocumentSerializer(data = request.data)
-		
 
 
-# 		if serializer.is_valid() and request.data.get('course_code')!=None and request.data.get('type_exam')!=None: 
+
+# 		if serializer.is_valid() and request.data.get('course_code')!=None and request.data.get('type_exam')!=None:
 # 			txtfile = open('media/unapproved_documents/files.txt','a')
 # 			txtfile.write(request.POST.get('course_code','none')+'_'+request.POST.get('year','')+'_sem'+request.POST.get('sem','')+'_'+request.POST.get('type_exam','none')+request.FILES['document'].name[request.FILES['document'].name.rindex('.'):]+'\n')
 # 			txtfile.close()
-# 			serializer.save() 
+# 			serializer.save()
 # 			return Response(serializer.data, status=status.HTTP_201_CREATED)
-# 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+# 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
