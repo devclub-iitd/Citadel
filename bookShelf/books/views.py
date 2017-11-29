@@ -156,22 +156,13 @@ def approve(request):
 			unapproved_documents.append(str(f)[str(f).rindex("/")+1:])
 	return render(request, 'books/approve.html', {'unapproved_documents':unapproved_documents})
 
-# @login_required
-# def remove_unapproved_document(request):
-# 	Document.objects.all().delete()#to remove model objects of unnecessary document model
-# 	txtfile = open('media/unapproved_documents/files.txt','r')
-# 	lines = txtfile.readlines()
-# 	txtfile.close()
-# 	txtfile = open('media/unapproved_documents/files.txt','w')
-# 	for line in lines:
-# 		if line != request.GET.get('name','none')+"\n":
-# 			txtfile.write(line)
-# 	txtfile.close()
-# 	try:
-# 		os.remove('media/unapproved_documents/'+request.GET.get('name','none'))
-# 	except:
-# 		return HttpResponse('<h1>No such file exists. Maybe it was manually deleted</h1>')
-# 	return redirect('/books/approve')
+@login_required
+def remove_unapproved_document(request):
+	try:
+		os.remove(UNAPPROVED_DIR+request.GET.get('name','none'))
+	except:
+		return HttpResponse('<h1>No such file exists. Maybe it was manually deleted</h1>')
+	return redirect('/books/approve')
 
 # #login to approve
 # @login_required
