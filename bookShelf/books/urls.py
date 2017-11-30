@@ -17,7 +17,7 @@ urlpatterns = [
 
 	url(r'^approve/$', views.approve ,name='approve'),
     url(r'^remove_unapproved_document/$', views.remove_unapproved_document ,name='remove_unapproved_document'),
- #    url(r'^approve_unapproved_document/$', views.approve_unapproved_document ,name='approve_unapproved_document'),
+    url(r'^approve_unapproved_document/$', views.approve_unapproved_document ,name='approve_unapproved_document'),
     url(r'^userlogin/$', views.userlogin ,name='userlogin'),
     url(r'^userlogout/$', views.userlogout ,name='userlogout'),
 

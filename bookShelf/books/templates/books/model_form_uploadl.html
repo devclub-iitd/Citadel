@@ -38,7 +38,7 @@
     <label>Semester</label>
     <!-- <input type="text" name="sem"> -->
     <select name = "sem" style="display: inline;width:100px">
-        <option value="_"> </option>
+        <option value=""> </option>
         <option value="1">1</option>
         <option value="2">2</option>
     </select>
@@ -59,7 +59,8 @@
     <input type="radio" name="type_exam" value="minor1">Minor1
     <input type="radio" name="type_exam" value="minor2">Minor2
     <input type="radio" name="type_exam" value="major">Major
-    <input id="other" type="radio" name="type_exam" value="">Other:
+    <input type="radio" name="type_exam" value="book">Book
+    <input id="other" type="radio" name="type_exam" value="other">Other:
     <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
     <!-- <input type="radio" name="type_exam" value="">Other <input type="text" name="type_exam" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ -->
 
@@ -78,12 +79,12 @@
 });
   </script>
 	<script src="{% static 'upload.js' %}"></script>
-  <script type="text/javascript">
+ <!--  <script type="text/javascript">
     $(function(){
       $('#other_text').on('change', function(){
         $('#other').val($('#other_text').val());
       });
     });
-  </script>
+  </script> -->
 </span>	
 {% endblock %}

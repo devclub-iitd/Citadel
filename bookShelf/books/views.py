@@ -12,6 +12,7 @@ from django.http import HttpResponse
 # from books.models import Document
 import os
 import json
+from shutil import copyfile
 from django.core.files import File
 
 from django.contrib.auth.decorators import login_required
@@ -112,9 +113,10 @@ def model_form_upload(request):
 		year		= request.POST.get('year',"None")
 		type_exam 	= request.POST.get('type_exam',"None")
 		prof 		= request.POST.get('professor',"None")
+		other_text  = request.POST.get('other_text',"None")
 		document 	= request.FILES['document']
 
-		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
@@ -130,10 +132,12 @@ def model_form_uploadl(request):
 		sem 		= request.POST.get('sem',"None")
 		year		= request.POST.get('year',"None")
 		type_exam 	= request.POST.get('type_exam',"None")
+		other_text  = request.POST.get('other_text',"None")
 		prof 		= request.POST.get('professor',"None")
 		document 	= request.FILES['document']
 
-		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+
+		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
@@ -164,37 +168,35 @@ def remove_unapproved_document(request):
 		return HttpResponse('<h1>No such file exists. Maybe it was manually deleted</h1>')
 	return redirect('/books/approve')
 
-# #login to approve
-# @login_required
-# def approve_unapproved_document(request):
-# 	fileName = request.GET.get('name','none')
-# 	try:
-# 		if fileName[fileName.rindex('_')+1:fileName.rindex('.')].upper() == "MAJOR":
-# 			coursecode = Course_code.objects.get(code=fileName[0:6].upper())
-# 			newpaper = Major(course = coursecode)
-# 			newpaper.paper.save(fileName, File(open("media/unapproved_documents/"+fileName)))
-# 			newpaper.save()
-# 			return redirect('/books/remove_unapproved_document?name='+fileName)
-# 		elif fileName[fileName.rindex('_')+1:fileName.rindex('.')].upper() == "MINOR1":
-# 			coursecode = Course_code.objects.get(code=fileName[0:6].upper())
-# 			newpaper = Minor1(course = coursecode)
-# 			newpaper.paper.save(fileName, File(open("media/unapproved_documents/"+fileName)))
-# 			newpaper.save()
-# 			return redirect('/books/remove_unapproved_document?name='+fileName)
-# 		elif fileName[fileName.rindex('_')+1:fileName.rindex('.')].upper() == "MINOR2":
-# 			coursecode = Course_code.objects.get(code=fileName[0:6].upper())
-# 			newpaper = Minor2(course = coursecode)
-# 			newpaper.paper.save(fileName, File(open("media/unapproved_documents/"+fileName)))
-# 			newpaper.save()
-# 			return redirect('/books/remove_unapproved_document?name='+fileName)
-# 		else :
-# 			coursecode = Course_code.objects.get(code=fileName[0:6].upper())
-# 			newpaper = Other(course = coursecode)
-# 			newpaper.paper.save(fileName, File(open("media/unapproved_documents/"+fileName)))
-# 			newpaper.save()
-# 			return redirect('/books/remove_unapproved_document?name='+fileName)
-# 	except:
-# 		return HttpResponse('<h1> Such a course code does not exist</h1><h1>Ask the developers to add the course code and then try again</h1>')
+#login to approve
+@login_required
+def approve_unapproved_document(request):
+	fileName = request.GET.get('name','none')
+	seperatedlist = fileName.split("_")
+	dep = seperatedlist[0][0:2]
+	try:
+		if seperatedlist[3] == "book":
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/"+seperatedlist[5]+seperatedlist[6]
+			copyfile(UNAPPROVED_DIR+fileName,destination)
+			return redirect('/books/remove_unapproved_document?name='+fileName)
+		elif seperatedlist[3] == "other":
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/"+seperatedlist[5]+seperatedlist[6]
+			copyfile(UNAPPROVED_DIR+fileName,destination)
+			return redirect('/books/remove_unapproved_document?name='+fileName)
+		elif seperatedlist[3] == "minor1":
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor1/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
+			copyfile(UNAPPROVED_DIR+fileName,destination)
+			return redirect('/books/remove_unapproved_document?name='+fileName)
+		elif seperatedlist[3] == "minor2":
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor2/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
+			copyfile(UNAPPROVED_DIR+fileName,destination)
+			return redirect('/books/remove_unapproved_document?name='+fileName)
+		elif seperatedlist[3] == "major":
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Major/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
+			copyfile(UNAPPROVED_DIR+fileName,destination)
+			return redirect('/books/remove_unapproved_document?name='+fileName)
+	except:
+		return HttpResponse('<h1> Such a course code does not exist</h1><h1>Ask the developers to add the course code and then try again</h1>')
 
 def userlogin(request):
 	if request.method=='POST':
