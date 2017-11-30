@@ -1,0 +1,9 @@
+ <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform">
+    {% csrf_token %}
+    <label>Original file name</label>
+    <input type="text" name="org" value="{{org}}">
+    <input type="text" name="final">
+    
+
+    <button type="submit">Rename</button>
+  </form>

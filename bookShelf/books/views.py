@@ -198,6 +198,14 @@ def approve_unapproved_document(request):
 	except:
 		return HttpResponse('<h1> Such a course code does not exist</h1><h1>Ask the developers to add the course code and then try again</h1>')
 
+@login_required
+def rename(request):
+	if request.method=="GET":
+		return render(request,"books/rename.html",{"org":request.GET.get('name','none')})
+	else:
+		copyfile(UNAPPROVED_DIR+request.POST.get('org'),UNAPPROVED_DIR+request.POST.get('final'))
+		return redirect('/books/remove_unapproved_document?name='+request.POST.get('org'))
+
 def userlogin(request):
 	if request.method=='POST':
 		user = authenticate(request,username=request.POST['username'],password=request.POST['password'])
