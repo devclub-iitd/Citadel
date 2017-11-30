@@ -23,6 +23,10 @@ urlpatterns = [
     url(r'^userlogin/$', views.userlogin ,name='userlogin'),
     url(r'^userlogout/$', views.userlogout ,name='userlogout'),
 
+    url(r'^api/structure$', views.APIstructure ,name='structure'),
+    url(r'^api/upload$', views.APIupload ,name='upload'),
+
+
  #    url(r'^api/departments/$', views.DepartmentList.as_view() ),
  #    url(r'^api/course_codes/$', views.Course_codeList.as_view() ),
  #    url(r'^api/document/$', views.DocumentList.as_view() ),
