@@ -9,11 +9,11 @@
       <a class="navbar-brand" href="#">WebSiteName</a>
     </div>-->
     <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px; display: inline-block;float: left;'>
-      <li style="display: inline-block;"><a href="/books/">Home</a></li>
-<li style="pointer-events: none;cursor: default; display: inline-block;" class='nav_li'><a href="/books/">></a></li>
-<li style="display: inline-block;"><a href="?department={{department_id}}&course_code=0">{{department_id}}</a></li>
+      <li style="display: inline-block;"><a href="/books/dark/">Home</a></li>
+<li style="pointer-events: none;cursor: default; display: inline-block;" class='nav_li'><a href="/books/dark/">></a></li>
+<li style="display: inline-block;"><a href="/dark/?department={{department_id}}&course_code=0">{{department_id}}</a></li>
 <li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/books/">></a></li>
-  <li class='nav_li' style="display: inline-block;"><a href="?department={{course.dept.id}}&course_code={{course.code}}">{{course_code_id}}</a></li>
+  <li class='nav_li' style="display: inline-block;"><a href="/dark/?department={{course.dept.id}}&course_code={{course.code}}">{{course_code_id}}</a></li>
       <!--<li><a href="#">Page 1</a></li>
       <li><a href="#">Page 2</a></li>
       <li><a href="#">Page 3</a></li>-->
@@ -39,21 +39,30 @@
 <ul class="nav nav-tabs">
   {% for parameter,items in sellist.items %}
     {% if items %}
-    <li class="active"><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li>
-    <!-- <li class="active">{{parameter}}</li> -->
+      {% if parameter == first %}
+        <li class="active"><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li>        
+      {% else %}
+        <li><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li>
+      {% endif %}
     {% endif %}
   {% endfor %}
 </ul>
 
 <div class="tab-content">
   {% for parameter,items in sellist.items %}
-    {% if items %}
-      <div id="{{parameter}}" class="tab-pane fade in active">
-      {% for item in items %}
-        <p>{{item}}</p>
-      {% endfor %}
-      </div>
-    {% endif %}
+      {% if items %}
+        {% if parameter == first %}
+          <div id="{{parameter}}" class="tab-pane fade in active">
+        {% else %}
+          <div id="{{parameter}}" class="tab-pane fade">
+        {% endif %}
+        <div class="custom-container">
+          {% for item in items %}
+            <p>{{item}}</p>
+          {% endfor %}
+        </div>
+        </div>
+      {% endif %}
   {% endfor %}
 </div>
 

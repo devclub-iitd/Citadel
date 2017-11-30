@@ -32,8 +32,8 @@
 <h1 class='department'>{{ department.dept }}</h1>
 <h2 class='course_list'>Course List</h2>
 <span class='code'>
-{% for course in department.course_code_set.all %}
-<a  style="float:left" href="/books/light/view/?department={{ department.id }}&course_code={{ course.code }}"><h3>{{ course.code }}</h3></a>
+{% for course in sellist %}
+<a  style="float:left" href="/books/light/view/?department={{ department_id }}&course_code={{ course }}"><h3>{{ course }}</h3></a>
 {% endfor %}
 </span>
 {% endblock %}

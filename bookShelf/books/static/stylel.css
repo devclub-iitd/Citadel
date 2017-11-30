@@ -382,3 +382,28 @@ float: right;
 width: 35vw;
 min-width: 200px;
 }
+
+.nav-tabs li a {
+color: black;
+}
+
+.nav-tabs>.active>a {
+  background-color: #bbb !important;
+  color: white !important;
+}
+
+.nav-tabs li a:hover {
+  color: #337ab7;
+}
+
+.nav-tabs li a {
+  background-color: #fff;
+}
+
+.tab-content .custom-container {
+  padding: 10px;
+}
+
+.tab-content .custom-container p {
+  color: black;
+}

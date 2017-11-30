@@ -40,27 +40,27 @@ def display(request):
 	department_id=request.GET.get('department','None')
 	course_code_id=request.GET.get('course_code','None')
 
-	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
-	if department_id not in list:
-		return render(request,'books/index.html',{"list":list})
-	elif course_code_id not in list[department_id]:
+	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
+	if department_id not in db_list:
+		return render(request,'books/index.html',{"list":db_list})
+	elif course_code_id not in db_list[department_id]:
                 print (course_code_id)
-                print (list[department_id])
-                return render(request,'books/get_course_codes.html',{"list":list,"sellist":list[department_id],"department_id":department_id})
+                print (db_list[department_id])
+                return render(request,'books/get_course_codes.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
 	else:
-		return render(request,'books/get_papers.html',{"list":list,"sellist":list[department_id][course_code_id],"department_id":department_id,"course_code_id":course_code_id})
+		return render(request,'books/get_papers.html',{"list":db_list,"sellist":db_list[department_id][course_code_id],"first":list(db_list[department_id][course_code_id])[0],"department_id":department_id,"course_code_id":course_code_id})
 
 def displayl(request):
 	department_id=request.GET.get('department','None')
 	course_code_id=request.GET.get('course_code','None')
 
-	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
-	if department_id not in list:
-		return render(request,'books/indexl.html',{"list":list})
-	elif course_code_id not in list[department_id]:
-		return render(request,'books/get_course_codesl.html',{"list":list,"sellist":list[department_id],"department_id":department_id})
+	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
+	if department_id not in db_list:
+		return render(request,'books/indexl.html',{"list":db_list})
+	elif course_code_id not in db_list[department_id]:
+		return render(request,'books/get_course_codesl.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
 	else:
-		return render(request,'books/get_papersl.html',{"list":list,"sellist":list[department_id][course_code_id],"department_id":department_id,"course_code_id":course_code_id})
+		return render(request,'books/get_papersl.html',{"list":db_list,"sellist":db_list[department_id][course_code_id],"first":list(db_list[department_id][course_code_id])[0],"department_id":department_id,"course_code_id":course_code_id})
 
 
 # ####upload file
@@ -192,7 +192,7 @@ def userlogout(request):
 @api_view()
 def APIstructure(request):
 	f = json.loads(open("database.txt").read())
-	print f
+	print (f)
 	return Response(f)
 @csrf_exempt
 def APIupload(request):

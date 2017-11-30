@@ -404,3 +404,19 @@ float: right;
 width: 35vw;
 min-width: 200px;
 }
+
+.nav-tabs li a {
+  background-color: #999;
+}
+
+.nav-tabs li a:hover {
+  color: #337ab7;
+}
+
+.tab-content .custom-container {
+  padding: 10px;
+}
+
+.tab-content .custom-container p {
+  color: white;
+}
