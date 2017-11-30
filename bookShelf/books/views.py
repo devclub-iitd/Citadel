@@ -135,28 +135,33 @@ def approve_unapproved_document(request):
 	fileName = request.GET.get('name','none')
 	seperatedlist = fileName.split("_")
 	dep = seperatedlist[0][0:2]
-	jsc.recreate_path(DATABASE_DIR,"database.txt")
+	
 
 	try:
 		if seperatedlist[3] == "book":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/"+seperatedlist[5]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
+			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "other":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/"+seperatedlist[5]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
+			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "minor1":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor1/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
+			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "minor2":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor2/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
+			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "major":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Major/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
+			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 	except:
 		return HttpResponse('<h1> Such a course code does not exist</h1><h1>Ask the developers to add the course code and then try again</h1>')
