@@ -24,7 +24,7 @@
 <span id='papers'>
 
 <ul class="nav nav-tabs">
-  {% for parameter,items in sellist.items %}
+  {% for parameter,w in sellist.items %}
     {% if items %}
       {% if parameter == first %}
         <li class="active"><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li>        
