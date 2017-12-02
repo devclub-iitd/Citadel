@@ -2,9 +2,7 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 	<link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
 	<link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
 	<link type="text/css" rel="stylesheet" href="{% static 'stylel.css' %}"/>
@@ -74,16 +72,10 @@
 
 <nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;border-radius:0px;left:30vw;">
   <div class="container-fluid">
-    <!--<div class="navbar-header">
-      <a class="navbar-brand" href="#">WebSiteName</a>
-    </div>-->
     <ol class="nav navbar-nav" style='font-size:1.5vw; display: inline-block;float: left;'>
       <li style="display: inline-block;"><a href="/books/light/">Home</a></li>
-      <!--<li><a href="#">Page 1</a></li>
-      <li><a href="#">Page 2</a></li>
-      <li><a href="#">Page 3</a></li>-->
     </ol>
-    		<a  style="text-decoration:none; float:right;" href="/books/"><h4 style="font-size:1vw;">SWITCH THEME</h4></a>
+    		<a  style="text-decoration:none; float:right;" href="/books/dark/"><h4 style="font-size:1vw;">SWITCH THEME</h4></a>
 
   </div>
 </nav>
@@ -102,10 +94,10 @@
   		</div>
   			<ul class="features">
 					{% for course in codes %}
-					<li><a class="course" href="/books/view/?department={{ dept }}&course_code={{ course }}" style="color: #003459">{{ course }}</a></li>
+					<li><a class="course" href="/books/light/view/?department={{ dept }}&course_code={{ course }}" style="color: #003459">{{ course }}</a></li>
 	  				 {% endfor %}  					
  			 </ul>
- 		 <button onclick="window.location.href='/books/view/?department={{ dept }}&course_code=0'">View All</button>
+ 		 <button onclick="window.location.href='/books/light/view/?department={{ dept }}&course_code=0'">View All</button>
 	</div>
 	{% endif %}
 {% endfor %}
@@ -113,20 +105,6 @@
 
 
 
-
-	<!--<h1 style="font-family:Monotype Corsiva">All Courses</h1>-->
-	<!--{% for dept in departments %}   THIS WAS THE ORIGINAL TABULAR REPRESENTATION. SAD FOR IT ITS no MORE
-		<table>
-			<tr>
-				<th>{{ dept.dept }}</th>
-			</tr>
-			{% for course in dept.course_code_set.all%}
-			<tr>
-				<td><a class="course" href="/studapp/view/?department={{ dept.id }}&course_code={{ course.id }}">{{ course.code }}</a></td>
-			</tr>
-			{% endfor %}
-			<br /></table>
-	{% endfor %}-->
 	{% endblock %}
 <!--*********CONTENT DONE**********-->
  </div>

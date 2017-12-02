@@ -3,26 +3,16 @@
 {% block navbar %}
 <nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;left:30vw;">
   <div class="container-fluid">
-    <!--<div class="navbar-header">
-      <a class="navbar-brand" href="#">WebSiteName</a>
-    </div>-->
-    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px; display: inline-block;float: left;'>
-      <li style="display: inline-block;"><a href="/study/">Home</a></li>
-	<li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/study/">></a></li>
-<li class='nav_li' style="display: inline-block;"><a href="">Upload</a></li>
 
-      <!--<li><a href="#">Page 1</a></li>
-      <li><a href="#">Page 2</a></li>
-      <li><a href="#">Page 3</a></li>-->
+    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px; display: inline-block;float: left;'>
+      <li style="display: inline-block;"><a href="/books/dark/">Home</a></li>
+	<li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/books/dark/">></a></li>
+<li class='nav_li' style="display: inline-block;"><a href="">Upload</a></li>
     </ol>
-    <a style="text-decoration:none; float:right;" href="/study/light/"><h4 style="color:white;font-size:1vw; ">SWITCH THEME</h4></a>
+    <a style="text-decoration:none; float:right;" href="/books/light/"><h4 style="color:white;font-size:1vw; ">SWITCH THEME</h4></a>
   </div>
 </nav>
 
-<!--<ol class="breadcrumb" style="background-color:#000;position:fixed;left:29vw;top:0px;width:71vw;font-size:1.5vw;">
-	<li><a href="/studapp/">Home</a></li>
-	
-</ol>-->
 {% endblock %}
 
 {% block content %}
@@ -46,16 +36,12 @@
     <label>Academic Year</label>
     <input style="margin:0" type="text" name="year" placeholder="2016-17">
     <br>
+    <label>Professor</label>
+    <input style="margin:0" type="text" name="professor" placeholder="Amitabha Bagchi">
+    <br>
     <label>Type of paper</label>
     
-    <!-- <input style="margin:0px;width:500px" list="types" name="type_exam" placeholder="minor1 or Probability_CheatSheet"  required>
-     <datalist id="types">
-     <option value="minor1">
-     <option value="minor2">
-     <option value="major">
-    </datalist>
-    <br> -->
-
+ 
     <input type="radio" name="type_exam" value="minor1">Minor1
     <input type="radio" name="type_exam" value="minor2">Minor2
     <input type="radio" name="type_exam" value="major">Major
@@ -69,14 +55,7 @@
   </form>
 {% endblock %}
 {% block js %}
-<!-- <script type="text/javascript">
-    $(function() {
-    $('input').on('keypress', function(e) {
-        if (e.which == 32)
-            return false;
-    });
-});
-  </script> -->
+
   <script src="{% static 'upload.js' %}"></script>
 </span> 
 {% endblock %}
