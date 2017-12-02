@@ -15,6 +15,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+import operator
+
 DATABASE_DIR = "../media/database"
 UNAPPROVED_DIR = "../media/unapproved/"
 
@@ -54,6 +56,8 @@ def displayl(request):
 	course_code_id=request.GET.get('course_code','None')
 
 	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
+	# db_list = dict(sorted(db_list.items(), key=operator.itemgetter(0)))
+	print db_list
 	if department_id not in db_list:
 		return render(request,'books/indexl.html',{"list":db_list})
 	elif course_code_id not in db_list[department_id]:
@@ -71,12 +75,12 @@ def thanksl(request):
 
 def model_form_upload(request):
 	if request.method == 'POST':
-		course_code = request.POST.get('course_code',"None")
-		sem 		= request.POST.get('sem',"None")
-		year		= request.POST.get('year',"None")
-		type_exam 	= request.POST.get('type_exam',"None")
-		prof 		= request.POST.get('professor',"None")
-		other_text  = request.POST.get('other_text',"None")
+		course_code = request.POST.get('course_code',"None").upper()
+		sem 		= request.POST.get('sem',"None").upper()
+		year		= request.POST.get('year',"None").upper()
+		type_exam 	= request.POST.get('type_exam',"None").upper()
+		prof 		= request.POST.get('professor',"None").upper()
+		other_text  = request.POST.get('other_text',"None").upper()
 		document 	= request.FILES['document']
 
 		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
@@ -90,12 +94,12 @@ def model_form_upload(request):
 
 def model_form_uploadl(request):
 	if request.method == 'POST':
-		course_code = request.POST.get('course_code',"None")
-		sem 		= request.POST.get('sem',"None")
-		year		= request.POST.get('year',"None")
-		type_exam 	= request.POST.get('type_exam',"None")
-		other_text  = request.POST.get('other_text',"None")
-		prof 		= request.POST.get('professor',"None")
+		course_code = request.POST.get('course_code',"None").upper()
+		sem 		= request.POST.get('sem',"None").upper()
+		year		= request.POST.get('year',"None").upper()
+		type_exam 	= request.POST.get('type_exam',"None").upper()
+		other_text  = request.POST.get('other_text',"None").upper()
+		prof 		= request.POST.get('professor',"None").upper()
 		document 	= request.FILES['document']
 
 
@@ -196,12 +200,12 @@ def APIstructure(request):
 @csrf_exempt
 def APIupload(request):
 	if request.method == 'POST':
-		course_code = request.POST.get('course_code',"None")
-		sem 		= request.POST.get('sem',"None")
-		year		= request.POST.get('year',"None")
-		type_exam 	= request.POST.get('type_exam',"None")
-		other_text  = request.POST.get('other_text',"None")
-		prof 		= request.POST.get('professor',"None")
+		course_code = request.POST.get('course_code',"None").upper()
+		sem 		= request.POST.get('sem',"None").upper()
+		year		= request.POST.get('year',"None").upper()
+		type_exam 	= request.POST.get('type_exam',"None").upper()
+		other_text  = request.POST.get('other_text',"None").upper()
+		prof 		= request.POST.get('professor',"None").upper()
 		document 	= request.FILES['document']
 
 

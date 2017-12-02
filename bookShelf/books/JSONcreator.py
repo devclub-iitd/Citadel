@@ -1,8 +1,9 @@
 import os
 import json
+import collections
 
 def generate_path(path):
-    d = {}
+    d = collections.OrderedDict()
     if os.path.isdir(path):
         for x in sorted(os.listdir(path)):
             new_path=generate_path(os.path.join(path,x))
