@@ -41,12 +41,14 @@ def display(request):
 	course_code_id=request.GET.get('course_code','None')
 
 	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
+	print db_list
+
 	if department_id not in db_list:
 		return render(request,'books/index.html',{"list":db_list})
 	elif course_code_id not in db_list[department_id]:
-                print (course_code_id)
-                print (db_list[department_id])
-                return render(request,'books/get_course_codes.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
+		print (course_code_id)
+		print (db_list[department_id])
+		return render(request,'books/get_course_codes.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
 	else:
 		return render(request,'books/get_papers.html',{"list":db_list,"sellist":db_list[department_id][course_code_id],"first":list(db_list[department_id][course_code_id])[0],"department_id":department_id,"course_code_id":course_code_id})
 
@@ -55,6 +57,8 @@ def displayl(request):
 	course_code_id=request.GET.get('course_code','None')
 
 	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
+	print db_list[department_id][course_code_id].items()
+
 	if department_id not in db_list:
 		return render(request,'books/indexl.html',{"list":db_list})
 	elif course_code_id not in db_list[department_id]:
