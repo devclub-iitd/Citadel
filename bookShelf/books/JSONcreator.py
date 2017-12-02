@@ -1,5 +1,6 @@
 import os
 import json
+import collections
 
 def generate_path(path):
     d = {}
