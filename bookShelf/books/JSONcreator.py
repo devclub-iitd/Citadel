@@ -5,7 +5,7 @@ import collections
 def generate_path(path):
     d = collections.OrderedDict()
     if os.path.isdir(path):
-        for x in sorted(os.listdir(path)):
+        for x in os.listdir(path):
             new_path=generate_path(os.path.join(path,x))
             if not new_path:
                 continue
