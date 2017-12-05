@@ -181,7 +181,7 @@ def approve_unapproved_document(request):
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 	except:
-		return HttpResponse('<h1> Such a course code does not exist</h1><h1>Ask the developers to add the course code and then try again</h1>')
+		return HttpResponse('<h1> Such a directory does not exist</h1><h1>Create the directory and then try again</h1>')
 
 @login_required
 def rename(request):

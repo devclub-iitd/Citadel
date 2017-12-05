@@ -22,6 +22,8 @@ urlpatterns = [
     url(r'^books/', include('books.urls')),
     # url(r'^books/light/', include('books.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^$', RedirectView.as_view(url='/books/light', permanent=True)),
+
 ]
 
 from django.conf import settings
