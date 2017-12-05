@@ -185,7 +185,8 @@ def approve_unapproved_document(request):
 				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/")
 				destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/"+seperatedlist[5].title()+seperatedlist[6]
 				copyfile(UNAPPROVED_DIR+fileName,destination)
-				jsc.recreate_path(DATABASE_DIR,"database.txt")			
+				jsc.recreate_path(DATABASE_DIR,"database.txt")
+				return redirect('/books/remove_unapproved_document?name='+fileName)
 			else:
 				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0])
 				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/")
