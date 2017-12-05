@@ -145,27 +145,27 @@ def approve_unapproved_document(request):
 	
 
 	try:
-		if seperatedlist[3] == "book":
+		if seperatedlist[3] == "BOOK":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/"+seperatedlist[5]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "other":
+		elif seperatedlist[3] == "OTHER":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/"+seperatedlist[5]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "minor1":
+		elif seperatedlist[3] == "MINOR1":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor1/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "minor2":
+		elif seperatedlist[3] == "MINOR2":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor2/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "major":
+		elif seperatedlist[3] == "MAJOR":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Major/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
