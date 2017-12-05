@@ -147,7 +147,6 @@ def approve_unapproved_document(request):
 	fileName = request.GET.get('name','none')
 	seperatedlist = fileName.split("_")
 	dep = seperatedlist[0][0:2]
-	
 
 	try:
 		if seperatedlist[3] == "LECNOTE":
@@ -180,8 +179,26 @@ def approve_unapproved_document(request):
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
-	except:
-		return HttpResponse('<h1> Such a directory does not exist</h1><h1>Create the directory and then try again</h1>')
+	except FileNotFoundError:
+		if os.path.isdir(DATABASE_DIR+"/"+dep):
+			if os.path.isdir(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]):
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/")
+				destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/"+seperatedlist[5].title()+seperatedlist[6]
+				copyfile(UNAPPROVED_DIR+fileName,destination)
+				jsc.recreate_path(DATABASE_DIR,"database.txt")			
+			else:
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0])
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/")
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/")
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/")
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/")
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/Minor1/")
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/Minor2/")
+				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/Major/")
+				return approve_unapproved_document(request)
+		else:
+			os.makedirs(DATABASE_DIR+"/"+dep)
+			return approve_unapproved_document(request)
 
 @login_required
 def rename(request):
