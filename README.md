@@ -32,6 +32,12 @@ cd bookShelf
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
+mkdir media
+mkdir media/database
+mkdir media/unapproved
+cd make_folder
+python make_folder.py
+mv DATA/* ../media/database/
 cd bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)
