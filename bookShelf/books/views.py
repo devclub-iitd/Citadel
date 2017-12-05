@@ -16,6 +16,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 import operator
+from collections import OrderedDict
+
 
 DATABASE_DIR = "../media/database"
 UNAPPROVED_DIR = "../media/unapproved/"
@@ -94,7 +96,8 @@ def model_form_upload(request):
 		return render(request,'books/thanks.html')
 
 	else:
-		return render(request, 'books/model_form_upload.html')
+		profs = json.loads(open("profs.json","r").read(), object_pairs_hook=OrderedDict)
+		return render(request, 'books/model_form_upload.html',{"profs":profs})
 
 def model_form_uploadl(request):
 	if request.method == 'POST':
@@ -115,7 +118,9 @@ def model_form_uploadl(request):
 
 
 	else:
-		return render(request, 'books/model_form_uploadl.html')
+		profs = json.loads(open("profs.json","r").read(), object_pairs_hook=OrderedDict)
+		# print profs
+		return render(request, 'books/model_form_uploadl.html',{"profs":profs})
 
 #approvals
 @login_required
@@ -145,13 +150,18 @@ def approve_unapproved_document(request):
 	
 
 	try:
-		if seperatedlist[3] == "BOOK":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/"+seperatedlist[5]+seperatedlist[6]
+		if seperatedlist[3] == "LECNOTE":
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/"+seperatedlist[5].title()+seperatedlist[6]
+			copyfile(UNAPPROVED_DIR+fileName,destination)
+			jsc.recreate_path(DATABASE_DIR,"database.txt")
+			return redirect('/books/remove_unapproved_document?name='+fileName)
+		elif seperatedlist[3] == "BOOK":
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/"+seperatedlist[5].title()+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "OTHER":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/"+seperatedlist[5]+seperatedlist[6]
+			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/"+seperatedlist[5].title()+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
 			jsc.recreate_path(DATABASE_DIR,"database.txt")
 			return redirect('/books/remove_unapproved_document?name='+fileName)

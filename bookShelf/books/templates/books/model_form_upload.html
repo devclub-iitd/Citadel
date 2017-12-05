@@ -37,7 +37,12 @@
     <input style="margin:0" type="text" name="year" placeholder="2016-17">
     <br>
     <label>Professor</label>
-    <input style="margin:0" type="text" name="professor" placeholder="Amitabha Bagchi">
+    <select name = "professor" style="display: inline;width:250px">
+        <option value=""> </option>
+        {% for value,name in profs.items %}
+        	<option value= "{{ value }}">{{ name }}</option>
+        {% endfor %}
+    </select>
     <br>
     <label>Type of paper</label>
     
@@ -46,6 +51,7 @@
     <input type="radio" name="type_exam" value="minor2"><span>Minor2</span>
     <input type="radio" name="type_exam" value="major"><span>Major</span>
     <input type="radio" name="type_exam" value="book"><span>Book</span>
+    <input type="radio" name="type_exam" value="lecnote"><span>Lecture/Notes</span>
     <input id="other" type="radio" name="type_exam" value="other"><span>Other:</span>
     <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
 
