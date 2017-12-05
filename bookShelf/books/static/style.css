@@ -13,7 +13,7 @@ body{
 }
 
 .sidebar{
-	width: 30vw !important;
+	width: 25vw !important;
     height: 100vh;
     /* width: 300px; Removed*/
     /* float:left  Removed*/
@@ -29,7 +29,7 @@ background-image: url("concrete_wall.jpg");
 
 }
 .content{
-	width:70%;
+	width:75%;
 	padding:10vh 3vw;
 	min-height: 100vh;
 	background-color: dimgray; /* For browsers that do not support gradients */
@@ -37,13 +37,8 @@ background-image: url("concrete_wall.jpg");
   background: -o-linear-gradient(bottom right, dimgray, #151616); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(bottom right, dimgray, #151616); /* For Firefox 3.6 to 15 */
   background: linear-gradient(to bottom right, dimgray, #151616); /* Standard syntax */
-
-
-
-
-
     /* width: 630px; Removed*/
-	margin-left: 30%;/* Added */
+	margin-left: 25%;/* Added */
 	/*padding: 50px 5% 5% 60px;*/
 	background-repeat: repeat-y;
   background-size: cover;
@@ -265,9 +260,9 @@ ul:hover::-webkit-scrollbar {
 }
 
 .section {
-width: 96%;
-margin: 10px 2%;
-padding: 0px 10px;
+width: 100%;
+margin: 10px 0px;
+padding: 0px 10px 10px 10px;
 float: left;
 background-color: #303036;
 display: block;
@@ -369,6 +364,15 @@ font-size: 0.75em;
     font-size: 30px;
     }
 }
+
+nav {
+  position:fixed !important;
+  top:10px !important;
+  width:70vw;
+  border-radius:0px;
+  min-height: 30px !important;
+}
+
 .navbar-inverse .navbar-nav > li > a{
   color : white !important;
   font-family: 'Poiret One', cursive;
@@ -419,4 +423,12 @@ min-width: 200px;
 
 .tab-content .custom-container p {
   color: white;
+}
+
+input[type=radio] {
+  margin: 0px 0px 0px 10px;
+}
+
+span {
+  font-size: 1em !important;
 }

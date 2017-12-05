@@ -1,7 +1,7 @@
 {% extends 'books/index.html' %}
 {% load static %}
 {% block navbar %}
-<nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;left:30vw;">
+<nav class="navbar navbar-inverse">
   <div class="container-fluid">
 
     <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px; display: inline-block;float: left;'>
@@ -42,11 +42,11 @@
     <label>Type of paper</label>
     
  
-    <input type="radio" name="type_exam" value="minor1">Minor1
-    <input type="radio" name="type_exam" value="minor2">Minor2
-    <input type="radio" name="type_exam" value="major">Major
-    <input type="radio" name="type_exam" value="book">Book
-    <input id="other" type="radio" name="type_exam" value="other">Other:
+    <input type="radio" name="type_exam" value="minor1"><span>Minor1</span>
+    <input type="radio" name="type_exam" value="minor2"><span>Minor2</span>
+    <input type="radio" name="type_exam" value="major"><span>Major</span>
+    <input type="radio" name="type_exam" value="book"><span>Book</span>
+    <input id="other" type="radio" name="type_exam" value="other"><span>Other:</span>
     <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
 
     <input type="file" name="document" required>

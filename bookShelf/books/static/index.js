@@ -3,7 +3,7 @@ $(document).ready(function() {
 	$('.promos').fadeIn(1000);
 	
 	$('.sidebar').css('width','0%');
-	$('.sidebar').animate({width:'30%'},300);
+	$('.sidebar').animate({width:'25%'},300);
 
 	// $('.sidebar').hide();
 	// $('.sidebar').slideDown(1000);

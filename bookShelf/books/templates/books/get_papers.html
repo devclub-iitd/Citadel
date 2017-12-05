@@ -3,14 +3,14 @@
 {%block title%}{{ course_code_id }}{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;border-radius:0px;left:30vw;">
+<nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px; display: inline-block;float: left;'>
       <li style="display: inline-block;"><a href="/books/dark/">Home</a></li>
 <li style="pointer-events: none;cursor: default; display: inline-block;" class='nav_li'><a href="/books/dark/">></a></li>
-<li style="display: inline-block;"><a href="/books/dark/?department={{department_id}}&course_code=0">{{department_id}}</a></li>
+<li style="display: inline-block;"><a href="?department={{department_id}}&course_code=0">{{department_id}}</a></li>
 <li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/books/dark/">></a></li>
-  <li class='nav_li' style="display: inline-block;"><a href="/books/dark/?department={{course.dept.id}}&course_code={{course.code}}">{{course_code_id}}</a></li>
+  <li class='nav_li' style="display: inline-block;"><a href="?department={{department_id}}&course_code={{course_code_id}}">{{course_code_id}}</a></li>
     </ol>
     <a style="text-decoration:none; float:right;" href="/books/light/"><h4 style="color:white;font-size:1vw; ">SWITCH THEME</h4></a>
 
@@ -24,7 +24,7 @@
 <span id='papers'>
 
 <ul class="nav nav-tabs">
-  {% for parameter,w in sellist.items %}
+  {% for parameter,items in sellist.items %}
     {% if items %}
       {% if parameter == first %}
         <li class="active"><a data-toggle="tab" href="#{{parameter}}">{{parameter}}</a></li>        
@@ -44,22 +44,22 @@
           <div id="{{parameter}}" class="tab-pane fade">
         {% endif %}
         <div class="custom-container">
-          {% if parameter != "Question_Papers" %}
-            <br>
-            {% for item in items %}
-                <a style="color: white" href="/../media/database/{{ department_id }}/{{ course_code_id }}/{{ parameter }}/{{ item }}">{{ item }}</a>
+          {% for name,list in items.items %}
+             {% if list == "file" %}
+                <a style="color: black" href="/../media/database/{{ department_id }}/{{ course_code_id }}/{{ parameter }}/{{ list }}">{{ name }}</a>
                 <br>
-            {% endfor %}
-          {% else %}
-            {% for parameter2,paperList in items.items %}
-              <h1>{{ parameter2 }}</h1>
-              {% for paper in paperList %}
-                <a style="color: white" href="/../media/database/{{ department_id }}/{{ course_code_id }}/Question_Papers/{{ parameter2 }}/{{ paper }}">{{ paper }}</a>
-                <br>
-              {% endfor %}
-              <hr>
-            {% endfor %}
-          {% endif %}
+             {% else %}
+              <div class="col-xs-6">
+              <div class="section">
+                <h2>{{ name }}</h2>
+                {% for paper in list %}
+                  <a style="color: black" href="/../media/database/{{ department_id }}/{{ course_code_id }}/{{ parameter }}/{{ name }}/{{ paper }}">{{ paper }}</a>
+                  <br>
+                {% endfor %}
+              </div>
+            </div>
+             {% endif %}
+          {% endfor %}
         </div>
         </div>
       {% endif %}

@@ -35,8 +35,9 @@ def index(request):
 	return render(request,'books/index.html',{"list":list})
 
 def indexl(request):
-	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
-	return render(request,'books/indexl.html',{"list":list})
+        print ("In indexl")
+        list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
+        return render(request,'books/indexl.html',{"list":list})
 
 def display(request):
 	department_id=request.GET.get('department','None')
@@ -57,13 +58,16 @@ def displayl(request):
 
 	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
 	# db_list = dict(sorted(db_list.items(), key=operator.itemgetter(0)))
-	print db_list
+	print (db_list)
 	if department_id not in db_list:
-		return render(request,'books/indexl.html',{"list":db_list})
+                print (department_id)
+                return render(request,'books/indexl.html',{"list":db_list})
 	elif course_code_id not in db_list[department_id]:
-		return render(request,'books/get_course_codesl.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
+                print ("1")
+                return render(request,'books/get_course_codesl.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
 	else:
-		return render(request,'books/get_papersl.html',{"list":db_list,"sellist":db_list[department_id][course_code_id],"first":list(db_list[department_id][course_code_id])[0],"department_id":department_id,"course_code_id":course_code_id})
+                print ("2")
+                return render(request,'books/get_papersl.html',{"list":db_list,"sellist":db_list[department_id][course_code_id],"first":list(db_list[department_id][course_code_id])[0],"department_id":department_id,"course_code_id":course_code_id})
 
 
 # ####upload file
