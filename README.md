@@ -20,7 +20,7 @@ Currently the workpattern is this, people contibute using the upload button, thi
 Using the approve page authorised people can add the papers.
 
 ### Technology used
-We will work using python 2.7
+We will work using python 3.6
 
 and latest version of django that is django 1.11.1
 
