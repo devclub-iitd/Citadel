@@ -44,106 +44,167 @@
                 <h3 class="text-muted">Book Shelf</h3>
             </nav>
         </header>
-        <div class="container" id="content">
-            <div class="row" id="path">
-                <nav aria-label="breadcrumb" role="navigation">
-                    <ol class="breadcrumb">
-                        {% for name,url in path %}
-                            {% if forloop.last %}
-                                <li class="breadcrumb-item active">{{name}}</li>
-                            {% else %}
-                                <li class="breadcrumb-item"><a href="{{url}}">{{name}}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                    </ol>
-                </nav>
-            </div>
-            <div class="row" id="file-browser">
-                <div class="col-sm-2 border rounded file-col1">
-                    <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
-                        {% for key1,value1 in db.items %}
-                            {% if value1 %}
-                                {% if value1|get_type == 'str' %}
-                                    <a target="_blank" class="nav-link" id="{{key1}}-tab" href="{{value1}}">{{key1}}</a>
-                                {% else %}
-                                    <a class="nav-link" id="{{key1}}-tab" data-toggle="pill" href="#{{key1}}-con"
-                                        role="tab" aria-controls="{{key1}}" aria-selected="false">{{key1}}</a>
+
+        <div class="container-fluid" id="content">
+            <div class="row main-row">
+            <div class="col-md-3 sidebar-new rounded">
+                {% block sidebar %}
+                <div class="input">
+                    <form action="/books/view/" id='course_with_code' method='get'>
+                    <div class="form-group">
+                        <strong>Course Search</strong><br/>
+                        <label for="course_code" style="color:white;">Department</label>        
+                        <select class='form-control' name="department" form="course_with_code" id='select1'>
+                             <option value="0" selected="selected">Select a department</option>
+                             {% for dept,code in db.items %}
+                                {% if code %}
+                                    <option value= {{ dept }}>{{ dept }}</option>
                                 {% endif %}
-                            {% endif %}
-                        {% endfor %}
+                             {% endfor %}        
+                        </select>
+                        <!-- DONE We have to change so that the second list is dynamically updated based on first one -->
+                        <label for="course_code" style="color:white;">Course Code</label>   
+                        <input type='text' class='form-control' list='course_code' name="course_code" form="course_with_code" autocomplete="off" id='select2' placeholder="Search or use the dropdown" >
+                        <datalist id="course_code">
+                            
+                             {% for dept,codes in db.items %}
+                                {% for course in codes %}
+                                    <option   value="{{course}}">{{ course }}</option>
+                                {% endfor %}
+                             {% endfor %}
+                        </datalist>
+                        <br>
+                        <input  type="submit" class="btn btn-success btn-md">
                     </div>
+                    <!-- <div class="form-group">
+                        <strong>Document Search</strong><br/>
+                        <label for="course_code" style="color:white;">Department</label>        
+                        <select class='form-control' name="department" form="course_with_code" id='select1'>
+                             <option value="0" selected="selected">Select a department</option>
+                             {% for dept,code in list.items %}
+                                {% if code %}
+                                    <option value= {{ dept }}>{{ dept }}</option>
+                                {% endif %}
+                             {% endfor %}        
+                        </select>
+                        <label for="course_code" style="color:white;">Course Code</label>   
+                        <input type='text' class='form-control' list='course_code' name="course_code" form="course_with_code" autocomplete="off" id='select2' placeholder="Search or use the dropdown" >
+                        <datalist id="course_code">
+                            
+                             {% for dept,codes in list.items %}
+                                {% for course in codes %}
+                                    <option   value="{{course}}">{{ course }}</option>
+                                {% endfor %}
+                             {% endfor %}
+                        </datalist>
+                        <input  type="submit" class="btn btn-success btn-lg" style="font-size:1.2vw;">
+                    </div> -->
+                    </form>
                 </div>
-                <div class="col-sm-10 tab-content">
-                    {% for key1,value1 in db.items %}
-                        {% if value1 and value1|get_type != 'str' %}
-                            <div class="tab-pane fade" id="{{key1}}-con" role="tabpanel" aria-labelledby="{{key1}}-tab">
-                                <div class="row">
-                                    <div class="col-sm-3 border rounded file-col2">
-                                        <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
-                                            {% for key2,value2 in value1.items %}
-                                                {% if value2 %}
-                                                    {% if value2|get_type == 'str' %}
-                                                        <a target="_blank" class="nav-link" href="{{value2}}">{{key2}}</a>
-                                                    {% else %}
-                                                        <a class="nav-link" id="{{key1}}-{{key2}}-tab" data-toggle="pill" href="#{{key1}}-{{key2}}-con"
-                                                            role="tab" aria-controls="{{key1}}-{{key2}}" aria-selected="false">{{key2}}</a>
+                {% endblock %}
+            </div>
+            <div class="container col-md-9">
+                <div class="row" id="path">
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            {% for name,url in path %}
+                                {% if forloop.last %}
+                                    <li class="breadcrumb-item active">{{name}}</li>
+                                {% else %}
+                                    <li class="breadcrumb-item"><a href="{{url}}">{{name}}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ol>
+                    </nav>
+                </div>
+                <div class="row" id="file-browser">
+                    <div class="col-sm-2 border rounded file-col1">
+                        <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
+                            {% for key1,value1 in db.items %}
+                                {% if value1 %}
+                                    {% if value1|get_type == 'str' %}
+                                        <a target="_blank" class="nav-link" id="{{key1}}-tab" href="{{value1}}">{{key1}}</a>
+                                    {% else %}
+                                        <a class="nav-link" id="{{key1}}-tab" data-toggle="pill" href="#{{key1}}-con"
+                                            role="tab" aria-controls="{{key1}}" aria-selected="false">{{key1}}</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-sm-10 tab-content">
+                        {% for key1,value1 in db.items %}
+                            {% if value1 and value1|get_type != 'str' %}
+                                <div class="tab-pane fade" id="{{key1}}-con" role="tabpanel" aria-labelledby="{{key1}}-tab">
+                                    <div class="row">
+                                        <div class="col-sm-3 border rounded file-col2">
+                                            <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
+                                                {% for key2,value2 in value1.items %}
+                                                    {% if value2 %}
+                                                        {% if value2|get_type == 'str' %}
+                                                            <a target="_blank" class="nav-link" href="{{value2}}">{{key2}}</a>
+                                                        {% else %}
+                                                            <a class="nav-link" id="{{key1}}-{{key2}}-tab" data-toggle="pill" href="#{{key1}}-{{key2}}-con"
+                                                                role="tab" aria-controls="{{key1}}-{{key2}}" aria-selected="false">{{key2}}</a>
+                                                        {% endif %}
                                                     {% endif %}
-                                                {% endif %}
-                                            {% endfor %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-9 tab-content" >
-                                        {% for key2,value2 in value1.items %}
-                                            {% if value2 and value2|get_type != 'str' %}
-                                                <div class="tab-pane fade" id="{{key1}}-{{key2}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-tab">
-                                                    <div class="row">
-                                                        <div class="col-sm-5 border rounded file-col3">
-                                                            <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
-                                                                {% for key3,value3 in value2.items %}
-                                                                    {% if value3 %}
-                                                                        {% if value3|get_type == 'str' %}
-                                                                            <a target="_blank" class="nav-link" href="{{value3}}">{{key3}}</a>
-                                                                        {% else %}
-                                                                            <a class="nav-link" id="{{key1}}-{{key2}}-{{key3}}-tab" data-toggle="pill" href="#{{key1}}-{{key2}}-{{key3}}-con"
-                                                                                role="tab" aria-controls="{{key1}}-{{key2}}-{{key3}}" aria-selected="false">{{key3}}</a>
+                                        <div class="col-sm-9 tab-content" >
+                                            {% for key2,value2 in value1.items %}
+                                                {% if value2 and value2|get_type != 'str' %}
+                                                    <div class="tab-pane fade" id="{{key1}}-{{key2}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-tab">
+                                                        <div class="row">
+                                                            <div class="col-sm-5 border rounded file-col3">
+                                                                <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
+                                                                    {% for key3,value3 in value2.items %}
+                                                                        {% if value3 %}
+                                                                            {% if value3|get_type == 'str' %}
+                                                                                <a target="_blank" class="nav-link" href="{{value3}}">{{key3}}</a>
+                                                                            {% else %}
+                                                                                <a class="nav-link" id="{{key1}}-{{key2}}-{{key3}}-tab" data-toggle="pill" href="#{{key1}}-{{key2}}-{{key3}}-con"
+                                                                                    role="tab" aria-controls="{{key1}}-{{key2}}-{{key3}}" aria-selected="false">{{key3}}</a>
+                                                                            {% endif %}
                                                                         {% endif %}
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7 tab-content" >
+                                                                {% for key3,value3 in value2.items %}
+                                                                    {% if value3 and value3|get_type != 'str' %}
+                                                                        <div class="tab-pane fade" id="{{key1}}-{{key2}}-{{key3}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-{{key3}}-tab">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12 border rounded file-col4">
+                                                                                    <div class='nav nav-pills flex-column file-column' role="tablist" aria-orientation="vertical">
+                                                                                        {% for key4,value4 in value3.items %}
+                                                                                            {% if value4|get_type == 'str' %}
+                                                                                                <a target="_blank" class="nav-item nav-link" href="{{value4}}">{{key4}}</a>
+                                                                                            {% else %}
+                                                                                                <a class="nav-item nav-link" href="{{key1}}/{{key2}}">{{key4}}</a>
+                                                                                            {% endif %}
+                                                                                        {% endfor %}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     {% endif %}
                                                                 {% endfor %}
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-7 tab-content" >
-                                                            {% for key3,value3 in value2.items %}
-                                                                {% if value3 and value3|get_type != 'str' %}
-                                                                    <div class="tab-pane fade" id="{{key1}}-{{key2}}-{{key3}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-{{key3}}-tab">
-                                                                        <div class="row">
-                                                                            <div class="col-sm-12 border rounded file-col4">
-                                                                                <div class='nav nav-pills flex-column file-column' role="tablist" aria-orientation="vertical">
-                                                                                    {% for key4,value4 in value3.items %}
-                                                                                        {% if value4|get_type == 'str' %}
-                                                                                            <a target="_blank" class="nav-item nav-link" href="{{value4}}">{{key4}}</a>
-                                                                                        {% else %}
-                                                                                            <a class="nav-item nav-link" href="{{key1}}/{{key2}}">{{key4}}</a>
-                                                                                        {% endif %}
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </div>
                                                     </div>
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
-    
             </div>
+            <img src="{% static 'img/bs1.png' %}" class="image">
+        </div>
         </div>
         <footer class="footer" id="footer">
             <div class="container">

@@ -96,3 +96,34 @@ body {
     margin-right: 0px;
     margin-left: 0px;
 }
+
+.sidebar-new{
+    height: 100%;
+    padding: 1%;
+    background-color: #1a9ccc;
+}
+
+.main-row {
+    height: 100%;
+}
+
+.image { 
+    z-index: 1000; 
+    right: 0; 
+    bottom: 10%;
+    max-width: 250px;
+}
+
+@media (max-width: 500px) {
+    .image {
+        position: relative;
+        margin: auto;
+    }
+}
+
+
+@media (min-width: 500px) {
+    .image {
+        position: absolute;
+    }
+}
