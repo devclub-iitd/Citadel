@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render,redirect
 from books import JSONcreator as jsc
 from django.http import HttpResponse, HttpResponseNotAllowed
+from django.http import Http404
 import os
 import json
 from shutil import copyfile
@@ -20,6 +21,7 @@ from collections import OrderedDict
 
 
 DATABASE_DIR = "../media/database"
+DATABASE_URL = "/media/database"
 UNAPPROVED_DIR = "../media/unapproved/"
 DATABASE_DICT_FILE_NAME = "database.json"
 
@@ -84,6 +86,28 @@ def displayl(request):
 
 		return render(request,'books/get_papersl.html',{"list":db_list,"sellist":list_to_show,"first":list(list_to_show)[0],"department_id":department_id,"course_code_id":course_code_id,"dir_id":actual_path_taken,"display_path":display_path})
 
+def browse(request,path):
+	main_path = request.path.strip("/")
+	path = path.strip("/")
+	prefix = "/"+main_path[:(-len(path))]
+	print("main_path- \""+main_path+"\"")
+	print("prefix- \""+prefix+"\"")
+	print("path - \""+path+"\"")
+
+	nav_path = jsc.build_nav_path(prefix,path)
+
+	root_db = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+	try:
+		db = jsc.navigate_path(root_db,path)
+	except jsc.InvalidPath as e:
+		raise Http404("No such file or directory")
+	except jsc.FilePath as e:
+		file_url = os.path.join(DATABASE_URL,path)
+		return redirect(file_url)
+	except Exception as e:
+		raise Http404("No such file or directory")
+	else:
+		return render(request,'books/shelf.html',{"path": nav_path,"db": db})
 ##### Upload file
 def thanks(request):
 	return render(request,'books/thanks.html')

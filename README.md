@@ -48,10 +48,12 @@ Tracking: Tracking and Page hits are currently implemented in two ways:
 /books/api/upload : upload api. Please provide course_code (APL100), sem(1), year(2016-17), type_exam(minor1), other_text(<name of book>), professor(handle of professor), document(file)
 
 # TODO List
-More papers to be added soon.
+1. Remove all the unnecessary light/dark thing
+2. Format upload and login page nicely
+3. Implement infinite horizontal scrolling to avoid page reload on navigation
+4. More papers to be added soon.
 # Bugs List
 <empty>
-
 
 						
 

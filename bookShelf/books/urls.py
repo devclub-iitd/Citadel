@@ -2,13 +2,16 @@ from django.conf.urls import url
 
 from . import views
 
-from rest_framework.urlpatterns import format_suffix_patterns
+# from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     url(r'^dark/$', views.index, name='index'),
     url(r'^light/$', views.indexl, name='indexl'),
     url(r'^dark/view/$', views.display ,name='display'),
     url(r'^light/view/$', views.displayl ,name='displayl'),
+
+    url(r'^view/(?P<path>.*)/$',views.browse,name="browse"),
+    url(r'^view/(?P<path>)$',views.browse,name="browse"), ## so that /view/ works without any path
     
 	url(r'^dark/upload/$', views.model_form_upload ,name='upload'),
     url(r'^light/upload/$', views.model_form_uploadl ,name='uploadl'),
@@ -32,4 +35,5 @@ urlpatterns = [
  #    url(r'^api/document/$', views.DocumentList.as_view() ),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+## This is not needed and was conflicting with /view/A.b type of requests - ozym4nd145
+# urlpatterns = format_suffix_patterns(urlpatterns)
