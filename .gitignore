@@ -103,5 +103,10 @@ ENV/
 .mypy_cache/
 
 media/
+<<<<<<< HEAD
 
 database.txt
+=======
+database.txt
+database.json
+>>>>>>> 618a9b59f8957e7aa6514f4bfc85f23405ca79be

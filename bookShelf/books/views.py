@@ -21,31 +21,29 @@ from collections import OrderedDict
 
 DATABASE_DIR = "../media/database"
 UNAPPROVED_DIR = "../media/unapproved/"
+DATABASE_DICT_FILE_NAME = "database.json"
 
 def track_hits(request,template_path,context,co):
-        try:
-                co.pagehits+=1
-        except:
-                co.pagehits = 1
-        co.save()
-        return render(request,template_path,context)
+	try:
+			co.pagehits+=1
+	except:
+			co.pagehits = 1
+	co.save()
+	return render(request,template_path,context)
 
 def index(request):
-	print(jsc.path_to_dict(DATABASE_DIR,"database.txt"))
-	list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
-	# print(os.getcwd())
+	list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 	return render(request,'books/index.html',{"list":list})
 
 def indexl(request):
-        print ("In indexl")
-        list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
-        return render(request,'books/indexl.html',{"list":list})
+	list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+	return render(request,'books/indexl.html',{"list":list})
 
 def display(request):
 	department_id=request.GET.get('department','None')
 	course_code_id=request.GET.get('course_code','None')
 
-	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
+	db_list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 
 	if department_id not in db_list:
 		return render(request,'books/index.html',{"list":db_list})
@@ -57,22 +55,36 @@ def display(request):
 def displayl(request):
 	department_id=request.GET.get('department','None')
 	course_code_id=request.GET.get('course_code','None')
+	dir_id= request.GET.get('dir_id','None')
 
-	db_list = jsc.path_to_dict(DATABASE_DIR,"database.txt")
-	# db_list = dict(sorted(db_list.items(), key=operator.itemgetter(0)))
-	print (db_list)
+	file_path = DATABASE_DIR +'/'+department_id+'/'+course_code_id+'/'+ dir_id
+	static_file_path = '/media/database'+'/'+department_id+'/'+course_code_id+'/'+ dir_id
+	if(os.path.isfile(file_path)):
+		return redirect(static_file_path)
+
+	db_list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+	
 	if department_id not in db_list:
-                print (department_id)
-                return render(request,'books/indexl.html',{"list":db_list})
+		return render(request,'books/indexl.html',{"list":db_list})
 	elif course_code_id not in db_list[department_id]:
-                print ("1")
-                return render(request,'books/get_course_codesl.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
+		return render(request,'books/get_course_codesl.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
 	else:
-                print ("2")
-                return render(request,'books/get_papersl.html',{"list":db_list,"sellist":db_list[department_id][course_code_id],"first":list(db_list[department_id][course_code_id])[0],"department_id":department_id,"course_code_id":course_code_id})
+		list_to_show = db_list[department_id][course_code_id].copy()
+		actual_path_list = ['None']
+		if(dir_id != 'None'):
+			actual_path_list = []
+			dir_list = dir_id.split("/");
+			for path in dir_list:
+				if(list(list_to_show[path].values()).count('file') != 0):
+					break
+				list_to_show = list_to_show[path]
+				actual_path_list.append(path)
+		actual_path_taken = '%2F'.join(actual_path_list)
+		display_path = '/'.join(actual_path_list)
 
+		return render(request,'books/get_papersl.html',{"list":db_list,"sellist":list_to_show,"first":list(list_to_show)[0],"department_id":department_id,"course_code_id":course_code_id,"dir_id":actual_path_taken,"display_path":display_path})
 
-# ####upload file
+##### Upload file
 def thanks(request):
 	return render(request,'books/thanks.html')
 def thanksl(request):
@@ -108,18 +120,13 @@ def model_form_uploadl(request):
 		other_text  = request.POST.get('other_text',"None").upper()
 		prof 		= request.POST.get('professor',"None").upper()
 		document 	= request.FILES['document']
-
-
 		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
 		return render(request,'books/thanksl.html')
-
-
 	else:
 		profs = json.loads(open("profs.json","r").read(), object_pairs_hook=OrderedDict)
-		# print profs
 		return render(request, 'books/model_form_uploadl.html',{"profs":profs})
 
 #approvals
@@ -152,32 +159,32 @@ def approve_unapproved_document(request):
 		if seperatedlist[3] == "LECNOTE":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/"+seperatedlist[5].title()+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,"database.txt")
+			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "BOOK":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/"+seperatedlist[5].title()+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,"database.txt")
+			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "OTHER":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/"+seperatedlist[5].title()+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,"database.txt")
+			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "MINOR1":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor1/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,"database.txt")
+			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "MINOR2":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor2/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,"database.txt")
+			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 		elif seperatedlist[3] == "MAJOR":
 			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Major/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
 			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,"database.txt")
+			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 			return redirect('/books/remove_unapproved_document?name='+fileName)
 	except FileNotFoundError:
 		if os.path.isdir(DATABASE_DIR+"/"+dep):
@@ -185,7 +192,7 @@ def approve_unapproved_document(request):
 				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/")
 				destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/"+seperatedlist[5].title()+seperatedlist[6]
 				copyfile(UNAPPROVED_DIR+fileName,destination)
-				jsc.recreate_path(DATABASE_DIR,"database.txt")
+				jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 				return redirect('/books/remove_unapproved_document?name='+fileName)
 			else:
 				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0])
@@ -226,7 +233,7 @@ def userlogout(request):
 #api
 @api_view()
 def APIstructure(request):
-	f = json.loads(open("database.txt").read())
+	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
 	print (f)
 	return Response(f)
 @csrf_exempt
