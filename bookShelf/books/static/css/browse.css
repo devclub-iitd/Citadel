@@ -23,31 +23,30 @@ body {
 }
 
 #path {
-    height: 10%;
+    height: 15%;
     min-height: 3rem;
 }
 
 #file-browser {
-    height: 90%;
+    height: 80%;
     overflow-x: auto;
     white-space: nowrap;
 }
 
-#file-browser div {
-    height: 100%;
-}
-
-#file-browser div .file-column {
-    height: 95%;
+.file-column {
+    height: 90%;
     overflow-y: auto;
-    margin-top: 3%;
-    margin-bottom: 3%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 2px;
+    margin-right: 2px;
+    max-width: 50%;
+    min-width: 25%;
 }
 
-.flex-column {
-    flex-wrap: nowrap;
+.col-item {
+    width: 100%;
 }
-
 
 /* Custom page header */
 
@@ -72,27 +71,4 @@ body {
     padding-top: 0.5rem;
     color: #777;
     border-top: .05rem solid #e5e5e5;
-}
-
-.file-col1 .nav-pills .nav-link.active{
-    background-color: pink;
-    color: #343a40;
-}
-
-.file-col2 .nav-pills .nav-link.active{
-    background-color: cyan;
-    color: #343a40;
-}
-.file-col3 .nav-pills .nav-link.active{
-    background-color: orange;
-    color: #343a40;
-}
-.file-col4 .nav-pills .nav-link.active{
-    background-color: yellow;
-    color: #343a40;
-}
-
-.row {
-    margin-right: 0px;
-    margin-left: 0px;
 }

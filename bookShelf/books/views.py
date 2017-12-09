@@ -258,7 +258,6 @@ def userlogout(request):
 @api_view()
 def APIstructure(request):
 	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
-	print (f)
 	return Response(f)
 @csrf_exempt
 def APIupload(request):
