@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import os
 import json
 import operator
 # Django Imports
+from __future__ import unicode_literals
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.http import Http404
@@ -25,10 +25,31 @@ DATABASE_URL = "/media/database"
 UNAPPROVED_DIR = "../media/unapproved/"
 DATABASE_DICT_FILE_NAME = "database.json"
 
+def track_hits(request,template_path,context,co):
+	try:
+			co.pagehits+=1
+	except:
+			co.pagehits = 1
+	co.save()
+	return render(request,template_path,context)
 
 def index(request):
 	list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-	return render(request,'books/index.html', {"list":list})
+	return render(request,'books/index.html',{"list":list})
+
+
+def display(request):
+	department_id=request.GET.get('department','None')
+	course_code_id=request.GET.get('course_code','None')
+
+	db_list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+
+	if department_id not in db_list:
+		return render(request,'books/index.html',{"list":db_list})
+	elif course_code_id not in db_list[department_id]:
+		return render(request,'books/get_course_codes.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
+	else:
+		return render(request,'books/get_papers.html',{"list":db_list,"sellist":db_list[department_id][course_code_id],"first":list(db_list[department_id][course_code_id])[0],"department_id":department_id,"course_code_id":course_code_id})
 
 def browse(request,path):
 	main_path = request.path.strip("/")
@@ -51,31 +72,37 @@ def browse(request,path):
 	except Exception as e:
 		raise Http404("No such file or directory")
 	else:
-		return render(request,'books/shelf.html',{"path": nav_path,"db": db,"list":list})
+		return render(request,'books/shelf.html',{"path": nav_path,"db": db})
 
-## Controller to Handle Upload of Documents
-def upload(request):
+## Controllers to handle file upload
+def thanks(request):
+	return render(request,'books/thanks.html')
+
+
+def model_form_upload(request):
 	if request.method == 'POST':
 		course_code = request.POST.get('course_code',"None").upper()
 		sem 		= request.POST.get('sem',"None").upper()
 		year		= request.POST.get('year',"None").upper()
 		type_exam 	= request.POST.get('type_exam',"None").upper()
-		other_text  = request.POST.get('other_text',"None").upper()
 		prof 		= request.POST.get('professor',"None").upper()
+		other_text  = request.POST.get('other_text',"None").upper()
 		document 	= request.FILES['document']
+
 		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
 		return render(request,'books/thanks.html')
+
 	else:
 		profs = json.loads(open("profs.json","r").read(), object_pairs_hook=OrderedDict)
-		return render(request, 'books/upload.html',{"profs":profs})
+		return render(request, 'books/model_form_upload.html',{"profs":profs})
 
-## Controller to Handle approval of requests
-
+#approvals
 @login_required
-def approve(request):	
+def approve(request):
+	
 	unapproved_documents = []
 	for path, subdirs, files in os.walk(UNAPPROVED_DIR):
 		for filename in files:
@@ -91,6 +118,7 @@ def remove_unapproved_document(request):
 		return HttpResponse('<h1>No such file exists. Maybe it was manually deleted</h1>')
 	return redirect('/books/approve')
 
+#login to approve
 @login_required
 def approve_unapproved_document(request):
 	fileName = request.GET.get('name','none')
@@ -170,4 +198,98 @@ def userlogin(request):
 
 def userlogout(request):
 	logout(request)
-	return redirect("/books/")
+	return redirect("/books/dark/")
+
+
+#api
+@api_view()
+def APIstructure(request):
+	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
+	print (f)
+	return Response(f)
+@csrf_exempt
+def APIupload(request):
+	if request.method == 'POST':
+		course_code = request.POST.get('course_code',"None").upper()
+		sem 		= request.POST.get('sem',"None").upper()
+		year		= request.POST.get('year',"None").upper()
+		type_exam 	= request.POST.get('type_exam',"None").upper()
+		other_text  = request.POST.get('other_text',"None").upper()
+		prof 		= request.POST.get('professor',"None").upper()
+		document 	= request.FILES['document']
+
+
+		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+		for chunk in document.chunks():
+			destination.write(chunk)
+		destination.close()
+		return render(request,'books/thanksl.html')
+
+
+	else:
+		return HttpResponse('Only POST here')
+
+
+## Redundant Functions
+'''
+def indexl(request):
+	list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+	return render(request,'books/indexl.html',{"list":list})
+
+
+def displayl(request):
+	department_id=request.GET.get('department','None')
+	course_code_id=request.GET.get('course_code','None')
+	dir_id= request.GET.get('dir_id','None')
+
+	file_path = DATABASE_DIR +'/'+department_id+'/'+course_code_id+'/'+ dir_id
+	static_file_path = '/media/database'+'/'+department_id+'/'+course_code_id+'/'+ dir_id
+	if(os.path.isfile(file_path)):
+		return redirect(static_file_path)
+
+	db_list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+	
+	if department_id not in db_list:
+		return render(request,'books/indexl.html',{"list":db_list})
+	elif course_code_id not in db_list[department_id]:
+		return render(request,'books/get_course_codesl.html',{"list":db_list,"sellist":db_list[department_id],"department_id":department_id})
+	else:
+		list_to_show = db_list[department_id][course_code_id].copy()
+		actual_path_list = ['None']
+		if(dir_id != 'None'):
+			actual_path_list = []
+			dir_list = dir_id.split("/");
+			for path in dir_list:
+				if(list(list_to_show[path].values()).count('file') != 0):
+					break
+				list_to_show = list_to_show[path]
+				actual_path_list.append(path)
+		actual_path_taken = '%2F'.join(actual_path_list)
+		display_path = '/'.join(actual_path_list)
+
+		return render(request,'books/get_papersl.html',{"list":db_list,"sellist":list_to_show,"first":list(list_to_show)[0],"department_id":department_id,"course_code_id":course_code_id,"dir_id":actual_path_taken,"display_path":display_path})
+
+def thanksl(request):
+	return render(request,'books/thanksl.html')
+
+
+
+def model_form_uploadl(request):
+	if request.method == 'POST':
+		course_code = request.POST.get('course_code',"None").upper()
+		sem 		= request.POST.get('sem',"None").upper()
+		year		= request.POST.get('year',"None").upper()
+		type_exam 	= request.POST.get('type_exam',"None").upper()
+		other_text  = request.POST.get('other_text',"None").upper()
+		prof 		= request.POST.get('professor',"None").upper()
+		document 	= request.FILES['document']
+		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+		for chunk in document.chunks():
+			destination.write(chunk)
+		destination.close()
+		return render(request,'books/thanksl.html')
+	else:
+		profs = json.loads(open("profs.json","r").read(), object_pairs_hook=OrderedDict)
+		return render(request, 'books/model_form_uploadl.html',{"profs":profs})
+'''
+

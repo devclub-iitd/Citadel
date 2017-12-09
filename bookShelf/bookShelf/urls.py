@@ -20,9 +20,8 @@ from django.views.generic import RedirectView
 urlpatterns = [
 	url(r'^accounts/login/$', RedirectView.as_view(url='/books/userlogin', permanent=True)),
     url(r'^books/', include('books.urls')),
-    # url(r'^books/light/', include('books.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^$', RedirectView.as_view(url='/books/view/', permanent=True)),
+    url(r'^$', RedirectView.as_view(url='/books/', permanent=True)),
 
 ]
 

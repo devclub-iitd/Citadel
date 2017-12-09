@@ -1,0 +1,66 @@
+{% extends 'books/index.html' %}
+{% load static %}
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px;display: inline-block;float: left;'>
+        <li style="display: inline-block;"><a href="/books/">Home</a></li>
+        <li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/books/">></a></li>
+        <li class='nav_li' style="display: inline-block;"><a href="">Upload</a></li>
+    </ol>
+  </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<br></br>
+<span id='form'>
+<p>Note: In case you upload a book, tut or something other than exam paper, leave the sem and year blank and add some details in the type of paper.</p>
+  <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform">
+    {% csrf_token %}
+    <label>Course Code</label>
+    <input style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required>
+    <br>
+    <label>Semester</label>
+    <select name = "sem" style="display: inline;width:100px">
+        <option value=""> </option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+    </select>
+    <br>
+    <label>Academic Year</label>
+    <input style="margin:0" type="text" name="year" placeholder="2016-17">
+    <br>
+    <label>Professor</label>
+    <select name = "professor" style="display: inline;width:250px">
+        <option value=""> </option>
+        {% for value,name in profs.items %}
+        	<option value= "{{ value }}">{{ name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label>Type of paper</label>
+    <input type="radio" name="type_exam" value="minor1"><span>Minor1</span>
+    <input type="radio" name="type_exam" value="minor2"><span>Minor2</span>
+    <input type="radio" name="type_exam" value="major"><span>Major</span>
+    <input type="radio" name="type_exam" value="book"><span>Book</span>
+    <input type="radio" name="type_exam" value="lecnote"><span>Lecture/Notes</span>
+    <input id="other" type="radio" name="type_exam" value="other"><span>Other:</span>
+    <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+    <input type="file" name="document" required>
+    <button type="submit">Upload</button>
+  </form>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    $(function() {
+    $('input').on('keypress', function(e) {
+        if (e.which == 32)
+            return false;
+    });
+});
+</script>
+<script src="{% static 'js/upload.js' %}"></script>
+</span>	
+{% endblock %}
