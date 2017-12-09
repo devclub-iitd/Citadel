@@ -105,3 +105,4 @@ ENV/
 media/
 database.txt
 database.json
+.vscode/
