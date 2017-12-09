@@ -57,7 +57,7 @@
                 </nav>
             </div>
             <div class="row" id="file-browser">
-                <div class="col-sm-2 border rounded file-col1">
+                <div class="col-xs-2 border rounded file-col1">
                     <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
                         {% for key1,value1 in db.items %}
                             {% if value1 %}
@@ -71,12 +71,12 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col-sm-10 tab-content">
+                <div class="col-xs-10 tab-content">
                     {% for key1,value1 in db.items %}
                         {% if value1 and value1|get_type != 'str' %}
                             <div class="tab-pane fade" id="{{key1}}-con" role="tabpanel" aria-labelledby="{{key1}}-tab">
                                 <div class="row">
-                                    <div class="col-sm-3 border rounded file-col2">
+                                    <div class="col-xs-3 border rounded file-col2">
                                         <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
                                             {% for key2,value2 in value1.items %}
                                                 {% if value2 %}
@@ -90,12 +90,12 @@
                                             {% endfor %}
                                         </div>
                                     </div>
-                                    <div class="col-sm-9 tab-content" >
+                                    <div class="col-xs-9 tab-content" >
                                         {% for key2,value2 in value1.items %}
                                             {% if value2 and value2|get_type != 'str' %}
                                                 <div class="tab-pane fade" id="{{key1}}-{{key2}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-tab">
                                                     <div class="row">
-                                                        <div class="col-sm-5 border rounded file-col3">
+                                                        <div class="col-xs-5 border rounded file-col3">
                                                             <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
                                                                 {% for key3,value3 in value2.items %}
                                                                     {% if value3 %}
@@ -109,7 +109,7 @@
                                                                 {% endfor %}
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-7 tab-content border rounded  file-col4" >
+                                                        <div class="col-xs-7 tab-content border rounded  file-col4" >
                                                             {% for key3,value3 in value2.items %}
                                                                 {% if value3 and value3|get_type != 'str' %}
                                                                     <div class="tab-pane fade" id="{{key1}}-{{key2}}-{{key3}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-{{key3}}-tab">
