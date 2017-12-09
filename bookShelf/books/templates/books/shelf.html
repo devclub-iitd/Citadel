@@ -26,10 +26,22 @@
 </head>
 <body>
     <div class="container-fluid" id="body-container">
-        <div class="jumbotron" id="jumbo">
-                <h1 class="display-3">Book Shelf</h1>
-        </div>
-    
+        <header class="header">
+            <nav>
+                <ul class="nav nav-pills float-right">
+                    <li class="nav-item">
+                    <a class="nav-link" href="/books/light/upload/">Upload<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <h3 class="text-muted">Book Shelf</h3>
+            </nav>
+        </header>
         <div class="container" id="content">
             <div class="row" id="path">
                 <nav aria-label="breadcrumb" role="navigation">
@@ -45,12 +57,12 @@
                 </nav>
             </div>
             <div class="row" id="file-browser">
-                <div class="col-sm-3" id="tab-lvl1">
+                <div class="col-sm-2 border rounded file-col1">
                     <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
                         {% for key1,value1 in db.items %}
                             {% if value1 %}
                                 {% if value1|get_type == 'str' %}
-                                    <a class="nav-link" id="{{key1}}-tab" href="{{value1}}">{{key1}}</a>
+                                    <a target="_blank" class="nav-link" id="{{key1}}-tab" href="{{value1}}">{{key1}}</a>
                                 {% else %}
                                     <a class="nav-link" id="{{key1}}-tab" data-toggle="pill" href="#{{key1}}-con"
                                         role="tab" aria-controls="{{key1}}" aria-selected="false">{{key1}}</a>
@@ -59,17 +71,17 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col-sm-9 tab-content" id="tabContent-lvl1">
+                <div class="col-sm-10 tab-content">
                     {% for key1,value1 in db.items %}
                         {% if value1 and value1|get_type != 'str' %}
                             <div class="tab-pane fade" id="{{key1}}-con" role="tabpanel" aria-labelledby="{{key1}}-tab">
                                 <div class="row">
-                                    <div class="col-sm-5" id="tab-lvl2">
+                                    <div class="col-sm-3 border rounded file-col2">
                                         <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
                                             {% for key2,value2 in value1.items %}
                                                 {% if value2 %}
                                                     {% if value2|get_type == 'str' %}
-                                                        <a href="{{value2}}">{{key2}}</a>
+                                                        <a target="_blank" class="nav-link" href="{{value2}}">{{key2}}</a>
                                                     {% else %}
                                                         <a class="nav-link" id="{{key1}}-{{key2}}-tab" data-toggle="pill" href="#{{key1}}-{{key2}}-con"
                                                             role="tab" aria-controls="{{key1}}-{{key2}}" aria-selected="false">{{key2}}</a>
@@ -78,18 +90,42 @@
                                             {% endfor %}
                                         </div>
                                     </div>
-                                    <div class="col-sm-7 tab-content" >
+                                    <div class="col-sm-9 tab-content" >
                                         {% for key2,value2 in value1.items %}
                                             {% if value2 and value2|get_type != 'str' %}
                                                 <div class="tab-pane fade" id="{{key1}}-{{key2}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-tab">
-                                                    <div class='nav nav-pills flex-column file-column' role="tablist" aria-orientation="vertical">
-                                                        {% for key3,value3 in value2.items %}
-                                                            {% if value3|get_type == 'str' %}
-                                                                <a target="_blank" class="nav-item nav-link" href="{{value3}}">{{key3}}</a>
-                                                            {% else %}
-                                                                <a class="nav-item nav-link" href="{{key1}}/{{key2}}">{{key3}}</a>
-                                                            {% endif %}
-                                                        {% endfor %}
+                                                    <div class="row">
+                                                        <div class="col-sm-5 border rounded file-col3">
+                                                            <div class="nav nav-pills flex-column file-column" role="tablist" aria-orientation="vertical">
+                                                                {% for key3,value3 in value2.items %}
+                                                                    {% if value3 %}
+                                                                        {% if value3|get_type == 'str' %}
+                                                                            <a target="_blank" class="nav-link" href="{{value3}}">{{key3}}</a>
+                                                                        {% else %}
+                                                                            <a class="nav-link" id="{{key1}}-{{key2}}-{{key3}}-tab" data-toggle="pill" href="#{{key1}}-{{key2}}-{{key3}}-con"
+                                                                                role="tab" aria-controls="{{key1}}-{{key2}}-{{key3}}" aria-selected="false">{{key3}}</a>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-7 tab-content border rounded  file-col4" >
+                                                            {% for key3,value3 in value2.items %}
+                                                                {% if value3 and value3|get_type != 'str' %}
+                                                                    <div class="tab-pane fade" id="{{key1}}-{{key2}}-{{key3}}-con" role="tabpanel" aria-labelledby="{{key1}}-{{key2}}-{{key3}}-tab">
+                                                                        <div class='nav nav-pills flex-column file-column' role="tablist" aria-orientation="vertical">
+                                                                            {% for key4,value4 in value3.items %}
+                                                                                {% if value4|get_type == 'str' %}
+                                                                                    <a target="_blank" class="nav-item nav-link" href="{{value4}}">{{key4}}</a>
+                                                                                {% else %}
+                                                                                    <a class="nav-item nav-link" href="{{key1}}/{{key2}}">{{key4}}</a>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             {% endif %}
@@ -103,6 +139,12 @@
     
             </div>
         </div>
+        <footer class="footer" id="footer">
+            <div class="container">
+                <p class="text-muted text-center">&copy; Dev Club IIT Delhi</p>
+            </div>
+        </footer>
+
     </div>
 </body>
 </html>
