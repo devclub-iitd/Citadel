@@ -1,0 +1,40 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#body-container {
+    height: 100%;
+    overflow-y: hidden;
+    min-height:100%;
+    min-width:100%;
+}
+
+#jumbo {
+    height: 20%;
+    padding: 10px;
+}
+
+#content {
+    height: 70%;
+}
+
+#path {
+    height: 15%;
+}
+
+#file-browser {
+    height: 80%;
+}
+
+#file-browser div {
+    height: 100%;
+}
+
+.file-column {
+    height: 100%;
+    overflow-y: auto;
+}
+.flex-column{
+    flex-wrap: nowrap;
+}
