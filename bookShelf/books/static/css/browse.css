@@ -7,6 +7,7 @@ body {
 body {
     padding-top: 0.5rem;
     padding-bottom: 0.15rem;
+    overflow: hidden;
 }
 
 #body-container {
@@ -17,33 +18,33 @@ body {
 
 
 #content {
-    height: 85%;
+    height: 87%;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    border-left: 1px solid #e9ecef;
+    border-right: 1px solid #e9ecef;
 }
 
 #path {
-    height: 15%;
-    min-height: 3rem;
+    height: 8%;
 }
 
 #file-browser {
     height: 85%;
     overflow-x: auto;
     white-space: nowrap;
+    overflow-y: hidden;
 }
 
 .file-column {
-    height: 90%;
+    height: 94%;
     overflow-y: auto;
     margin-top: 1%;
     margin-bottom: 1%;
-    margin-left: 2px;
-    margin-right: 2px;
-    /* max-width: 50%; */
-    /* min-width: 25%; */
-    min-width: 300px;
-    max-width: 300px;
+    margin-left: 5px;
+    margin-right: 5px;
+    min-width: 290px;
+    max-width: 290px;
 }
 
 .col-item {
@@ -72,9 +73,22 @@ body {
 /* Custom page footer */
 
 .footer {
-    padding-top: 0.5rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
     color: #777;
     border-top: .05rem solid #e5e5e5;
+}
+.search_bar {
+    margin-bottom: 10px;
+    border: 0px;
+}
+
+#file-browser .col-item-wrap{
+    border-right: 0px;
+    border-left: 0px;
+    border-radius: 0px;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
 }
 
 .panel {

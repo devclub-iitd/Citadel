@@ -29,8 +29,8 @@ function search_column()
 // creates the base div block which contains a pane of file browser
 function create_base_div_col()
 {
-    var html = '<div class="file-column"> \
-                    <input onkeyup="search_column.call(this);" type="text" class="form-control" placeholder="Search.." aria-label="search bar"> \
+    var html = '<div class="file-column border rounded"> \
+                    <input onkeyup="search_column.call(this);" type="text" class="form-control search_bar" placeholder="Search.." aria-label="search bar"> \
                     <div class="list-group">\
                     </div> \
                 </div>';
@@ -104,7 +104,7 @@ function create_elem_col(path_prefix,name,is_file)
 
     path_prefix.push([name,"#"+new_id]);
 
-    var html = '<a href="#" class="list-group-item list-group-item-action" id="'+new_id+'"><div class="col-item" title="'+name+'">'+name+'</div></a>';
+    var html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap" id="'+new_id+'"><div class="col-item" title="'+name+'">'+name+'</div></a>';
     var btn = $.parseHTML(html)[0];
 
     var handler = get_event_handler_col(is_file,path_prefix.slice(),MEDIA_PREFIX+new_id);
