@@ -43,13 +43,20 @@ function update_view(path_prefix)
     remove_cols(num_cols);
 
     // removing active status from all the elements in last column
-    $(COLS[COLS.length-1]).children().removeClass("active");
+    $(COLS[COLS.length-1]).children().removeAttr('style');
 
     // creating column corresponding to the clicked folder
     create_column(path_prefix.slice());
 
     // redrawing the path bar
     redraw_path_bar(path_prefix);
+}
+
+// chooses a random colour to highlight a given jquery obj
+function random_highlight(obj)
+{
+    var style = STYLES[Math.floor(Math.random()*STYLES.length)];
+    obj.css(style);
 }
 
 // returns the event handler to be called when an element is clicked in file column
@@ -64,7 +71,7 @@ function get_event_handler_col(is_file,path_prefix,url)
         return function()
         {
             update_view(path_prefix.slice());
-            $(this).addClass("active");
+            random_highlight($(this));
         };
     }
 }
@@ -120,13 +127,10 @@ function get_prefix_dict(path_prefix)
 function insert_prefix_dict(path_prefix,new_val)
 {
     var db = DB;
-
     for(var i=0;i<path_prefix.length-1;i++)
     {
         db = db[path_prefix[i][0]];
     }
-    console.log("DB:",db)
-    console.log("path_prefix: "+path_prefix);
     db[path_prefix[path_prefix.length-1][0]]=new_val
 }
 
@@ -142,7 +146,8 @@ function create_column(path_prefix)
         {
             path += path_prefix[i][0]+"/";
         }
-        $.getJSON( API_URL,{"path":path,depth:DEPTH}, function( data ) {
+        $.getJSON( API_URL,{"path":path,depth:DEPTH}, function( data )
+        {
             insert_prefix_dict(path_prefix,data)
             create_column(path_prefix);
         });
@@ -195,8 +200,10 @@ function create_column(path_prefix)
     }
 }
 
-$(document).ready(function(){
-    $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data ) {
+$(document).ready(function()
+{
+    $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data )
+    {
         DB=data;
         update_view([]);
         redraw_path_bar([["Home","#"]]);
