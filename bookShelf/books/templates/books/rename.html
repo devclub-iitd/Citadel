@@ -1,20 +1,19 @@
-{% extends 'books/index.html' %}
+{% extends 'books/shelf.html' %}
 {% load static %}
-{%block title%}Login{% endblock %}
+{% load extra_tags %}
 
-{% block navbar %}
-<nav class="navbar navbar-inverse" style="position:fixed;top:0px;width:70vw;border-radius:0px;left:30vw;">
-  <div class="container-fluid">
-    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px;display: inline-block;float: left;'>
-        <li style="display: inline-block;"><a href="/books/">Home</a></li>
-        <li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/books/">></a></li>
-        <li class='nav_li' style="display: inline-block;">Login</li>
-    </ol>
-  </div>
-</nav>
+{% block nav %}
+<div class="d-flex flex-row justify-content-center" id="path">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb" id="path-bar">
+            <li class="breadcrumb-item"><a href="/books/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/books/userlogout">Logout</a></li>
+        </ol>
+    </nav>
+</div>
 {% endblock %}
 
-{% block content %}
+{% block body %}
     <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform">
     {% csrf_token %}
     <label>Original file name</label>
