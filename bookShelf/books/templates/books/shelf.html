@@ -37,6 +37,7 @@
             </nav>
         </header>
         <div class="container" id="content">
+            {% block nav %}
             <div class="d-flex flex-row justify-content-center" id="path">
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb" id="path-bar">
@@ -44,8 +45,11 @@
                     </ol>
                 </nav>
             </div>
+            {% endblock %}
+            {% block body %}
             <div class="d-flex flex-row" id="file-browser">
             </div>
+            {% endblock %}
         </div>
         <footer class="footer" id="footer">
             <div class="container">

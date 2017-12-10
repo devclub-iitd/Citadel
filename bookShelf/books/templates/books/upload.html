@@ -1,141 +1,96 @@
+{% extends 'books/shelf.html' %}
 {% load static %}
 {% load extra_tags %}
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/styles.js' %}"></script>
-
-    <link href="https://fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/browse.css' %}">
-    <link href="https://fonts.googleapis.com/css?family=Lato|Open+Sans|Slabo+27px" rel="stylesheet">
-
-    <title>{% block title %}Citadel{% endblock %}</title>
-</head>
-<body>
-
-    <div class="container-fluid" id="body-container">
-        <header class="header">
-            <nav>
-                <ul class="nav nav-pills float-right">
-                    <li class="nav-item">
-                    <a class="nav-link" href="/books/upload/">Upload<span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
-                <h3 class="text-muted">Citadel</h3>
-            </nav>
-        </header>
-
-        <div class="container" id="content">
-            <div class="d-flex flex-row justify-content-center" id="path">
-                <nav aria-label="breadcrumb" role="navigation">
-                    <ol class="breadcrumb" id="path-bar">
-                        <li class="breadcrumb-item"><a href="../">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Upload</a></li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                <p>Note: In case you upload a book, tut or something other than exam paper, leave the sem and year blank and add some details in the type of paper.</p>
-                <!-- <p>Important Instruction: Please take care to upload the file with an appropriate name so that it is easy for others to understand.</p> -->
-                  <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal">
-                    {% csrf_token %}
-                    <div class="form-group row">
-                        <label class="control-label col-sm-2">Course Code</label>
-                        <input class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required>
-                    </div>
-                    
-                    <div class="form-group row">
-                        <label class="control-label col-sm-2">Semester</label>
-                        <!-- <input type="text" name="sem"> -->
-                        <select class="form-control col-sm-6" name = "sem" style="display: inline;width:100px">
-                            <option value=""> </option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group row">
-                        <label class="control-label col-sm-2">Academic Year</label>
-                        <input class="form-control col-sm-6" style="margin:0" type="text" name="year" placeholder="2016-17">
-                    </div>
-                    
-                    <div class="form-group row">
-                        <label class="control-label col-sm-2">Professor</label>
-                        <select class="form-control col-sm-6" name = "professor" style="display: inline;width:250px">
-                            <option value=""> </option>
-                            {% for value,name in profs.items %}
-                                <option value= "{{ value }}">{{ name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <div class="form-group row">
-                        <label class="control-label col-sm-2">Type of paper</label>     
-                        <div class="form-check form-check-inline">    
-                            <label class="form-check-label">
-                                <input type="radio" name="type_exam" value="minor1" class="form-check-input"><span>Minor1</span>
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">   
-                            <label class="form-check-label">
-                                <input type="radio" name="type_exam" value="minor2" class="form-check-input"><span>Minor2</span>
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">   
-                            <label class="form-check-label">
-                                <input type="radio" name="type_exam" value="major" class="form-check-input"><span>Major</span>      
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">   
-                            <label class="form-check-label">
-                                <input type="radio" name="type_exam" value="book" class="form-check-input"><span>Book</span>
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">   
-                            <label class="form-check-label">
-                                <input type="radio" name="type_exam" value="lecnote"  class="form-check-input"><span>Lecture/Notes</span>
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">   
-                            <label class="form-check-label">
-                                <input id="other" type="radio" name="type_exam" value="other"  class="form-check-input"><span>Other:</span>
-                            </label>
-                        </div>
-                        <label class="control-label col-sm-2">
-                            <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name"  class="form-check-input"/>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
-                        </label> 
-                    </div>
-
-                    <!-- <input type="radio" name="type_exam" value="">Other <input type="text" name="type_exam" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ -->
-                    <input type="file" name="document" required class="btn">
-
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                  </form>
-              </div>
-            </div>
+{% block nav %}
+<div class="d-flex flex-row justify-content-center" id="path">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb" id="path-bar">
+            <li class="breadcrumb-item"><a href="../">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Upload</a></li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+{% block body %}
+<div class="panel panel-default">
+    <div class="panel-body">
+    <p>Note: In case you upload a book, tut or something other than exam paper, leave the sem and year blank and add some details in the type of paper.</p>
+    <!-- <p>Important Instruction: Please take care to upload the file with an appropriate name so that it is easy for others to understand.</p> -->
+      <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal">
+        {% csrf_token %}
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Course Code</label>
+            <input class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required>
         </div>
-        <footer class="footer" id="footer">
-            <div class="container">
-                <p class="text-muted text-center">&copy; Dev Club IIT Delhi</p>
+        
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Semester</label>
+            <!-- <input type="text" name="sem"> -->
+            <select class="form-control col-sm-6" name = "sem" style="display: inline;width:100px">
+                <option value=""> </option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+        </div>
+        
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Academic Year</label>
+            <input class="form-control col-sm-6" style="margin:0" type="text" name="year" placeholder="2016-17">
+        </div>
+        
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Professor</label>
+            <select class="form-control col-sm-6" name = "professor" style="display: inline;width:250px">
+                <option value=""> </option>
+                {% for value,name in profs.items %}
+                    <option value= "{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Type of paper</label>     
+            <div class="form-check form-check-inline">    
+                <label class="form-check-label">
+                    <input type="radio" name="type_exam" value="minor1" class="form-check-input"><span>Minor1</span>
+                </label>
             </div>
-        </footer>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input type="radio" name="type_exam" value="minor2" class="form-check-input"><span>Minor2</span>
+                </label>
+            </div>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input type="radio" name="type_exam" value="major" class="form-check-input"><span>Major</span>      
+                </label>
+            </div>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input type="radio" name="type_exam" value="book" class="form-check-input"><span>Book</span>
+                </label>
+            </div>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input type="radio" name="type_exam" value="lecnote"  class="form-check-input"><span>Lecture/Notes</span>
+                </label>
+            </div>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input id="other" type="radio" name="type_exam" value="other"  class="form-check-input"><span>Other:</span>
+                </label>
+            </div>
+            <label class="control-label col-sm-2">
+                <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name"  class="form-check-input"/>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
+            </label> 
+        </div>
 
-    </div>
+        <!-- <input type="radio" name="type_exam" value="">Other <input type="text" name="type_exam" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ -->
+        <input type="file" name="document" required class="btn">
 
-    <script src="{% static 'js/browse.js' %}"></script>
-</body>
-</html>
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+  </div>
+</div>
+{% endblock %}
