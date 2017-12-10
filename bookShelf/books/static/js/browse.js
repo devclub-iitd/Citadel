@@ -15,10 +15,25 @@ function create_elem_path(name,url)
     return $.parseHTML(html)[0];
 }
 
+// filters the column list-group according to the query here
+function search_column()
+{
+    var list_group = this.nextElementSibling;
+    var query = this.value.toUpperCase();
+
+    $(list_group).children().show();
+    function filter_fn(index){ return (this.textContent.toUpperCase().indexOf(query) <= -1);}
+    $(list_group).children().filter(filter_fn).hide();
+}
+
 // creates the base div block which contains a pane of file browser
 function create_base_div_col()
 {
-    var html = '<div class="list-group file-column"></div>';
+    var html = '<div class="file-column"> \
+                    <input onkeyup="search_column.call(this);" type="text" class="form-control" placeholder="Search.." aria-label="search bar"> \
+                    <div class="list-group">\
+                    </div> \
+                </div>';
     return $.parseHTML(html)[0];
 }
 
@@ -42,7 +57,8 @@ function update_view(path_prefix)
     remove_cols(num_cols);
 
     // removing active status from all the elements in last column
-    $(COLS[COLS.length-1]).children().removeAttr('style');
+    $(COLS[COLS.length-1]).children().children().removeAttr('style');
+    $(COLS[COLS.length-1]).children().val(null);
 
     // creating column corresponding to the clicked folder
     create_column(path_prefix.slice());
@@ -155,6 +171,8 @@ function create_column(path_prefix)
     else
     {
         var base_div = create_base_div_col();
+        var search_bar = base_div.children[0];
+        var list_group = base_div.children[1];
         var folders = []
         var files = []
 
@@ -181,11 +199,11 @@ function create_column(path_prefix)
 
         for(var i=0;i<folders.length;i++)
         {
-            base_div.append(folders[i][1]);
+            list_group.append(folders[i][1]);
         }
         for(var i=0;i<files.length;i++)
         {
-            base_div.append(files[i][1]);
+            list_group.append(files[i][1]);
         }
 
         $(base_div).hide();
