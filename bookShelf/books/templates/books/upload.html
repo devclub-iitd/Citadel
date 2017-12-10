@@ -2,26 +2,26 @@
 {% load static %}
 {% load extra_tags %}
 
-{% block nav %}
-<div class="d-flex flex-row justify-content-center" id="path">
-    <nav aria-label="breadcrumb" role="navigation">
-        <ol class="breadcrumb" id="path-bar">
-            <li class="breadcrumb-item"><a href="../">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Upload</a></li>
-        </ol>
-    </nav>
-</div>
-{% endblock %}
+            {% block nav %}
+            <div class="d-flex flex-row justify-content-center" id="path">
+                <nav aria-label="breadcrumb" role="navigation">
+                    <ol class="breadcrumb" id="path-bar">
+                        <li class="breadcrumb-item"><a href="../">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Upload</a></li>
+                    </ol>
+                </nav>
+            </div>
+            {% endblock %}
 {% block body %}
 <div class="panel panel-default">
     <div class="panel-body">
-    <p>Note: In case you upload a book, tut or something other than exam paper, leave the sem and year blank and add some details in the type of paper.</p>
+    <!-- <p>Note: In case you upload a book, tut or something other than exam paper, leave the sem and year blank and add some details in the type of paper.</p> -->
     <!-- <p>Important Instruction: Please take care to upload the file with an appropriate name so that it is easy for others to understand.</p> -->
-      <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal">
+      <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal" id="upload-form">
         {% csrf_token %}
         <div class="form-group row">
             <label class="control-label col-sm-2">Course Code</label>
-            <input class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required>
+            <input class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
         </div>
         
         <div class="form-group row">
@@ -36,12 +36,12 @@
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Academic Year</label>
-            <input class="form-control col-sm-6" style="margin:0" type="text" name="year" placeholder="2016-17">
+            <input class="form-control col-sm-6" style="margin:0" type="text" name="year" placeholder="2016-17" pattern="201[0-9]{1}[-][0-9]{2}">
         </div>
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Professor</label>
-            <select class="form-control col-sm-6" name = "professor" style="display: inline;width:250px">
+            <select class="form-control col-sm-6" name = "professor" style="display: inline;width:250px" required>
                 <option value=""> </option>
                 {% for value,name in profs.items %}
                     <option value= "{{ value }}">{{ name }}</option>
@@ -82,15 +82,18 @@
                 </label>
             </div>
             <label class="control-label col-sm-2">
-                <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name"  class="form-check-input"/>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
+                <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name"  class="form-check-input" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
             </label> 
         </div>
 
         <!-- <input type="radio" name="type_exam" value="">Other <input type="text" name="type_exam" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ -->
         <input type="file" name="document" required class="btn">
+        <!-- <a href="#" id="check-btn">ok</a> -->
 
-        <button type="submit" class="btn btn-primary">Upload</button>
+        <button type="submit" id="upload-btn" class="btn btn-primary">Upload</button>
       </form>
   </div>
 </div>
+
+    <script src="{% static 'js/formValidator.js' %}"></script>
 {% endblock %}
