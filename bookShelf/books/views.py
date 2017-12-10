@@ -259,7 +259,7 @@ def userlogout(request):
 def APIstructure(request):
 	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
 	path = request.GET.get('path',"/")
-	depth = int(request.GET.get('depth',5))
+	depth = int(request.GET.get('depth',3))
 	try:
 		db = jsc.navigate_path(f,path)
 	except Exception as e:
