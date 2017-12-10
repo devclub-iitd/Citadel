@@ -16,14 +16,18 @@
 
 {% block body %}
 
-<p>Please review the document carefully before approving the document.</p>
+<center><p>Please review the documents carefully before approving them.</p></center>
 
-{% for doc in unapproved_documents%}
-	<a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
-    
-    <a style="position: absolute;right: 30%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
-	<a style="position: absolute;right: 20%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>
-    <a style="position: absolute;right: 10%" id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a>
-	<br><br>
-{% endfor %}
+<div class="panel panel-default">
+    <div class="panel-body">
+    <center><h6>{{ error }}</h6></center>
+    {% for doc in unapproved_documents%}
+        <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
+        <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
+        <a style="position: absolute;right: 27%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>
+        <a style="position: absolute;right: 21%" id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a>
+        <br><br>
+    {% endfor %}
+    </div>
+</div>
 {% endblock %}

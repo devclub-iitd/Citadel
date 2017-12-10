@@ -57,7 +57,11 @@ def approve(request):
 		for filename in files:
 			f = os.path.join(path, filename)
 			unapproved_documents.append(str(f)[str(f).rindex("/")+1:])
-	return render(request, 'books/approve.html', {'unapproved_documents':unapproved_documents})
+	if(len(unapproved_documents)==0):
+		error = "No Unapproved documents present, please ask people to upload material and contribute to the Citadel"
+	else:
+		error=''
+	return render(request, 'books/approve.html', {'unapproved_documents':unapproved_documents,'error': error})
 
 @login_required
 def remove_unapproved_document(request):
