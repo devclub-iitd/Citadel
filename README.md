@@ -1,4 +1,4 @@
-# Bookshelf
+# Citadel
 
 ## Getting Started: 
 1. Install requirements.txt file and run server at your local device using pip install -r requirements.txt
