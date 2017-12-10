@@ -152,7 +152,7 @@ def userlogout(request):
 #api
 @api_view()
 def APIstructure(request):
-	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
+	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 	path = request.GET.get('path',"/")
 	depth = int(request.GET.get('depth',3))
 	try:
