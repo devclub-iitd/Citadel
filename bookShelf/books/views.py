@@ -27,31 +27,7 @@ DATABASE_DICT_FILE_NAME = "database.json"
 
 
 def index(request):
-	list = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-	return render(request,'books/index.html', {"list":list})
-
-def browse(request,path):
-	main_path = request.path.strip("/")
-	path = path.strip("/")
-	prefix = "/"+main_path[:(-len(path))]
-	print("main_path- \""+main_path+"\"")
-	print("prefix- \""+prefix+"\"")
-	print("path - \""+path+"\"")
-
-	nav_path = jsc.build_nav_path(prefix,path)
-
-	root_db = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-	try:
-		db = jsc.navigate_path(root_db,path)
-	except jsc.InvalidPath as e:
-		raise Http404("No such file or directory")
-	except jsc.FilePath as e:
-		file_url = os.path.join(DATABASE_URL,path)
-		return redirect(file_url)
-	except Exception as e:
-		raise Http404("No such file or directory")
-	else:
-		return render(request,'books/shelf.html',{"path": nav_path,"db": db,"list":list})
+	return render(request,'books/shelf.html')
 
 ## Controller to Handle Upload of Documents
 def upload(request):
@@ -171,3 +147,40 @@ def userlogin(request):
 def userlogout(request):
 	logout(request)
 	return redirect("/books/")
+
+
+#api
+@api_view()
+def APIstructure(request):
+	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
+	path = request.GET.get('path',"/")
+	depth = int(request.GET.get('depth',3))
+	try:
+		db = jsc.navigate_path(f,path)
+	except Exception as e:
+		print("invalid path")
+		return Response({})
+	else:
+		truncated_db = jsc.truncate_db(db,depth)
+		return Response(truncated_db)
+@csrf_exempt
+def APIupload(request):
+	if request.method == 'POST':
+		course_code = request.POST.get('course_code',"None").upper()
+		sem 		= request.POST.get('sem',"None").upper()
+		year		= request.POST.get('year',"None").upper()
+		type_exam 	= request.POST.get('type_exam',"None").upper()
+		other_text  = request.POST.get('other_text',"None").upper()
+		prof 		= request.POST.get('professor',"None").upper()
+		document 	= request.FILES['document']
+
+
+		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
+		for chunk in document.chunks():
+			destination.write(chunk)
+		destination.close()
+		return render(request,'books/thanksl.html')
+
+
+	else:
+		return HttpResponse('Only POST here')

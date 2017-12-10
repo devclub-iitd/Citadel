@@ -8,9 +8,6 @@ urlpatterns = [
     
     url(r'^$', views.index, name='index'),
     
-    url(r'^view/(?P<path>.*)/$',views.browse,name='browse'),
-    url(r'^view/(?P<path>)$',views.browse,name='browse'), ## so that /view/ works without any path
-
     url(r'^upload/$',views.upload,name='upload'),
 
 	url(r'^approve/$', views.approve ,name='approve'),
@@ -34,8 +31,8 @@ urlpatterns = [
 	# url(r'^dark/thanks/$', views.thanks ,name='thanks'),
 
 
-    # url(r'^api/structure$', views.APIstructure ,name='structure'),
-    # url(r'^api/upload$', views.APIupload ,name='upload'),
+    url(r'^api/structure$', views.APIstructure ,name='structure'),
+    url(r'^api/upload$', views.APIupload ,name='upload'),
 
 
  #    url(r'^api/departments/$', views.DepartmentList.as_view() ),
