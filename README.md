@@ -50,7 +50,7 @@ Tracking: Tracking and Page hits are currently implemented in two ways:
 # TODO List
 1. Remove all the unnecessary light/dark thing
 2. Format upload and login page nicely
-3. Implement infinite horizontal scrolling to avoid page reload on navigation
+~~3. Implement infinite horizontal scrolling to avoid page reload on navigation~~
 4. More papers to be added soon.
 5. Add a nice search bar
 # Bugs List
