@@ -7,6 +7,7 @@ var PATH_ELEM = $("#path-bar")[0];
 var COLS_ELEM = $("#file-browser")[0];
 var MEDIA_PREFIX = "/media/database/";
 var API_URL = "/books/api/structure";
+var DEPTH = 3;
 
 // creates single pathbar navigation element
 function create_elem_path(name,url)
@@ -45,19 +46,10 @@ function update_view(path_prefix)
     $(COLS[COLS.length-1]).children().removeClass("active");
 
     // creating column corresponding to the clicked folder
-    var new_column = create_column(path_prefix.slice());
-
-    // adding column to the html of the page
-    COLS_ELEM.append(new_column);
-
-    // saving the column object in COLS array
-    COLS.push(new_column);
+    create_column(path_prefix.slice());
 
     // redrawing the path bar
     redraw_path_bar(path_prefix);
-
-    // scroll this new column into view
-    new_column.scrollIntoView();
 }
 
 // returns the event handler to be called when an element is clicked in file column
@@ -124,53 +116,87 @@ function get_prefix_dict(path_prefix)
     return db;
 }
 
+// inserts the new_value at the path given by path_prefix
+function insert_prefix_dict(path_prefix,new_val)
+{
+    var db = DB;
+
+    for(var i=0;i<path_prefix.length-1;i++)
+    {
+        db = db[path_prefix[i][0]];
+    }
+    console.log("DB:",db)
+    console.log("path_prefix: "+path_prefix);
+    db[path_prefix[path_prefix.length-1][0]]=new_val
+}
+
 // creates column containing the files according to the path_prefix passed
 function create_column(path_prefix)
 {
-    var base_div = create_base_div_col();
-    var folders = []
-    var files = []
-
-    var dic = get_prefix_dict(path_prefix)
-
-    for (var key in dic)
+    var dic = get_prefix_dict(path_prefix.slice())
+    if (dic===null)
     {
-        if(dic.hasOwnProperty(key))
+        // fetch more data
+        path = "/"
+        for(var i=0;i<path_prefix.length;i++)
         {
-            if (dic[key] === undefined)
+            path += path_prefix[i][0]+"/";
+        }
+        $.getJSON( API_URL,{"path":path,depth:DEPTH}, function( data ) {
+            insert_prefix_dict(path_prefix,data)
+            create_column(path_prefix);
+        });
+
+    }
+    else
+    {
+        var base_div = create_base_div_col();
+        var folders = []
+        var files = []
+
+
+        for (var key in dic)
+        {
+            if(dic.hasOwnProperty(key))
             {
-                // fetch more data
-            }
-            if(typeof(dic[key])==='string')
-            {
-                // if file then put in files
-                files.push([key,create_elem_col(path_prefix.slice(),key,true)]);
-            }
-            else
-            {
-                // put in folder
-                folders.push([key,create_elem_col(path_prefix.slice(),key,false)]);
+                if(typeof(dic[key])==='string')
+                {
+                    // if file then put in files
+                    files.push([key,create_elem_col(path_prefix.slice(),key,true)]);
+                }
+                else
+                {
+                    // put in folder
+                    folders.push([key,create_elem_col(path_prefix.slice(),key,false)]);
+                }
             }
         }
-    }
 
-    folders.sort(function(a,b){return (a[0] > b[0]) ? 1 : ((b[0] > a[0]) ? -1 : 0);});
-    files.sort(function(a,b){return (a[0] > b[0]) ? 1 : ((b[0] > a[0]) ? -1 : 0);});
+        folders.sort(function(a,b){return (a[0] > b[0]) ? 1 : ((b[0] > a[0]) ? -1 : 0);});
+        files.sort(function(a,b){return (a[0] > b[0]) ? 1 : ((b[0] > a[0]) ? -1 : 0);});
 
-    for(var i=0;i<folders.length;i++)
-    {
-        base_div.append(folders[i][1]);
-    }
-    for(var i=0;i<files.length;i++)
-    {
-        base_div.append(files[i][1]);
-    }
+        for(var i=0;i<folders.length;i++)
+        {
+            base_div.append(folders[i][1]);
+        }
+        for(var i=0;i<files.length;i++)
+        {
+            base_div.append(files[i][1]);
+        }
 
-    return base_div;
+        // adding column to the html of the page
+        COLS_ELEM.append(base_div);
+    
+        // saving the column object in COLS array
+        COLS.push(base_div);
+
+        // scroll this new column into view
+        base_div.scrollIntoView();
+    }
 }
 
 $(document).ready(function(){
-    $.getJSON( API_URL, function( data ) {
+    $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data ) {
         DB=data;
         update_view([]);
         redraw_path_bar([["Home","#"]]);

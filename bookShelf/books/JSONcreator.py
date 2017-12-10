@@ -30,6 +30,26 @@ def navigate_path(db,path):
         raise FilePath
     return db
 
+def truncate_db(db,depth):
+    """
+        Truncated database according to the given depth.
+        Dictionary is truncated as None, while string is not truncated.
+        E.g.
+            db: {"CO":{"COL100":"foo"},"HU":"bar"}
+            depth: 1
+            result: {"CO":None,"HU":"bar"}
+    """
+    depth = int(depth)
+    if (db=={}) or (type(db) is str):
+        return db
+    if depth==0:
+        return None
+    new_db = {}
+    for key in db.keys():
+        new_db[key] = truncate_db(db[key],depth-1)
+    return new_db
+
+
 def build_nav_path(prefix,path):
     """
         Builds a list of tuple for access links.abs

@@ -258,7 +258,16 @@ def userlogout(request):
 @api_view()
 def APIstructure(request):
 	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
-	return Response(f)
+	path = request.GET.get('path',"/")
+	depth = int(request.GET.get('depth',5))
+	try:
+		db = jsc.navigate_path(f,path)
+	except Exception as e:
+		print("invalid path")
+		return Response({})
+	else:
+		truncated_db = jsc.truncate_db(db,depth)
+		return Response(truncated_db)
 @csrf_exempt
 def APIupload(request):
 	if request.method == 'POST':
