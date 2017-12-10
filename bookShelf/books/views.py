@@ -130,9 +130,11 @@ def approve_unapproved_document(request):
 def rename(request):
 	if request.method=="GET":
 		return render(request,"books/rename.html",{"org":request.GET.get('name','none')})
-	else:
+	elif request.method=="POST":
 		copyfile(UNAPPROVED_DIR+request.POST.get('org'),UNAPPROVED_DIR+request.POST.get('final'))
 		return redirect('/books/remove_unapproved_document?name='+request.POST.get('org'))
+	else:
+		return HttpResponse('<h1> Invalid use of Rename API</h1>')
 
 def userlogin(request):
 	if request.method=='POST':
@@ -152,7 +154,7 @@ def userlogout(request):
 #api
 @api_view()
 def APIstructure(request):
-	f = json.loads(open(DATABASE_DICT_FILE_NAME).read())
+	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 	path = request.GET.get('path',"/")
 	print (path)
 	depth = int(request.GET.get('depth',3))
@@ -174,14 +176,10 @@ def APIupload(request):
 		other_text  = request.POST.get('other_text',"None").upper()
 		prof 		= request.POST.get('professor',"None").upper()
 		document 	= request.FILES['document']
-
-
 		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
 		for chunk in document.chunks():
 			destination.write(chunk)
 		destination.close()
 		return render(request,'books/thanksl.html')
-
-
 	else:
 		return HttpResponse('Only POST here')

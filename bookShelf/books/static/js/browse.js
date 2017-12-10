@@ -205,10 +205,13 @@ function create_column(path_prefix)
 
 $(document).ready(function()
 {
-    $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data )
+    if(COLS_ELEM) // checking if the current page has filebrowser div
     {
-        DB=data;
-        update_view([]);
-        redraw_path_bar([["Home","#"]]);
-    });
+        $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data )
+        {
+            DB=data;
+            update_view([]);
+            redraw_path_bar([["Home","#"]]);
+        });
+    }
 });

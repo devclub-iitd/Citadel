@@ -44,7 +44,7 @@
             <select class="form-control col-sm-6" name = "professor" style="display: inline;width:250px" required>
                 <option value=""> </option>
                 {% for value,name in profs.items %}
-                    <option value= "{{ value }}">{{ name }}</option>
+                    <option value= "{{ value }}">{{value}} - {{ name }}</option>
                 {% endfor %}
             </select>
         </div>

@@ -1,31 +1,29 @@
-{% extends 'books/index.html' %}
+{% extends 'books/shelf.html' %}
 {% load static %}
+{% load extra_tags %}
 {%block title%}Approve{% endblock %}
-{% block navbar %}
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px; display: inline-block;float: left;'>
-        <li style="display: inline-block;"><a href="/books/">Home</a></li>
-        <li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/books/">></a></li>
-        <li class='nav_li' style="display: inline-block;">Approve</li>
-    </ol>
-  </div>
-</nav>
+{% block nav %}
+<div class="d-flex flex-row justify-content-center" id="path">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb" id="path-bar">
+            <li class="breadcrumb-item"><a href="/books/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/books/userlogout">Logout</a></li>
+        </ol>
+    </nav>
+</div>
+
 {% endblock %}
 
-{% block content %}
-<h2 id='h2_1'>Approve</h2>
-<h1>{{doc}}</h1>
+{% block body %}
+
+<p>Please review the document carefully before approving the document.</p>
+
 {% for doc in unapproved_documents%}
-	<a id="unapproved_document" href="/../media/unapproved/{{ doc }}">{{ doc }}</a>
+	<a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
     
     <a style="position: absolute;right: 30%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
 	<a style="position: absolute;right: 20%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>
     <a style="position: absolute;right: 10%" id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a>
 	<br><br>
 {% endfor %}
-{% endblock %}
-
-{% block js %}
-	<script src="{% static 'js/thanks.js' %}"></script>
 {% endblock %}
