@@ -40,12 +40,16 @@ body {
     margin-bottom: 1%;
     margin-left: 2px;
     margin-right: 2px;
-    max-width: 50%;
-    min-width: 25%;
+    /* max-width: 50%; */
+    /* min-width: 25%; */
+    min-width: 300px;
+    max-width: 300px;
 }
 
 .col-item {
     width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Custom page header */
