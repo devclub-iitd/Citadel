@@ -51,9 +51,6 @@ body {
     overflow-x: hidden;
     text-overflow: ellipsis;
 }
-.col-item:hover{
-    overflow-x: visible;
-}
 
 /* Custom page header */
 

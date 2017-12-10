@@ -104,7 +104,7 @@ function create_elem_col(path_prefix,name,is_file)
 
     path_prefix.push([name,"#"+new_id]);
 
-    var html = '<a href="#" class="list-group-item list-group-item-action" id="'+new_id+'"><div class="col-item">'+name+'</div></a>';
+    var html = '<a href="#" class="list-group-item list-group-item-action" id="'+new_id+'"><div class="col-item" title="'+name+'">'+name+'</div></a>';
     var btn = $.parseHTML(html)[0];
 
     var handler = get_event_handler_col(is_file,path_prefix.slice(),MEDIA_PREFIX+new_id);
