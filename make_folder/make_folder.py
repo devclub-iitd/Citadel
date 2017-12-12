@@ -24,14 +24,14 @@ for course in courses:
         os.makedirs('DATA/'+dept)
     if not os.path.exists('DATA/'+dept+'/'+course):
         os.makedirs('DATA/'+dept+'/'+course)
-    if not os.path.exists('DATA/'+dept+'/'+course+'/Question_Papers'):
-        os.makedirs('DATA/'+dept+'/'+course+'/Question_Papers')
-    if not os.path.exists('DATA/'+dept+'/'+course+'/Question_Papers/Minor1'):
-        os.makedirs('DATA/'+dept+'/'+course+'/Question_Papers/Minor1')
-    if not os.path.exists('DATA/'+dept+'/'+course+'/Question_Papers/Minro2'):
-        os.makedirs('DATA/'+dept+'/'+course+'/Question_Papers/Minor2')
-    if not os.path.exists('DATA/'+dept+'/'+course+'/Question_Papers/Major'):
-        os.makedirs('DATA/'+dept+'/'+course+'/Question_Papers/Major')
+    if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers'):
+        os.makedirs('DATA/'+dept+'/'+course+'/Question-Papers')
+    if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers/Minor1'):
+        os.makedirs('DATA/'+dept+'/'+course+'/Question-Papers/Minor1')
+    if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers/Minro2'):
+        os.makedirs('DATA/'+dept+'/'+course+'/Question-Papers/Minor2')
+    if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers/Major'):
+        os.makedirs('DATA/'+dept+'/'+course+'/Question-Papers/Major')
     if not os.path.exists('DATA/'+dept+'/'+course+'/Books'):
         os.makedirs('DATA/'+dept+'/'+course+'/Books')
     if not os.path.exists('DATA/'+dept+'/'+course+'/Others'):

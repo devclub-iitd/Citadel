@@ -26,6 +26,7 @@ DATABASE_DIR = "../media/database"
 DATABASE_URL = "/media/database"
 UNAPPROVED_DIR = "../media/unapproved/"
 DATABASE_DICT_FILE_NAME = "database.json"
+SEPARATOR = "||"
 
 def index(request):
 	return render(request,'books/shelf.html')
@@ -38,16 +39,16 @@ def getFileName(course_code,sem,year,type_file,prof,filename,other):
 	else:
 		origFileName = '.'.join(filename.split('.')[:-1])
 	fileExtension = "." + filename.split('.')[-1]
-	dirPath = course_code[0:2] + "_" + course_code + "_"
+	dirPath = course_code[0:2] + SEPARATOR + course_code + SEPARATOR
 
 	if(type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
-		dirPath = dirPath + "Question-Papers" + "_" + type_file + "_" 
+		dirPath = dirPath + "Question-Papers" + SEPARATOR + type_file + SEPARATOR 
 		toWriteFileName = dirPath + fileNamePrefix + "-" + type_file + fileExtension
 	elif(type_file == 'Books' or type_file == 'Others'):
-		dirPath = dirPath + type_file + "_"
+		dirPath = dirPath + type_file + SEPARATOR
 		toWriteFileName = dirPath + origFileName + fileExtension
 	else:
-		dirPath = dirPath + "Professors" + "_" + prof + "_" + type_file + "_"
+		dirPath = dirPath + "Professors" + SEPARATOR + prof + SEPARATOR + type_file + SEPARATOR
 		toWriteFileName = dirPath + fileNamePrefix + "-" + origFileName + fileExtension
 	return toWriteFileName
 
@@ -100,7 +101,7 @@ def remove_unapproved_document(request):
 @login_required
 def approve_unapproved_document(request):
 	fileName = request.GET.get('name','none')
-	seperatedlist = fileName.split("_")
+	seperatedlist = fileName.split(SEPARATOR)
 	try:
 		destination = DATABASE_DIR
 		for directory in seperatedlist:
