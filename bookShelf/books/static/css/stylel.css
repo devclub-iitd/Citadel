@@ -11,19 +11,15 @@ body{
 	
 }
 
-.sidebar{
-	width: 25vw;
-    height: 100vh;
+.sidebar-new{
+    height: 100%;
     /* width: 300px; Removed*/
     /* float:left  Removed*/
     left:0; /* Added */
     top:0; /* Added */
     position: fixed; /*Changed from absolute*/
 	padding: 1%;
-	/*background-color: #1a9ccd;*/
-	background-image: url("../img/blue_2.jpg");
-	background-repeat: repeat-y;
-  background-size: cover;
+  background-color: blue;
 
 }
 .content{
@@ -156,7 +152,7 @@ body {
   font-color: #000;
 }
 
-.promo:hover{
+/*.promo:hover{
   transform: scale(1.02);
   box-shadow: 0 0 4px 1px rgba(20, 20, 20, 0.8);
 }
@@ -179,7 +175,7 @@ body {
   font-size: 23px;
   padding: 17px 0 17px 0;
 }*/
-
+/*
 .features {
   display: block;
   margin: 10px 0 10px 0;
@@ -205,19 +201,19 @@ button {
   width: 6vw;
   margin: 1vh 7vw 1vh 7vw;
 }
-
+*/
 /*
 .scale{
   transform: scale(1.05);
   box-shadow: 0 0 4px 1px rgba(20, 20, 20, 0.8);
 }*/
-
+/*
 .scale button {
   background: #64AAA4;
 }
 .scale .price {
   color: #64AAA4;
-}
+}*/
 
 /****************scrollbar*/
 ::-webkit-scrollbar {

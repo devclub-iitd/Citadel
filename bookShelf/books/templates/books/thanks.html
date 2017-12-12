@@ -1,24 +1,19 @@
-{% extends 'books/index.html' %}
+{% extends 'books/shelf.html' %}
 {% load static %}
-{%block title%}Thanks{% endblock %}
-{% block navbar %}
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <ol class="nav navbar-nav" style='font-size:1.5vw;padding-bottom: 5px;display: inline-block;float: left;'>
-      <li style="display: inline-block;"><a href="/books/dark/">Home</a></li>
-	<li style="pointer-events: none;cursor: default;display: inline-block;" class='nav_li'><a href="/books/dark/">></a></li>
-<li class='nav_li' style="display: inline-block;"><a href="/books/thanks/">Thanks</a></li>
-    </ol>
-    <a style="text-decoration:none; float:right;" href="/books/light/"><h4 style="color:white;font-size:1vw; ">SWITCH THEME</h4></a>
-  </div>
-</nav>
+{% load extra_tags %}
 
-
+{% block nav %}
+<div class="d-flex flex-row justify-content-center" id="path">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb" id="path-bar">
+            <li class="breadcrumb-item"><a href="../">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Upload</a></li>
+        </ol>
+    </nav>
+</div>
 {% endblock %}
-{% block content %}
-<h2 id='h2_1'>Thank you for uploading.</h2>
-<h2 id='h2_2'> Our experts would soon put it on the website after scrutinising it.</h2>
+{% block body %}
+<div class="container rounded">
+    <p>Thanks for uploading. Our experts would soon put it on the Citadel after scrutinising it.</p>
+</div>
 {% endblock %}
-{% block js %}
-	<script src="{% static 'js/thanks.js' %}"></script>
-	{% endblock %}
