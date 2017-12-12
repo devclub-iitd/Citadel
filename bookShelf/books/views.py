@@ -3,11 +3,13 @@ from __future__ import unicode_literals
 import os
 import json
 import operator
+import shutil
+import errno
+
 # Django Imports
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.http import Http404
-from shutil import copyfile
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -25,31 +27,55 @@ DATABASE_URL = "/media/database"
 UNAPPROVED_DIR = "../media/unapproved/"
 DATABASE_DICT_FILE_NAME = "database.json"
 
-
 def index(request):
 	return render(request,'books/shelf.html')
+
+def getFileName(course_code,sem,year,type_file,prof,filename,other):
+	toWriteFileName = ""
+	fileNamePrefix = "[" + sem + year[2:] + "]"
+	if(other != 'None' and any(x.isalpha() for x in other) ):
+		origFileName = other
+	else:
+		origFileName = '.'.join(filename.split('.')[:-1])
+	fileExtension = "." + filename.split('.')[-1]
+	dirPath = course_code[0:2] + "_" + course_code + "_"
+
+	if(type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
+		dirPath = dirPath + "Question-Papers" + "_" + type_file + "_" 
+		toWriteFileName = dirPath + fileNamePrefix + "-" + type_file + fileExtension
+	elif(type_file == 'Books' or type_file == 'Others'):
+		dirPath = dirPath + type_file + "_"
+		toWriteFileName = dirPath + origFileName + fileExtension
+	else:
+		dirPath = dirPath + "Professors" + "_" + prof + "_" + type_file + "_"
+		toWriteFileName = dirPath + fileNamePrefix + "-" + origFileName + fileExtension
+	return toWriteFileName
+
 
 ## Controller to Handle Upload of Documents
 def upload(request):
 	if request.method == 'POST':
 		course_code = request.POST.get('course_code',"None").upper()
-		sem 		= request.POST.get('sem',"None").upper()
-		year		= request.POST.get('year',"None").upper()
-		type_exam 	= request.POST.get('type_exam',"None").upper()
-		other_text  = request.POST.get('other_text',"None").upper()
-		prof 		= request.POST.get('professor',"None").upper()
-		document 	= request.FILES['document']
-		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
-		for chunk in document.chunks():
-			destination.write(chunk)
-		destination.close()
+		sem 		= request.POST.get('sem',"None")
+		year		= request.POST.get('year',"None")
+		type_file 	= request.POST.get('type_file',"None")
+		prof 		= request.POST.get('professor',"None")
+		documents 	= request.FILES.getlist('documents')
+		other_text  = request.POST.get('customFilename',"None")
+		if(len(documents)>1):
+			other_text = 'None'
+		for document in documents:
+			filename = getFileName(course_code,sem,year,type_file,prof,document.name,other_text)
+			destination = open(UNAPPROVED_DIR+filename,"wb+")
+			for chunk in document.chunks():
+				destination.write(chunk)
+			destination.close()
 		return render(request,'books/thanks.html')
 	else:
 		profs = json.loads(open("profs.json","r").read(), object_pairs_hook=OrderedDict)
 		return render(request, 'books/upload.html',{"profs":profs})
 
 ## Controller to Handle approval of requests
-
 @login_required
 def approve(request):	
 	unapproved_documents = []
@@ -75,67 +101,27 @@ def remove_unapproved_document(request):
 def approve_unapproved_document(request):
 	fileName = request.GET.get('name','none')
 	seperatedlist = fileName.split("_")
-	dep = seperatedlist[0][0:2]
-
 	try:
-		if seperatedlist[3] == "LECNOTE":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/"+seperatedlist[5].title()+seperatedlist[6]
-			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "BOOK":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/"+seperatedlist[5].title()+seperatedlist[6]
-			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "OTHER":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/"+seperatedlist[5].title()+seperatedlist[6]
-			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "MINOR1":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor1/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
-			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "MINOR2":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Minor2/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
-			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-			return redirect('/books/remove_unapproved_document?name='+fileName)
-		elif seperatedlist[3] == "MAJOR":
-			destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/"+"Major/"+seperatedlist[2]+"_sem"+seperatedlist[1]+seperatedlist[6]
-			copyfile(UNAPPROVED_DIR+fileName,destination)
-			jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-			return redirect('/books/remove_unapproved_document?name='+fileName)
-	except FileNotFoundError:
-		if os.path.isdir(DATABASE_DIR+"/"+dep):
-			if os.path.isdir(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]):
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/")
-				destination = DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/"+seperatedlist[4]+"/"+seperatedlist[5].title()+seperatedlist[6]
-				copyfile(UNAPPROVED_DIR+fileName,destination)
-				jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
-				return redirect('/books/remove_unapproved_document?name='+fileName)
-			else:
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0])
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Professors/")
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Books/")
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Others/")
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/")
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/Minor1/")
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/Minor2/")
-				os.makedirs(DATABASE_DIR+"/"+dep+"/"+seperatedlist[0]+"/Question_Papers/Major/")
-				return approve_unapproved_document(request)
-		else:
-			os.makedirs(DATABASE_DIR+"/"+dep)
-			return approve_unapproved_document(request)
+		destination = DATABASE_DIR
+		for directory in seperatedlist:
+			destination = destination + "/" + directory
+		shutil.copy(UNAPPROVED_DIR+fileName,destination)
+		jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+		return redirect('/books/remove_unapproved_document?name='+fileName)
+	except IOError as e:
+		if e.errno != errno.ENOENT:
+			raise
+		os.makedirs(os.path.dirname(destination))
+		shutil.copy(UNAPPROVED_DIR+fileName, destination)	
+		jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
+		return redirect('/books/remove_unapproved_document?name='+fileName)
 
 @login_required
 def rename(request):
 	if request.method=="GET":
 		return render(request,"books/rename.html",{"org":request.GET.get('name','none')})
 	elif request.method=="POST":
-		copyfile(UNAPPROVED_DIR+request.POST.get('org'),UNAPPROVED_DIR+request.POST.get('final'))
+		shutil.copy(UNAPPROVED_DIR+request.POST.get('org'),UNAPPROVED_DIR+request.POST.get('final'))
 		return redirect('/books/remove_unapproved_document?name='+request.POST.get('org'))
 	else:
 		return HttpResponse('<h1> Invalid use of Rename API</h1>')
@@ -170,20 +156,3 @@ def APIstructure(request):
 	else:
 		truncated_db = jsc.truncate_db(db,depth)
 		return Response(truncated_db)
-@csrf_exempt
-def APIupload(request):
-	if request.method == 'POST':
-		course_code = request.POST.get('course_code',"None").upper()
-		sem 		= request.POST.get('sem',"None").upper()
-		year		= request.POST.get('year',"None").upper()
-		type_exam 	= request.POST.get('type_exam',"None").upper()
-		other_text  = request.POST.get('other_text',"None").upper()
-		prof 		= request.POST.get('professor',"None").upper()
-		document 	= request.FILES['document']
-		destination = open(UNAPPROVED_DIR+course_code+"_"+sem+"_"+year+"_"+type_exam+"_"+prof+"_"+other_text+"_"+document.name[request.FILES['document'].name.rindex('.'):],"wb+")
-		for chunk in document.chunks():
-			destination.write(chunk)
-		destination.close()
-		return render(request,'books/thanksl.html')
-	else:
-		return HttpResponse('Only POST here')

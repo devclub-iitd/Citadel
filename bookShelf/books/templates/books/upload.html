@@ -13,10 +13,10 @@
             </div>
             {% endblock %}
 {% block body %}
+<p>Important Instruction: Please take care to upload the files with an appropriate name so that it is easy for others to understand.</p>
+<p>NOTE: You can upload multiple files of the same type, like multiple lectures, notes, assignments, tutorials or books for the same course.</p>
 <div class="panel panel-default">
     <div class="panel-body">
-    <!-- <p>Note: In case you upload a book, tut or something other than exam paper, leave the sem and year blank and add some details in the type of paper.</p> -->
-    <!-- <p>Important Instruction: Please take care to upload the file with an appropriate name so that it is easy for others to understand.</p> -->
       <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal" id="upload-form">
         {% csrf_token %}
         <div class="form-group row">
@@ -26,22 +26,21 @@
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Semester</label>
-            <!-- <input type="text" name="sem"> -->
-            <select class="form-control col-sm-6" name = "sem" style="display: inline;width:100px">
+            <select class="form-control col-sm-6" name = "sem" style="display: inline">
                 <option value=""> </option>
-                <option value="1">1</option>
-                <option value="2">2</option>
+                <option value="Fall">Fall (Sem 1)</option>
+                <option value="Spring">Spring (Sem 2)</option>
             </select>
         </div>
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Academic Year</label>
-            <input class="form-control col-sm-6" style="margin:0" type="text" name="year" placeholder="2016-17" pattern="201[0-9]{1}[-][0-9]{2}">
+            <select class="form-control col-sm-6" name="year" id="year"></select>
         </div>
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Professor</label>
-            <select class="form-control col-sm-6" name = "professor" style="display: inline;width:250px" required>
+            <select class="form-control col-sm-6" name = "professor" style="display: inline" required>
                 <option value=""> </option>
                 {% for value,name in profs.items %}
                     <option value= "{{ value }}">{{value}} - {{ name }}</option>
@@ -53,44 +52,66 @@
             <label class="control-label col-sm-2">Type of paper</label>     
             <div class="form-check form-check-inline">    
                 <label class="form-check-label">
-                    <input type="radio" name="type_exam" value="minor1" class="form-check-input"><span>Minor1</span>
+                    <input type="radio" name="type_file" value="Minor1" class="form-check-input"><span>Minor1</span>
                 </label>
             </div>
             <div class="form-check form-check-inline">   
                 <label class="form-check-label">
-                    <input type="radio" name="type_exam" value="minor2" class="form-check-input"><span>Minor2</span>
+                    <input type="radio" name="type_file" value="Minor2" class="form-check-input"><span>Minor2</span>
                 </label>
             </div>
             <div class="form-check form-check-inline">   
                 <label class="form-check-label">
-                    <input type="radio" name="type_exam" value="major" class="form-check-input"><span>Major</span>      
+                    <input type="radio" name="type_file" value="Major" class="form-check-input"><span>Major</span>      
                 </label>
             </div>
             <div class="form-check form-check-inline">   
                 <label class="form-check-label">
-                    <input type="radio" name="type_exam" value="book" class="form-check-input"><span>Book</span>
+                    <input type="radio" name="type_file" value="Books" class="form-check-input"><span>Book</span>
                 </label>
             </div>
             <div class="form-check form-check-inline">   
                 <label class="form-check-label">
-                    <input type="radio" name="type_exam" value="lecnote"  class="form-check-input"><span>Lecture/Notes</span>
+                    <input type="radio" name="type_file" value="Lectures"  class="form-check-input"><span>Lectures/Slides</span>
                 </label>
             </div>
             <div class="form-check form-check-inline">   
                 <label class="form-check-label">
-                    <input id="other" type="radio" name="type_exam" value="other"  class="form-check-input"><span>Other:</span>
+                    <input type="radio" name="type_file" value="Notes"  class="form-check-input"><span>Notes</span>
                 </label>
             </div>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input type="radio" name="type_file" value="Assignments"  class="form-check-input"><span>Assignments</span>
+                </label>
+            </div>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input type="radio" name="type_file" value="Tutorials"  class="form-check-input"><span>Tutorials</span>
+                </label>
+            </div>
+            <div class="form-check form-check-inline">   
+                <label class="form-check-label">
+                    <input id="other" type="radio" name="type_file" value="Others"  class="form-check-input"><span>Others</span>
+                </label>
+            </div> 
+        </div>
+        
+        <div class="form-group row">
+            <label class="control-label col-sm-2">Optional (FileName):</label>                    
             <label class="control-label col-sm-2">
-                <input style="width:400px" id="other_text" type="text" name="other_text" placeholder="If not an exam paper, enter file name"  class="form-check-input" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
-            </label> 
+                <input style="width:400px" id="customFilename" type="text" name="customFilename" placeholder="Change File name (Without extension)"  class="form-check-input" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
+            </label>
+        </div>
+       
+        <div class="form-group row">
+            <input type="file" name="documents" required class="btn" multiple>
         </div>
 
-        <!-- <input type="radio" name="type_exam" value="">Other <input type="text" name="type_exam" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ -->
-        <input type="file" name="document" required class="btn">
-        <!-- <a href="#" id="check-btn">ok</a> -->
-
-        <button type="submit" id="upload-btn" class="btn btn-primary">Upload</button>
+        <div class="form-group row" style="justify-content: space-around; align-items: center">
+            <button type="submit" id="upload-btn" class="btn btn-primary">Upload</button>            
+        </div>
+            
       </form>
   </div>
 </div>

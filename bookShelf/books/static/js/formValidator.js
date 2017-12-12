@@ -1,8 +1,16 @@
-document.getElementById("other_text").addEventListener("input", function() {
-    if (document.getElementById("other_text").validity.typeMismatch) {
-        document.getElementById("other_text").setCustomValidity("Only letters, numbers and spaces are allowed for this field");
+var start = 2005;
+var end = new Date().getFullYear();
+var options = "";
+for(var year = end ; year >= start; year--){
+  options += "<option value=\""+ year +"\" >"+ year +"</option>";
+}
+document.getElementById("year").innerHTML = options;
+
+document.getElementById("customFilename").addEventListener("input", function() {
+    if (document.getElementById("customFilename").validity.typeMismatch) {
+        document.getElementById("customFilename").setCustomValidity("Only letters, numbers and spaces are allowed for this field");
     } else {
-        document.getElementById("other_text").setCustomValidity("");
+        document.getElementById("customFilename").setCustomValidity("");
     }
 });
 document.getElementById("upload-btn").addEventListener("click", function() {
@@ -20,16 +28,15 @@ document.getElementById("upload-btn").addEventListener("click", function() {
             break;
         }
     }
-    if(sem=="" && year=="" && exam!="other") {
-        // console.log("done");
-        document.getElementById("other").setCustomValidity("Other must be selected if sem and year are left blank.");
+    if(sem=="" && year=="" && exam!= "other") {
+        document.getElementById("other").setCustomValidity("Other must be selected if Semester and Year are left blank.");
     } else {
         document.getElementById("other").setCustomValidity("");
     }
     if (exam=="other" && other_text=="") {
-        // console.log("done2");
-        document.getElementById("other_text").setCustomValidity("Please enter the file name as well");
+        document.getElementById("custtomFilename").setCustomValidity("Please enter the file name as well");
     } else {
-        document.getElementById("other_text").setCustomValidity("");            
+        document.getElementById("custtomFilename").setCustomValidity("");            
     }
 });
+
