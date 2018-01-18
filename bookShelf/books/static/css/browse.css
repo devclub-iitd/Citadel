@@ -7,7 +7,7 @@ body {
 body {
     padding-top: 0.5rem;
     padding-bottom: 0.15rem;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 #body-container {
@@ -92,8 +92,9 @@ body {
 }
 
 .panel {
-    border: 0.5px solid #bbb;
+    border: 3.5px solid #bbb;
     background-color: #f9f9f9;
     border-radius: 5px;
     padding: 20px;
+    overflow: auto;
 }
