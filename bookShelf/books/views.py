@@ -157,3 +157,8 @@ def APIstructure(request):
 	else:
 		truncated_db = jsc.truncate_db(db,depth)
 		return Response(truncated_db)
+
+#testAPI
+@api_view()
+def heartbeat(request):
+    return Response({"message":"Server is up!"});
