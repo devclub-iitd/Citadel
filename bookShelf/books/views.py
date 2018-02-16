@@ -112,7 +112,7 @@ def approve_unapproved_document(request):
 	except IOError as e:
 		if e.errno != errno.ENOENT:
 			raise
-		os.makedirs(os.path.dirname(destination))
+		os.makedirs(os.path.dirname(destination),exist_ok=True)
 		shutil.copy(UNAPPROVED_DIR+fileName, destination)	
 		jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 		return redirect('/books/remove_unapproved_document?name='+fileName)
