@@ -86,7 +86,7 @@ PS: You must be logged in to do that ;)
 
 Tracking and Page hits are currently implemented in two ways:
 
-1. Google Analytics - Currently, Google analytics is operational for **www.cse.iitd.ac.in/devclub/studyportal**
+1. Google Analytics - Currently, Google analytics is operational for **study.devclub.cse.iitd.ac.in/**
 2. Admin Panel - Course Page hits can also be found from the admin panel. Go to the requisite course code and check the pagehits field
 
 ## API
