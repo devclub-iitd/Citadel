@@ -17,6 +17,7 @@
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-81476513-4"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
+
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 
@@ -34,10 +35,24 @@
                     <li class="nav-item">
                     <a class="nav-link" href="/books/">Home</a>
                     </li>
+
                     <li class="nav-item">
                     <a class="nav-link" href="/books/upload/">Upload</a>
                     </li>
-                    <li class="nav-item">
+                    {% if user.is_authenticated %}
+                     <li class="nav-item">
+                    <a class="nav-link" href="/books/approve">Approve</a>
+                    </li>
+                     <li class="nav-item">
+                    <a class="nav-link" href="/books/userlogout">Logout</a>
+                    </li>
+
+                    {% endif %}
+<li class="nav-item">
+                    <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLScPwizIa6I62uZWx5IX3VxKFJKm8x-IH2j17eGkPl_woJMTeA/viewform" target="_blank">Suggestions</a>
+                    </li>
+                </ul>
+<li class="nav-item">
                     <a class="nav-link" href="http://www.cse.iitd.ac.in/devclub/" target="_blank">About Us</a>
                     </li>
                 </ul>
