@@ -1,0 +1,19 @@
+{% extends 'books/shelf.html' %}
+{% load static %}
+{% load extra_tags %}
+
+{% block nav %}
+<div class="d-flex flex-row justify-content-center" id="path">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb" id="path-bar">
+            <li class="breadcrumb-item"><a href="../">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Upload</a></li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+{% block body %}
+<div class="container rounded">
+    <p>Thanks for uploading. Our experts would soon put it on the Citadel after scrutinising it.</p>
+</div>
+{% endblock %}

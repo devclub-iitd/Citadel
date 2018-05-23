@@ -1,0 +1,32 @@
+{% extends 'books/shelf.html' %}
+{% load static %}
+{% load extra_tags %}
+{%block title%}Login{% endblock %}
+
+{% block nav %}
+<div class="d-flex flex-row justify-content-center" id="path">
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb" id="path-bar">
+            <li class="breadcrumb-item"><a href="/books/">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">User Login</a></li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="panel panel-default">
+	<div class="panel-body">
+		<form method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			<label>Username: </label>
+			<input type="text" name="username">
+			<br>
+			<label>Password: </label>
+			<input type="password" name="password">
+			<br>
+			<button>Login</button>
+		</form>
+	</div>
+</div>
+{% endblock %}
