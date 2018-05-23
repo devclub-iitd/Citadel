@@ -133,7 +133,10 @@ def approve_unapproved_document(request):
 		if e.errno != errno.ENOENT:
 			raise
 		os.makedirs(os.path.dirname(destination),exist_ok=True)
-		shutil.copy(UNAPPROVED_DIR+fileName, destination)	
+		shutil.copy(UNAPPROVED_DIR+fileName, destination)
+		zf = zipfile.ZipFile(zip_file, mode='a')
+		zf.write(destination, arcname=to_write)
+		zf.close()		
 		jsc.recreate_path(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 		return redirect('/books/remove_unapproved_document?name='+fileName)
 
