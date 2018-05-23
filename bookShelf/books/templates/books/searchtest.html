@@ -1,0 +1,12 @@
+{% extends 'books/shelf.html' %}
+{% load static %}
+{% load extra_tags %}
+
+{%block body%}
+Just A test !
+<input type="search">
+<button>SEARCH</button>
+<script src="{% static 'js/searchtest.js' %}"></script>
+<div id="output"></div>
+
+{%endblock%}

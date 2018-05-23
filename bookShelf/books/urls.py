@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^userlogout/$', views.userlogout ,name='userlogout'),
     url(r'^api/structure$', views.APIstructure ,name='structure'),
     url(r'^heartbeat$', views.heartbeat ,name='heartbeat'),
+    url(r'^searchtest$', views.searchtest ,name='searchtest'),
 ]

@@ -160,4 +160,8 @@ def APIstructure(request):
 #testAPI
 @api_view()
 def heartbeat(request):
-    return Response({"message":"Server is up!"});
+    return Response({"message":"Server is up!"})
+
+
+def searchtest(request):
+	return render(request, 'books/searchtest.html')
