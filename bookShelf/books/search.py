@@ -3,7 +3,19 @@ def match_string(keyword_list, check_list):
 	for word in keyword_list:
 		if word not in check_list:
 			return False
-	return True
+	if (keyword_list):
+		return True
+	else:
+		return False
+
+
+def get_path_prefix(path):
+	temp_path=list(filter(None, path.split("/")))
+	j=0
+	path_prefix=[]
+	for node in temp_path:
+		path_prefix.append([node])
+	return path_prefix
 
 def search_dic(dic,result,path_prefix,keyword_list):
 	
@@ -25,4 +37,4 @@ def search_dic(dic,result,path_prefix,keyword_list):
 		if not(is_match or is_dict):
 			# metadata search
 			pass
-		
+

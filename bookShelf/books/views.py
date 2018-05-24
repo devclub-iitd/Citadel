@@ -20,7 +20,7 @@ from collections import OrderedDict
 
 #Custom JSON Database Creator
 from books import JSONcreator as jsc
-from books import search
+from books import search as search
 
 
 DATABASE_DIR = "../media/database"
@@ -147,7 +147,6 @@ def userlogout(request):
 def APIstructure(request):
 	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)
 	path = request.GET.get('path',"/")
-	print (path)
 	depth = int(request.GET.get('depth',3))
 	try:
 		db = jsc.navigate_path(f,path)
@@ -157,6 +156,7 @@ def APIstructure(request):
 	else:
 		truncated_db = jsc.truncate_db(db,depth)
 		return Response(truncated_db)
+
 #testAPI
 @api_view()
 def heartbeat(request):
@@ -165,6 +165,28 @@ def heartbeat(request):
 
 def searchtest(request):
 	return render(request, 'books/searchtest.html')
+
+@api_view()
+def APIsearch(request):
+	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)    ####can this be drier? repeated code
+	keyword_list=(request.GET.get('query',"")).split()    
+	print(keyword_list)
+	path=request.GET.get('path',"/")
+	path_prefix=search.get_path_prefix(path)
+	try:
+		db = jsc.navigate_path(f,path)
+	except Exception as e:
+		print("invalid path")
+		return Response({})
+	else:
+		result=[]
+		search.search_dic(db,result,path_prefix,keyword_list)
+		return Response({"result":result})
+
+
+
+
+
 
 
 	

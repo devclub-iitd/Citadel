@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^api/structure$', views.APIstructure ,name='structure'),
     url(r'^heartbeat$', views.heartbeat ,name='heartbeat'),
     url(r'^searchtest$', views.searchtest ,name='searchtest'),
+    url(r'^api/search$', views.APIsearch, name='search')
 ]
