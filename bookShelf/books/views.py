@@ -20,6 +20,7 @@ from collections import OrderedDict
 
 #Custom JSON Database Creator
 from books import JSONcreator as jsc
+from books import search
 
 
 DATABASE_DIR = "../media/database"
@@ -141,7 +142,6 @@ def userlogout(request):
 	logout(request)
 	return redirect("/books/")
 
-
 #api
 @api_view()
 def APIstructure(request):
@@ -165,3 +165,7 @@ def heartbeat(request):
 
 def searchtest(request):
 	return render(request, 'books/searchtest.html')
+
+
+	
+
