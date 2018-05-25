@@ -52,6 +52,11 @@ function update_view(path_prefix)
 {
     // number of columns to retain
     var num_cols = path_prefix.length;
+    if (path_prefix.length>=1){
+        if(path_prefix[0].length==3){
+            num_cols=num_cols-path_prefix[0][2]+1
+        }
+    }
     
     // removing the un-needed columns
     remove_cols(num_cols);
