@@ -111,23 +111,8 @@ function create_elem_col(path_prefix,name,is_file)
     
     btn.onclick = handler;
 
-//to add the download course button
-    if (path_prefix.length == 2 && (path_prefix[0][0] != "Books" && path_prefix[0][0] != "Others")){
-        var url = new_id.substr(0,new_id.length-1)+'.zip';
-        html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap""><div class="col-item" title="jkj">'+"Download Course"+'</div></a>';
-        var bt=$.parseHTML(html)[0];
-
-        handler = function(){
-            var win = window.open(MEDIA_PREFIX+url,'_blank');
-            win.focus();
-        };
-        bt.onclick = handler;
-        btn.append(bt)
-    }
     return btn;
-
 }
-
 
 // redraws the path bar according to the value in PATH array
 function redraw_path_bar(path)

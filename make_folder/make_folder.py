@@ -37,5 +37,4 @@ for course in courses:
     if not os.path.exists('DATA/'+dept+'/'+course+'/Others'):
         os.makedirs('DATA/'+dept+'/'+course+'/Others')
     if not os.path.exists('DATA/'+dept+'/'+course+'/Professors'):
-        os.makedirs('DATA/'+dept+'/'+course+'/Professors')  
-  
+        os.makedirs('DATA/'+dept+'/'+course+'/Professors')

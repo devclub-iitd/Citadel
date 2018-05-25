@@ -1,7 +1,7 @@
 import os
 import json
 import collections
-
+from . import views
 
 class FilePath(Exception):
     """
@@ -109,10 +109,12 @@ def remove_zips(data):
     if isinstance(data, list):
         return [remove_zips(val) for val in data]
     return {k: remove_zips(val) for k, val in data.items()
-            if not k.lower().endswith(('.zip', '.meta'))}
+            if not k.lower().endswith('.zip')}
 
 
 def recreate_path(path, name_of_file):
+    views.zip_courses()
+    views.export_files()
     """Forces the recreation of heirarchy."""
     heirarchy = generate_path(path)
     heirarchy = remove_zips(heirarchy)
