@@ -30,7 +30,7 @@ DATABASE_DICT_FILE_NAME = "database.json"
 SEPARATOR = "||"
 
 def index(request):
-	return render(request,'books/shelf.html')
+	return render(request,'books/browse.html')
 
 def getFileName(course_code,sem,year,type_file,prof,filename,other):
 	toWriteFileName = ""
@@ -161,10 +161,6 @@ def APIstructure(request):
 @api_view()
 def heartbeat(request):
     return Response({"message":"Server is up!"})
-
-
-def searchtest(request):
-	return render(request, 'books/searchtest.html')
 
 @api_view()
 def APIsearch(request):
