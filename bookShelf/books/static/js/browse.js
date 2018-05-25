@@ -131,6 +131,7 @@ function redraw_path_bar(path)
 function get_prefix_dict(path_prefix)
 {
     var db = DB;
+
     for(var i=0;i<path_prefix.length;i++)
     {
         db = db[path_prefix[i][0]];
@@ -152,9 +153,12 @@ function insert_prefix_dict(path_prefix,new_val)
 // creates column containing the files according to the path_prefix passed
 function create_column(path_prefix)
 {
+
     var dic = get_prefix_dict(path_prefix.slice())
     if (dic===null)
     {
+
+
         // fetch more data
         path = "/"
         for(var i=0;i<path_prefix.length;i++)
@@ -170,16 +174,18 @@ function create_column(path_prefix)
     }
     else
     {
+
+
         var base_div = create_base_div_col();
         var search_bar = base_div.children[0];
         var list_group = base_div.children[1];
         var folders = []
         var files = []
 
-
         for (var key in dic)
         {
             if(dic.hasOwnProperty(key))
+
             {
                 if(typeof(dic[key])==='string')
                 {
@@ -227,8 +233,8 @@ $(document).ready(function()
     {
         $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data )
         {
-            DB=data;
-            update_view([]);
+            DB=data;                        
+            update_view([]);                    
             redraw_path_bar([["Home","#"]]);
         });
     }
