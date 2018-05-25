@@ -156,7 +156,7 @@ def approve_unapproved_document(request):
             if tags[k] not in keys:
                 metafile.write(tags[k] + '\n')
         metafile.close()
-        jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+    #    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
         return redirect('/books/remove_unapproved_document?name=' + fileDes)
     except IOError as e:
         if e.errno != errno.ENOENT:
@@ -172,7 +172,7 @@ def approve_unapproved_document(request):
             if tags[k] not in keys:
                 metafile.write(tags[k] + '\n')
         metafile.close()
-        jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+    #    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
         return redirect('/books/remove_unapproved_document?name=' + fileDes)
 
 
@@ -188,6 +188,15 @@ def rename(request):
         return redirect('/books/remove_unapproved_document?name=' + request.POST.get('org'))
     else:
         return HttpResponse('<h1> Invalid use of Rename API</h1>')
+
+
+@login_required
+def finalize_approvals(request):
+    if request.method == "GET":
+        jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+        return redirect('/books/approve')
+    else:
+        return redirect('/books/approve')
 
 
 def userlogin(request):

@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^remove_unapproved_document/$', views.remove_unapproved_document, name='remove_unapproved_document'),
     url(r'^approve_unapproved_document/$', views.approve_unapproved_document, name='approve_unapproved_document'),
     url(r'^download_course/$', views.download_course, name='download_course'),
+    url(r'^finalize_approvals/$', views.finalize_approvals, name='finalize_approvals'),
     url(r'^rename/$', views.rename, name='rename'),
     url(r'^userlogin/$', views.userlogin, name='userlogin'),
     url(r'^userlogout/$', views.userlogout, name='userlogout'),
