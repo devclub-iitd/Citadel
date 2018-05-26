@@ -5,7 +5,6 @@ var COLS = [];
 var PATH_ELEM = $("#path-bar")[0];
 var COLS_ELEM = $("#file-browser")[0];
 var MEDIA_PREFIX = "/media/database/";
-<<<<<<< HEAD
 var API_URL = "/books/api/structure";
 //var DEPTH =3;
 var DEPTH = -1;  //hacky fix, must fix "db==null" in get_prefix_dict, insert_prefix_dict for search terms
@@ -109,6 +108,24 @@ function create_elem_col(path_prefix,name,is_file)
     {
         new_id += path_prefix[i][0]+"/";
     }
+
+    if(is_file){ 
+        var desc = name.split("==")
+        if (desc.length==3){
+            if (desc[2]=='.meta'){
+                console.log("hi")
+                name = desc[0]
+                var raw_loc = desc[1]
+                var dirs = raw_loc.split('-')
+                var file_dir = dirs.join("/")
+                var file_loc = file_dir + '/' + name
+            }
+        }
+    }
+
+
+
+
     new_id += name+"/";
 
     path_prefix.push([name,"#"+new_id]);
@@ -116,7 +133,7 @@ function create_elem_col(path_prefix,name,is_file)
     var html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap" id="'+new_id+'"><div class="col-item" title="'+name+'">'+name+'</div></a>';
     var btn = $.parseHTML(html)[0];
 
-    var handler = get_event_handler_col(is_file,path_prefix.slice(),MEDIA_PREFIX+new_id);
+    var handler = get_event_handler_col(is_file,path_prefix.slice(),file_loc);
     
     btn.onclick = handler;
 //to add the download course button
@@ -206,7 +223,6 @@ function create_column(path_prefix)
             {
                 if(typeof(dic[key])==='string')
                 {
-                    // if file then put in files
                     files.push([key,create_elem_col(path_prefix.slice(),key,true)]);
                 }
                 else

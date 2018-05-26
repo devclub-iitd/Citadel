@@ -1,3 +1,5 @@
+from . import views 
+
 EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others']
 
 
@@ -31,20 +33,24 @@ def get_search_list(db,result,path_prefix,keyword_list):
 	
 	for key in db:
 		is_dict=type(db[key]) is dict
-		check_list=[key]
-
+		name=key
+		check_list=[]
 		if not is_dict:
-			pass #add metadata to check_list
+			(name,location)=views.get_file_loc(name)
+			if location != None :
+				pass #add metadata to check_list
+				###watch for newline errors
 
+		check_list=[name]
 		(matches,perfect_matches)=match_string(keyword_list, check_list)
 		if matches and key not in EXCLUDE_SET:
 			new_path_prefix=path_prefix[:]
-			new_path_prefix.append([key])
+			new_path_prefix.append([name])
 			result.append((new_path_prefix,matches,perfect_matches))
 
 		if is_dict:
 			new_path_prefix=path_prefix[:]
-			new_path_prefix.append([key])
+			new_path_prefix.append([name])
 			get_search_list(db[key],result,new_path_prefix,keyword_list)
 
 
