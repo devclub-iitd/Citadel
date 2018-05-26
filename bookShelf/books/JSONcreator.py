@@ -113,6 +113,7 @@ def remove_zips(data):
 
 
 def recreate_path(path, name_of_file):
+    views.build_meta_files()
     views.zip_courses()
     views.export_files()
     """Forces the recreation of heirarchy."""

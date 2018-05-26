@@ -299,4 +299,24 @@ def get_file_loc(meta_file):
     return file_loc
 
 
+def build_meta_files():
+    for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
+        for filename in files:
+            if not filename.lower().endswith(('.meta', '.zip')):
+                file_loc = os.path.join(root, filename)
+                metafile_loc = file_loc + TAG + FILESV_CODE + TAG + '.meta'
+                if not (os.path.exists(metafile_loc) and os.path.isfile(metafile_loc)):
+                    f = open(metafile_loc, 'w')
+                    inner_path = os.path.relpath(metafile_loc, DATABASE_DIR)
+                    inner_path = os.path.split(inner_path)[0]
+                    inner_path = os.path.split(inner_path)[0]
+                    while os.path.split(inner_path)[0] is not '':
+                        f.write(os.path.split(inner_path)[1] + '\n')
+                        inner_path = os.path.split(inner_path)[0]
+                    f.close()
+
+
+
+
+
 
