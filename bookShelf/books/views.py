@@ -162,6 +162,9 @@ def APIstructure(request):
 def heartbeat(request):
     return Response({"message":"Server is up!"})
 
+
+
+
 @api_view()
 def APIsearch(request):
 	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)    ####can this be drier? repeated code
@@ -175,15 +178,13 @@ def APIsearch(request):
 		print("invalid path")
 		return Response({})
 	else:
-		result=[]
-		search.search_dic(db,result,path_prefix,keyword_list)
+		result=search.search_dic(db,path_prefix,keyword_list)
 		return Response({"result":result})
 
 
 
 
+####no way to reset search, remake
 
 
-
-	
 

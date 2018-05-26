@@ -6,7 +6,8 @@ var PATH_ELEM = $("#path-bar")[0];
 var COLS_ELEM = $("#file-browser")[0];
 var MEDIA_PREFIX = "/media/database/";
 var API_URL = "/books/api/structure";
-var DEPTH = 3;
+//var DEPTH =3;
+var DEPTH = -1;  //hacky fix, must fix "db==null" in get_prefix_dict, insert_prefix_dict for search terms
 
 // creates single pathbar navigation element
 function create_elem_path(name,url)
@@ -139,6 +140,7 @@ function get_prefix_dict(path_prefix)
 
     for(var i=0;i<path_prefix.length;i++)
     {
+        
         db = db[path_prefix[i][0]];
     }
     return db;
