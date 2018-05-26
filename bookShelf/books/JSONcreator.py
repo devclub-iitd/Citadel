@@ -1,6 +1,7 @@
 import os
 import json
 import collections
+from . import views
 
 class FilePath(Exception):
     """
@@ -8,6 +9,7 @@ class FilePath(Exception):
         instead of a director
     """
     pass
+
 class InvalidPath(Exception):
     """
         Raised when the path given is not a valid heirarchical
@@ -16,6 +18,7 @@ class InvalidPath(Exception):
     pass
 
 def navigate_path(db,path):
+
     """
         Returns appropriate dict as pointed to by path.
         In case of invalid path raise appropriate exceptions
@@ -51,6 +54,7 @@ def truncate_db(db,depth):
 
 
 def build_nav_path(prefix,path):
+
     """
         Builds a list of tuple for access links.abs
         E.g.
@@ -85,21 +89,33 @@ def path_to_dict(path,name_of_file):
     """Checks if file with name exists and if it doesnt it recreates all the heirarchy."""
 
     if os.path.isfile(name_of_file):
-        f=open(name_of_file,"r").read()
-        heirarchy=json.loads(f)
-        if(heirarchy=="file"):
-            heirarchy={}
+        f = open(name_of_file, "r").read()
+        heirarchy = json.loads(f)
+        if heirarchy == "file":
+            heirarchy = {}
     else:
-        heirarchy=generate_path(path)
-        f = open(name_of_file,"w+")
+        heirarchy = generate_path(path)
+        f = open(name_of_file, "w+")
         f.write(json.dumps(heirarchy))
     return heirarchy
 
-def recreate_path(path,name_of_file):
 
+def remove_zips(data):
+    if not isinstance(data, (dict, list)):
+        return data
+    if isinstance(data, list):
+        return [remove_zips(val) for val in data]
+    return {k: remove_zips(val) for k, val in data.items()
+            if not k.lower().endswith('.zip')}
+
+
+def recreate_path(path, name_of_file):
+    views.build_meta_files()
+    views.zip_courses()
+    views.export_files()
     """Forces the recreation of heirarchy."""
-
-    heirarchy=generate_path(path)
-    f = open(name_of_file,"w+")
+    heirarchy = generate_path(path)
+    heirarchy = remove_zips(heirarchy)
+    f = open(name_of_file, "w+")
     f.write(json.dumps(heirarchy))
     return heirarchy

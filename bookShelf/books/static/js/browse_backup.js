@@ -5,12 +5,8 @@ var COLS = [];
 var PATH_ELEM = $("#path-bar")[0];
 var COLS_ELEM = $("#file-browser")[0];
 var MEDIA_PREFIX = "/media/database/";
-<<<<<<< HEAD
 var API_URL = "/books/api/structure";
-//var DEPTH =3;
-var DEPTH = -1;  //hacky fix, must fix "db==null" in get_prefix_dict, insert_prefix_dict for search terms
-var ZIP_URL = "/books/download_course/?course="
-
+var DEPTH = 3;
 
 // creates single pathbar navigation element
 function create_elem_path(name,url)
@@ -56,11 +52,6 @@ function update_view(path_prefix)
 {
     // number of columns to retain
     var num_cols = path_prefix.length;
-    if (path_prefix.length>=1){
-        if(path_prefix[0].length==3){
-            num_cols=num_cols-path_prefix[0][2]+1
-        }
-    }
     
     // removing the un-needed columns
     remove_cols(num_cols);
@@ -119,21 +110,8 @@ function create_elem_col(path_prefix,name,is_file)
     var handler = get_event_handler_col(is_file,path_prefix.slice(),MEDIA_PREFIX+new_id);
     
     btn.onclick = handler;
-//to add the download course button
-    if (path_prefix.length == 2){
-        var url = name;
-        html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap""><div class="col-item" title="jkj">'+"Download Course"+'</div></a>';
-        var bt=$.parseHTML(html)[0];
 
-        handler = function(){
-            var win = window.open(ZIP_URL+url,'_blank');
-            win.focus();
-        };
-        bt.onclick = handler;
-        btn.append(bt)
-    }
     return btn;
-
 }
 
 // redraws the path bar according to the value in PATH array
@@ -153,7 +131,6 @@ function redraw_path_bar(path)
 function get_prefix_dict(path_prefix)
 {
     var db = DB;
-
     for(var i=0;i<path_prefix.length;i++)
     {
         db = db[path_prefix[i][0]];
@@ -193,12 +170,12 @@ function create_column(path_prefix)
     }
     else
     {
-
         var base_div = create_base_div_col();
         var search_bar = base_div.children[0];
         var list_group = base_div.children[1];
         var folders = []
         var files = []
+
 
         for (var key in dic)
         {
@@ -250,8 +227,8 @@ $(document).ready(function()
     {
         $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data )
         {
-            DB=data;                        
-            update_view([]);                    
+            DB=data;
+            update_view([]);
             redraw_path_bar([["Home","#"]]);
         });
     }
