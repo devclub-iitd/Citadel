@@ -259,9 +259,12 @@ def zip_courses():
                                 zf.write(path, arcname=to_write)
                     zf.close()
                 else:
-                    zf = zipfile.ZipFile(zip_file, "w")
+                    is_changed = 0
                     for dirname, sudirs, files in os.walk(os.path.join(root, course)):
                         for filename in files:
+                            if is_changed == 0:
+                                zf = zipfile.ZipFile(zip_file, "w")
+                                is_changed = 1
                             if not filename.lower().endswith('.meta'):
                                 path = os.path.join(dirname, filename)
                                 to_write = os.path.relpath(path, course_path)
@@ -273,7 +276,8 @@ def zip_courses():
                                 to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
                                                         os.path.split(file_loc)[1])
                                 zf.write(file_loc, arcname=to_write)
-                    zf.close()
+                    if is_changed == 1:
+                        zf.close()
 
 
 def export_files():

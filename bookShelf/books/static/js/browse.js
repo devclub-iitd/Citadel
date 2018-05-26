@@ -5,6 +5,7 @@ var COLS = [];
 var PATH_ELEM = $("#path-bar")[0];
 var COLS_ELEM = $("#file-browser")[0];
 var MEDIA_PREFIX = "/media/database/";
+var ZIP_URL = "/books/download_course/?course="
 var API_URL = "/books/api/structure";
 var DEPTH = 3;
 
@@ -112,13 +113,13 @@ function create_elem_col(path_prefix,name,is_file)
     btn.onclick = handler;
 
 //to add the download course button
-    if (path_prefix.length == 2 && (path_prefix[0][0] != "Books" && path_prefix[0][0] != "Others")){
-        var url = new_id.substr(0,new_id.length-1)+'.zip';
+    if (path_prefix.length == 2){
+        var url = name;
         html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap""><div class="col-item" title="jkj">'+"Download Course"+'</div></a>';
         var bt=$.parseHTML(html)[0];
 
         handler = function(){
-            var win = window.open(MEDIA_PREFIX+url,'_blank');
+            var win = window.open(ZIP_URL+url,'_blank');
             win.focus();
         };
         bt.onclick = handler;
