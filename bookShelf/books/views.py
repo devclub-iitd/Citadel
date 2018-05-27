@@ -8,7 +8,7 @@ import errno
 
 
 # Django Imports
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect, HttpResponse
 
 import zipfile
 
@@ -139,7 +139,6 @@ def remove_unapproved_document(request):
 		os.remove(UNAPPROVED_DIR + request.GET.get('name', 'none'))
 	except:
 		return HttpResponse('<h1>No such file exists. Maybe it was manually deleted</h1>')
-	jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
 	return redirect('/books/approve')
 
 
