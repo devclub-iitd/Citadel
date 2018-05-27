@@ -37,8 +37,7 @@ def get_meta(meta_path_prefix, check_list):
 	path=DATABASE_DIR+path
 	f = open(path, "r")
 	for line in f:
-		check_list.append(line)
-	print(check_list)
+		check_list.append(line.rstrip())
 	f.close()
 
 

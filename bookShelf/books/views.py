@@ -227,7 +227,6 @@ def userlogout(request):
 def APIstructure(request):
 	f = jsc.path_to_dict(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
 	path = request.GET.get('path', "/")
-	print(path)
 	depth = int(request.GET.get('depth', 3))
 	try:
 		db = jsc.navigate_path(f, path)
@@ -242,7 +241,6 @@ def APIstructure(request):
 def APIsearch(request):
 	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)    ####can this be drier? repeated code
 	keyword_list=(request.GET.get('query',"")).split()    
-	print(keyword_list)
 	path=request.GET.get('path',"/")
 	path_prefix=search.get_path_prefix(path)
 	try:
