@@ -5,11 +5,14 @@ import json
 import operator
 import shutil
 import errno
-import zipfile
 
 # Django Imports
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseNotAllowed
+
+import zipfile
+
+# Django Imports
+from django.shortcuts import render, redirect, HttpResponse
 from django.http import Http404
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
@@ -18,6 +21,7 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from collections import OrderedDict
+from books import search as search
 
 # Custom JSON Database Creator
 from books import JSONcreator as jsc
@@ -30,10 +34,12 @@ UNAPPROVED_DIR = "../media/unapproved/"
 DATABASE_DICT_FILE_NAME = "database.json"
 SEPARATOR = "\\"
 TAG = "=="
+META_SPLIT_COMPONENTS = 3
+META_EXTENSION = ".meta"
 
 
 def index(request):
-    return render(request, 'books/shelf.html')
+    return render(request, 'books/browse.html')
 
 
 def getFileName(course_code, sem, year, type_file, prof, filename, other):
@@ -104,12 +110,14 @@ def download_course(request):
                     zf.write(path, arcname=to_write)
                 else:
                     meta_file = os.path.split(filename)[1]
-                    file_loc = get_file_loc(meta_file)
+                    file_loc = get_file_loc(meta_file)[1]
                     path = os.path.join(dirname, filename)
-                    to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0], os.path.split(file_loc)[1])
+                    to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
+                                            os.path.split(file_loc)[1])
                     zf.write(file_loc, arcname=to_write)
         zf.close()
         return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
+
 
 # Controller to Handle approval of requests
 @login_required
@@ -156,7 +164,7 @@ def approve_unapproved_document(request):
             if tags[k] not in keys:
                 metafile.write(tags[k] + '\n')
         metafile.close()
-    #    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+        #    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
         return redirect('/books/remove_unapproved_document?name=' + fileDes)
     except IOError as e:
         if e.errno != errno.ENOENT:
@@ -172,7 +180,7 @@ def approve_unapproved_document(request):
             if tags[k] not in keys:
                 metafile.write(tags[k] + '\n')
         metafile.close()
-    #    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+        #    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
         return redirect('/books/remove_unapproved_document?name=' + fileDes)
 
 
@@ -232,6 +240,23 @@ def APIstructure(request):
         return Response(truncated_db)
 
 
+@api_view()
+def APIsearch(request):
+    f = jsc.path_to_dict(DATABASE_DIR, DATABASE_DICT_FILE_NAME)  ####can this be drier? repeated code
+    keyword_list = (request.GET.get('query', "")).split()
+    print(keyword_list)
+    path = request.GET.get('path', "/")
+    path_prefix = search.get_path_prefix(path)
+    try:
+        db = jsc.navigate_path(f, path)
+    except Exception as e:
+        print("invalid path")
+        return Response({})
+    else:
+        result = search.search_dic(db, path_prefix, keyword_list)
+        return Response({"result": result})
+
+
 # testAPI
 @api_view()
 def heartbeat(request):
@@ -245,7 +270,7 @@ def zip_courses():
             if len(name) == 2:
                 flag = 1
                 break
-        if root[len(DATABASE_DIR)+1:].count(os.sep) == 0 and flag == 0:
+        if root[len(DATABASE_DIR) + 1:].count(os.sep) == 0 and flag == 0:
             for course in dirs:
                 course_path = os.path.join(root, course)
                 zip_file = os.path.join(root, course) + ".zip"
@@ -271,7 +296,7 @@ def zip_courses():
                                 zf.write(path, arcname=to_write)
                             else:
                                 meta_file = os.path.split(filename)[1]
-                                file_loc = get_file_loc(meta_file)
+                                file_loc = get_file_loc(meta_file)[1]
                                 path = os.path.join(dirname, filename)
                                 to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
                                                         os.path.split(file_loc)[1])
@@ -283,20 +308,23 @@ def zip_courses():
 def export_files():
     for root, dirs, files in os.walk(DATABASE_DIR):
         for filename in files:
-            if not filename.lower().endswith(('.zip','.meta')):
+            if not filename.lower().endswith(('.zip', '.meta')):
                 from_link = os.path.join(root, filename)
                 to_link = FILESV_DIR + '/' + os.path.split(from_link)[1]
                 shutil.move(from_link, to_link)
 
 
 def get_file_loc(meta_file):
-    desc = meta_file.split("==")
-    file_name = desc[0]
-    raw_loc = desc[1]
-    dirs = raw_loc.split('-')
-    file_dir = '/'.join(dirs)
-    file_loc = file_dir + '/' + file_name
-    return file_loc
+    desc = meta_file.split(TAG)
+    if (len(desc) == 3):
+        if (desc[-1] == META_EXTENSION):
+            file_name = desc[0]
+            raw_loc = desc[1]
+            dirs = raw_loc.split('-')
+            file_dir = '/'.join(dirs)
+            file_loc = file_dir + '/' + file_name
+            return (file_name, file_loc)
+    return (meta_file, None)
 
 
 def build_meta_files():
@@ -314,9 +342,3 @@ def build_meta_files():
                         f.write(os.path.split(inner_path)[1] + '\n')
                         inner_path = os.path.split(inner_path)[0]
                     f.close()
-
-
-
-
-
-

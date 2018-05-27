@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33474cd0-0a92-4521-96c9-7aed609da468" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bookShelf/books/JSONcreator.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/JSONcreator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bookShelf/books/static/js/browse.js" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/static/js/browse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bookShelf/books/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bookShelf/books/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/make_folder/course_codes.json" beforeDir="false" afterPath="$PROJECT_DIR$/make_folder/course_codes.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/make_folder/make_folder.py" beforeDir="false" afterPath="$PROJECT_DIR$/make_folder/make_folder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,8 +23,8 @@
       <file leaf-file-name="browse.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/browse.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="123" column="10" selection-start-line="123" selection-start-column="10" selection-end-line="123" selection-end-column="10" />
+            <state relative-caret-position="-1121">
+              <caret line="120" column="52" selection-start-line="120" selection-start-column="52" selection-end-line="120" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -26,8 +32,8 @@
       <file leaf-file-name="make_folder.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/make_folder/make_folder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="32" column="76" selection-start-line="32" selection-start-column="76" selection-end-line="32" selection-end-column="76" />
+            <state relative-caret-position="256">
+              <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -35,14 +41,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bookShelf/books/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="312" column="54" selection-start-line="312" selection-start-column="54" selection-end-line="312" selection-end-column="54" />
-              <folding>
-                <element signature="e#24#63#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-749">
+              <caret line="14" column="59" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="searchtest.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/searchtest.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="search.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bookShelf/books/search.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1152">
+              <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -50,17 +71,8 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bookShelf/books/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
+            <state relative-caret-position="221">
               <caret line="15" column="51" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bookShelf/books/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
             </state>
           </provider>
         </entry>
@@ -68,18 +80,13 @@
       <file leaf-file-name="JSONcreator.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bookShelf/books/JSONcreator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="115" column="18" selection-start-line="115" selection-start-column="18" selection-end-line="115" selection-end-column="18" />
+            <state relative-caret-position="-1764">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="get_papers.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/get_papers.js">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="course_dept.json" pinned="false" current-in-tab="false">
@@ -89,7 +96,20 @@
       </file>
       <file leaf-file-name="course_codes.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/make_folder/course_codes.json">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-21684">
+              <caret line="120" column="11" selection-start-line="120" selection-start-column="11" selection-end-line="120" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -100,6 +120,7 @@
       <find>getFileName</find>
       <find>FILESV_DIR</find>
       <find>os.path.isfile</find>
+      <find>CH1</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -109,11 +130,13 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/bookShelf/books/static/js/browse2.js" />
-        <option value="$PROJECT_DIR$/make_folder/make_folder.py" />
         <option value="$PROJECT_DIR$/bookShelf/books/urls.py" />
         <option value="$PROJECT_DIR$/bookShelf/books/templates/books/shelf.html" />
         <option value="$PROJECT_DIR$/bookShelf/books/static/js/browse.js" />
+        <option value="$PROJECT_DIR$/make_folder/make_folder.py" />
         <option value="$PROJECT_DIR$/bookShelf/books/JSONcreator.py" />
+        <option value="$PROJECT_DIR$/bookShelf/books/static/js/searchtest.js" />
+        <option value="$PROJECT_DIR$/bookShelf/books/search.py" />
         <option value="$PROJECT_DIR$/bookShelf/books/views.py" />
       </list>
     </option>
@@ -127,9 +150,9 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="630" />
-    <option name="y" value="107" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="245" />
+    <option name="y" value="52" />
     <option name="width" value="1250" />
     <option name="height" value="670" />
   </component>
@@ -157,6 +180,28 @@
               <item name="BookShelf" type="462c0819:PsiDirectoryNode" />
               <item name="bookShelf" type="462c0819:PsiDirectoryNode" />
               <item name="books" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BookShelf" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BookShelf" type="462c0819:PsiDirectoryNode" />
+              <item name="bookShelf" type="462c0819:PsiDirectoryNode" />
+              <item name="books" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BookShelf" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BookShelf" type="462c0819:PsiDirectoryNode" />
+              <item name="bookShelf" type="462c0819:PsiDirectoryNode" />
+              <item name="books" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BookShelf" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BookShelf" type="462c0819:PsiDirectoryNode" />
+              <item name="bookShelf" type="462c0819:PsiDirectoryNode" />
+              <item name="books" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="BookShelf" type="b2602c69:ProjectViewProjectNode" />
@@ -209,7 +254,7 @@
     <option name="totallyTimeSpent" value="11009000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="504" y="86" width="1000" height="536" extended-state="0" />
+    <frame x="196" y="42" width="1000" height="536" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -236,14 +281,15 @@
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22413793" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2494929" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Python Console" order="9" />
@@ -251,9 +297,8 @@
       <window_info anchor="right" id="Database" order="4" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
@@ -270,23 +315,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/make_folder/course_codes.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/browse.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2091">
-          <caret line="123" column="29" lean-forward="true" selection-start-line="123" selection-start-column="29" selection-end-line="123" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/browse.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
-          <caret line="63" column="17" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/JSONcreator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1904">
@@ -525,22 +553,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/browse_backup.js" />
     <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/browse2.js" />
-    <entry file="file://$PROJECT_DIR$/make_folder/course_dept.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/make_folder/course_codes.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/make_folder/make_folder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="32" column="76" selection-start-line="32" selection-start-column="76" selection-end-line="32" selection-end-column="76" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/get_papers.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -551,13 +563,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/browse.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="123" column="10" selection-start-line="123" selection-start-column="10" selection-end-line="123" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -565,30 +570,75 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bookShelf/books/urls.py">
+    <entry file="file://$PROJECT_DIR$/make_folder/course_codes.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="15" column="51" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
+        <state relative-caret-position="-21684">
+          <caret line="120" column="11" selection-start-line="120" selection-start-column="11" selection-end-line="120" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/make_folder/make_folder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/make_folder/course_dept.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/browse.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1121">
+          <caret line="120" column="52" selection-start-line="120" selection-start-column="52" selection-end-line="120" selection-end-column="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/JSONcreator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="115" column="18" selection-start-line="115" selection-start-column="18" selection-end-line="115" selection-end-column="18" />
+        <state relative-caret-position="-1764">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bookShelf/books/search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1152">
+          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bookShelf/books/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="15" column="51" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="312" column="54" selection-start-line="312" selection-start-column="54" selection-end-line="312" selection-end-column="54" />
-          <folding>
-            <element signature="e#24#63#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-749">
+          <caret line="14" column="59" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/searchtest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
         </state>
       </provider>
     </entry>

@@ -10,7 +10,6 @@ class FilePath(Exception):
     """
     pass
 
-
 class InvalidPath(Exception):
     """
         Raised when the path given is not a valid heirarchical
@@ -18,8 +17,8 @@ class InvalidPath(Exception):
     """
     pass
 
+def navigate_path(db,path):
 
-def navigate_path(db, path):
     """
         Returns appropriate dict as pointed to by path.
         In case of invalid path raise appropriate exceptions
@@ -34,8 +33,7 @@ def navigate_path(db, path):
         raise FilePath
     return db
 
-
-def truncate_db(db, depth):
+def truncate_db(db,depth):
     """
         Truncated database according to the given depth.
         Dictionary is truncated as None, while string is not truncated.
@@ -45,17 +43,18 @@ def truncate_db(db, depth):
             result: {"CO":None,"HU":"bar"}
     """
     depth = int(depth)
-    if (db == {}) or (type(db) is str):
+    if (db=={}) or (type(db) is str):
         return db
-    if depth == 0:
+    if depth==0:
         return None
     new_db = {}
     for key in db.keys():
-        new_db[key] = truncate_db(db[key], depth-1)
+        new_db[key] = truncate_db(db[key],depth-1)
     return new_db
 
 
-def build_nav_path(prefix, path):
+def build_nav_path(prefix,path):
+
     """
         Builds a list of tuple for access links.abs
         E.g.
@@ -64,30 +63,28 @@ def build_nav_path(prefix, path):
             result:
                 [("Home","/books/view"),("CO","/books/view/CO"),("COL100","/books/view/COL100")]
     """
-    result = [("Home", prefix)]
+    result = [("Home",prefix)]
     acc = prefix
     keys = list(filter(None, path.split("/")))
     for key in keys:
-        acc = os.path.join(acc, key)
-        result.append((key, acc))
+        acc = os.path.join(acc,key)
+        result.append((key,acc))
     return result
-
 
 def generate_path(path):
     d = collections.OrderedDict()
     if os.path.isdir(path):
         for x in sorted(os.listdir(path)):
-            new_path = generate_path(os.path.join(path, x))
+            new_path=generate_path(os.path.join(path,x))
             if not new_path:
                 continue
-            d[x] = new_path
+            d[x]=new_path
     else:
-        # TODO: MORE ROBUST PATH CONFIGURATION
+        ## TODO: MORE ROBUST PATH CONFIGURATION
         return path[2:]
     return d
 
-
-def path_to_dict(path, name_of_file):
+def path_to_dict(path,name_of_file):
 
     """Checks if file with name exists and if it doesnt it recreates all the heirarchy."""
 
