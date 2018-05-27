@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33474cd0-0a92-4521-96c9-7aed609da468" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bookShelf/books/JSONcreator.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/JSONcreator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bookShelf/books/static/js/browse.js" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/static/js/browse.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bookShelf/books/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bookShelf/books/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bookShelf/books/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/make_folder/course_codes.json" beforeDir="false" afterPath="$PROJECT_DIR$/make_folder/course_codes.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/make_folder/make_folder.py" beforeDir="false" afterPath="$PROJECT_DIR$/make_folder/make_folder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -44,17 +37,20 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bookShelf/books/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-749">
-              <caret line="14" column="59" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
+            <state relative-caret-position="-2352">
+              <caret line="183" column="31" selection-start-line="183" selection-start-column="31" selection-end-line="183" selection-end-column="31" />
+              <folding>
+                <element signature="e#24#63#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="searchtest.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="searchtest.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/searchtest.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+            <state relative-caret-position="-187">
+              <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -77,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JSONcreator.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="JSONcreator.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bookShelf/books/JSONcreator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1764">
-              <caret line="5" selection-start-line="5" selection-end-line="5" />
+            <state relative-caret-position="290">
+              <caret line="121" lean-forward="true" selection-start-line="121" selection-end-line="121" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -106,8 +102,8 @@
       <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
+            <state relative-caret-position="51">
+              <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -134,10 +130,10 @@
         <option value="$PROJECT_DIR$/bookShelf/books/templates/books/shelf.html" />
         <option value="$PROJECT_DIR$/bookShelf/books/static/js/browse.js" />
         <option value="$PROJECT_DIR$/make_folder/make_folder.py" />
-        <option value="$PROJECT_DIR$/bookShelf/books/JSONcreator.py" />
         <option value="$PROJECT_DIR$/bookShelf/books/static/js/searchtest.js" />
         <option value="$PROJECT_DIR$/bookShelf/books/search.py" />
         <option value="$PROJECT_DIR$/bookShelf/books/views.py" />
+        <option value="$PROJECT_DIR$/bookShelf/books/JSONcreator.py" />
       </list>
     </option>
   </component>
@@ -579,8 +575,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="51">
+          <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -604,20 +600,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bookShelf/books/JSONcreator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1764">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/search.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1152">
           <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/searchtest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-187">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -630,15 +623,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bookShelf/books/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-749">
-          <caret line="14" column="59" selection-start-line="14" selection-start-column="59" selection-end-line="14" selection-end-column="59" />
+        <state relative-caret-position="-2352">
+          <caret line="183" column="31" selection-start-line="183" selection-start-column="31" selection-end-line="183" selection-end-column="31" />
+          <folding>
+            <element signature="e#24#63#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bookShelf/books/static/js/searchtest.js">
+    <entry file="file://$PROJECT_DIR$/bookShelf/books/JSONcreator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="14" lean-forward="true" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+        <state relative-caret-position="290">
+          <caret line="121" lean-forward="true" selection-start-line="121" selection-end-line="121" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
