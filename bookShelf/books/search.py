@@ -1,6 +1,7 @@
-from . import views 
 
-EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others']
+from . import views
+DATABASE_DIR = "../media/database"
+EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others','Professors']
 
 
 def searchterm_match(term, string):
@@ -29,6 +30,18 @@ def match_string(keyword_list, check_list):
 				perfect_matches+=1
 	return (matches,perfect_matches)
 
+def get_meta(meta_path_prefix, check_list):
+	path=''
+	for node in meta_path_prefix:
+		path+= '/'+ node[0]
+	path=DATABASE_DIR+path
+	f = open(path, "r")
+	for line in f:
+		check_list.append(line)
+	print(check_list)
+	f.close()
+
+
 def get_search_list(db,result,path_prefix,keyword_list):
 	
 	for key in db:
@@ -38,19 +51,21 @@ def get_search_list(db,result,path_prefix,keyword_list):
 		if not is_dict:
 			(name,location)=views.get_file_loc(name)
 			if location != None :
-				pass #add metadata to check_list
-				###watch for newline errors
+				meta_path_prefix=path_prefix[:]
+				meta_path_prefix.append([key])
+				get_meta(meta_path_prefix,check_list)
+				pass
 
-		check_list=[name]
+		check_list.append(name)
 		(matches,perfect_matches)=match_string(keyword_list, check_list)
 		if matches and key not in EXCLUDE_SET:
 			new_path_prefix=path_prefix[:]
-			new_path_prefix.append([name])
+			new_path_prefix.append([key])
 			result.append((new_path_prefix,matches,perfect_matches))
 
 		if is_dict:
 			new_path_prefix=path_prefix[:]
-			new_path_prefix.append([name])
+			new_path_prefix.append([key])
 			get_search_list(db[key],result,new_path_prefix,keyword_list)
 
 
