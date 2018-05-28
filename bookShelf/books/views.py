@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect
 import zipfile
 
 # Django Imports
+from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, HttpResponse
 from django.http import Http404
 from django.core.files import File
@@ -36,6 +37,9 @@ SEPARATOR = "\\"
 TAG = "=="
 META_SPLIT_COMPONENTS = 3
 META_EXTENSION = ".meta"
+ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
+ZIP_SPACE_LIMIT = 1e+10
+STATS_FILE = "course_downloads.txt"
 
 
 def index(request):
@@ -97,9 +101,7 @@ def download_course(request):
         return redirect('/books/')
     parent_dir = course[0:2]
     zip_location = DATABASE_DIR + '/' + parent_dir + '/' + course + '.zip'
-    if os.path.exists(zip_location) and os.path.isfile(zip_location):
-        return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
-    else:
+    if not(os.path.exists(zip_location) and os.path.isfile(zip_location)):
         course_path = DATABASE_DIR + '/' + parent_dir + '/' + course
         zf = zipfile.ZipFile(zip_location, "w")
         for dirname, sudirs, files in os.walk(course_path):
@@ -116,7 +118,28 @@ def download_course(request):
                                             os.path.split(file_loc)[1])
                     zf.write(file_loc, arcname=to_write)
         zf.close()
-        return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
+
+    with open(STATS_FILE, "r") as stats:
+        lines = stats.readlines()
+    start_time = lines[0].split(':')[1]
+    if start_time.strip('\n') == '' or datetime.now() > datetime.strptime(start_time.strip('\n'), '%d/%m/%Y') + ZIP_TIME_LIMIT:
+        lines[0] = lines[0].split(':')[0] + ":" + datetime.now().strftime("%d/%m/%Y") + '\n'
+        for k in range(1, len(lines)):
+            seperated = lines[k].split(":")
+            freq = 0
+            lines[k] = seperated[0] + ":" + str(freq) + '\n'
+    for k in range(1, len(lines)):
+        if lines[k].find(course) != -1:
+            seperated = lines[k].split(":")
+            freq = int(seperated[1])
+            freq = freq + 1
+            lines[k] = seperated[0] + ":" + str(freq) + '\n'
+            break
+
+    with open(STATS_FILE, "w") as stats:
+        stats.writelines(lines)
+    return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
+
 
 
 # Controller to Handle approval of requests
@@ -304,6 +327,8 @@ def zip_courses():
                     if is_changed == 1:
                         zf.close()
 
+    #delete_zips()
+
 
 def export_files():
     for root, dirs, files in os.walk(DATABASE_DIR):
@@ -316,15 +341,15 @@ def export_files():
 
 def get_file_loc(meta_file):
     desc = meta_file.split(TAG)
-    if (len(desc) == 3):
-        if (desc[-1] == META_EXTENSION):
+    if len(desc) == 3:
+        if desc[-1] == META_EXTENSION:
             file_name = desc[0]
             raw_loc = desc[1]
             dirs = raw_loc.split('-')
             file_dir = '/'.join(dirs)
             file_loc = file_dir + '/' + file_name
-            return (file_name, file_loc)
-    return (meta_file, None)
+            return file_name, file_loc
+    return meta_file, None
 
 
 def build_meta_files():
@@ -342,3 +367,39 @@ def build_meta_files():
                         f.write(os.path.split(inner_path)[1] + '\n')
                         inner_path = os.path.split(inner_path)[0]
                     f.close()
+
+
+def get_size():
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(DATABASE_DIR):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            total_size += os.path.getsize(fp)
+    return total_size
+
+
+def delete_zips():
+    if get_size() < ZIP_SPACE_LIMIT:
+        return
+
+    with open(STATS_FILE, "r") as stats:
+        lines = stats.readlines()
+    data = []
+    for k in range(1, len(lines)):
+        seperated = lines[k].split(':')
+        course = seperated[0].strip()
+        freq = seperated[1].strip('\n')
+        data.append([course, int(freq)])
+    data.sort(key=lambda x: x[1])
+    cntr = 0
+    while get_size() > ZIP_SPACE_LIMIT:
+        course = data[cntr][0]
+        parent_dir = course[0:2]
+        zip_location = DATABASE_DIR + '/' + parent_dir + '/' + course + '.zip'
+        if os.path.exists(zip_location) and os.path.isfile(zip_location):
+            os.remove(zip_location)
+        cntr = cntr + 1
+
+
+
+
