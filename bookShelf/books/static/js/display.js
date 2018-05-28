@@ -1,5 +1,7 @@
 // Only run after browse.js
 
+// Creates database browser
+
 
 $(document).ready(function()
 {

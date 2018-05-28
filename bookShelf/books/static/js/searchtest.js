@@ -1,4 +1,4 @@
-
+//only run after browse.js
 
 $(document).ready(function(){
 	$("button")[0].addEventListener("click", function(){
@@ -15,8 +15,13 @@ $(document).ready(function(){
 			    	var path_prefixer=DBZ["result"][i]
 			    	path_prefixer[0].push("#")
 
+
+			    	// indicate difference in depth of path_prefix and depth of divs to display
+			    	// workaround; unneeded if frontend is redesigned
 			    	var l =  path_prefixer.length
 			    	path_prefixer[0].push(l)
+
+			    	
 			    	if (typeof(get_prefix_dict(path_prefixer))==="string"){
 			    		var is_file=true;
 			    	}

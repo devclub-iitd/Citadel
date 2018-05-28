@@ -239,6 +239,7 @@ def APIstructure(request):
 
 @api_view()
 def APIsearch(request):
+	#gives a list of all path_prefix objects matching search terms
 	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)    ####can this be drier? repeated code
 	keyword_list=(request.GET.get('query',"")).split()    
 	path=request.GET.get('path',"/")

@@ -110,6 +110,7 @@ function create_elem_col(path_prefix,name,is_file)
     }
 
     if(is_file){ 
+        //get file data from filename of metafile
         var desc = name.split("==")
         if (desc.length==3){
             if (desc[2]=='.meta'){
@@ -136,8 +137,9 @@ function create_elem_col(path_prefix,name,is_file)
     var handler = get_event_handler_col(is_file,path_prefix.slice(),file_loc);
     
     btn.onclick = handler;
-//to add the download course button
+
     if (path_prefix.length == 2){
+        //to add the download course button
         var url = name;
         html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap""><div class="col-item" title="jkj">'+"Download Course"+'</div></a>';
         var bt=$.parseHTML(html)[0];

@@ -15,7 +15,7 @@ def searchterm_match(term, string):
 		return 0
 
 def match_string(keyword_list, check_list):
-	#placeholder function for more sophisticated keyword matching
+	#gives degree of matching for ranking 
 	matches=0
 	perfect_matches=0
 	for term in keyword_list:
@@ -31,6 +31,7 @@ def match_string(keyword_list, check_list):
 	return (matches,perfect_matches)
 
 def get_meta(meta_path_prefix, check_list):
+	#reads meta tags and adds to check_list
 	path=''
 	for node in meta_path_prefix:
 		path+= '/'+ node[0]
@@ -42,7 +43,7 @@ def get_meta(meta_path_prefix, check_list):
 
 
 def get_search_list(db,result,path_prefix,keyword_list):
-	
+	#passes matching path_prefixes and their matches into result
 	for key in db:
 		is_dict=type(db[key]) is dict
 		name=key
@@ -69,8 +70,11 @@ def get_search_list(db,result,path_prefix,keyword_list):
 
 
 def search_dic(db,path_prefix,keyword_list):
+	#sorts results based on no of matches, perfect matches, and depth in structure.
 	result=[]
 	get_search_list(db,result,path_prefix,keyword_list)
+
+	# python search is stable, so sorted in reverse order of criteria importance
 	result.sort(key=lambda x: len(x[0]))
 	result.sort(key=lambda x: x[2], reverse=True)
 	result.sort(key=lambda x: x[1], reverse=True)
@@ -80,6 +84,7 @@ def search_dic(db,path_prefix,keyword_list):
 	return path_list
 
 def get_path_prefix(path):
+	# gets path_prefixe given path
 	temp_path=list(filter(None, path.split("/")))
 	j=0
 	path_prefix=[]

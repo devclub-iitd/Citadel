@@ -1,4 +1,4 @@
-
+//
 
 $(document).ready(function(){
 	$("button")[0].addEventListener("click", function(){
@@ -8,10 +8,14 @@ $(document).ready(function(){
 		     DBZ=data;
 		    $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data ){
 		        DB=data;	    
+
+		        // reset output
 		        var box = $.parseHTML("<div id='output'></div>")
 		        $("#output").remove()
 		        $("button").after(box)
+
 				for (var i=0; i< DBZ["result"].length;i++){
+
 			    	var path_prefixer=DBZ["result"][i]
 			    	if (typeof(get_prefix_dict(path_prefixer))==="string"){
 			    		var is_file=true;
@@ -23,6 +27,7 @@ $(document).ready(function(){
 			    	if(is_file){ 
 
 			    		// repeated code from browse.js, TODO: cleanup
+			    		// get data from filename of metafile
 
 				        var desc = name.split("==")
 				        if (desc.length==3){
