@@ -31,9 +31,8 @@ FILESV_DIR = "../media/files"
 UNAPPROVED_DIR = "../media/unapproved/"
 DATABASE_DICT_FILE_NAME = "database.json"
 SEPARATOR = "\\"
-TAG = "=="
+
 META_SPLIT_COMPONENTS = 3
-META_EXTENSION = ".meta"
 # time limit to store download stats of zip files
 ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
 # space limit of database directory
@@ -118,7 +117,7 @@ def download_course(request):
 					zf.write(path, arcname=to_write)
 				else:
 					meta_file = os.path.split(filename)[1]
-					file_loc = get_file_loc(meta_file)[1]
+					file_loc = search.get_file_loc(meta_file)[1]
 					path = os.path.join(dirname, filename)
 					to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
 											os.path.split(file_loc)[1])
@@ -338,7 +337,7 @@ def zip_courses():
 								zf.write(path, arcname=to_write)
 							else:
 								meta_file = os.path.split(filename)[1]
-								file_loc = get_file_loc(meta_file)[1]
+								file_loc = search.get_file_loc(meta_file)[1]
 								path = os.path.join(dirname, filename)
 								to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
 														os.path.split(file_loc)[1])
@@ -357,23 +356,6 @@ def export_files():
 				from_link = os.path.join(root, filename)
 				to_link = FILESV_DIR + '/' + os.path.split(from_link)[1]
 				shutil.move(from_link, to_link)
-
-				
-def get_file_loc(meta_file):
-	"""
-		function to provide the actual file location and name from the name of its metafile
-	"""
-	desc = meta_file.split(TAG)
-	if (len(desc)==3):
-		if(desc[-1]==META_EXTENSION):
-			file_name = desc[0]
-			raw_loc = desc[1]
-			dirs = raw_loc.split('-')
-			file_dir = '/'.join(dirs)
-			file_loc = file_dir + '/' + file_name
-			return (file_name, file_loc)
-	return (meta_file, None)
-
 
 def build_meta_files():
 	"""

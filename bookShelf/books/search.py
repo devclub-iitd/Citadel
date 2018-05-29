@@ -1,7 +1,23 @@
-from . import views
+TAG = "=="
+META_EXTENSION = ".meta"
 DATABASE_DIR = "../media/database"
 EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others','Professors']
 
+				
+def get_file_loc(meta_file):
+	"""
+		function to provide the actual file location and name from the name of its metafile
+	"""
+	desc = meta_file.split(TAG)
+	if (len(desc)==3):
+		if(desc[-1]==META_EXTENSION):
+			file_name = desc[0]
+			raw_loc = desc[1]
+			dirs = raw_loc.split('-')
+			file_dir = '/'.join(dirs)
+			file_loc = file_dir + '/' + file_name
+			return (file_name, file_loc)
+	return (meta_file, None)
 
 def searchterm_match(term, string):
 	"""
@@ -56,7 +72,7 @@ def get_search_list(db,result,path_prefix,keyword_list):
 		name=key
 		check_list=[]
 		if not is_dict:
-			(name,location)=views.get_file_loc(name)
+			(name,location)=get_file_loc(name)
 			if location != None :
 				meta_path_prefix=path_prefix[:]
 				meta_path_prefix.append([key])
