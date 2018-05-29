@@ -37,7 +37,9 @@ SEPARATOR = "\\"
 TAG = "=="
 META_SPLIT_COMPONENTS = 3
 META_EXTENSION = ".meta"
+# time limit to store download stats of zip files
 ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
+# space limit of database directory
 ZIP_SPACE_LIMIT = 1e+10
 STATS_FILE = "course_downloads.txt"
 
@@ -95,6 +97,7 @@ def upload(request):
         return render(request, 'books/upload.html', {"profs": profs})
 
 
+# function to serve the zip files of entire courses
 def download_course(request):
     course = request.GET.get('course', 'none')
     if course == 'none':
@@ -118,7 +121,7 @@ def download_course(request):
                                             os.path.split(file_loc)[1])
                     zf.write(file_loc, arcname=to_write)
         zf.close()
-
+    # records the downloaded zip file in the stats file
     with open(STATS_FILE, "r") as stats:
         lines = stats.readlines()
     start_time = lines[0].split(':')[1]
@@ -139,7 +142,6 @@ def download_course(request):
     with open(STATS_FILE, "w") as stats:
         stats.writelines(lines)
     return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
-
 
 
 # Controller to Handle approval of requests
@@ -166,6 +168,7 @@ def remove_unapproved_document(request):
     return redirect('/books/approve')
 
 
+# controller to approve the files and create the meta file of those files alongside in the database_dir
 @login_required
 def approve_unapproved_document(request):
     fileDes = request.GET.get('name', 'none')
@@ -221,6 +224,8 @@ def rename(request):
         return HttpResponse('<h1> Invalid use of Rename API</h1>')
 
 
+# controller to finalize all the approvals (calls the recreate path function from jsc)
+# admin needs to click on finalize approvals once after manually pasting new files.
 @login_required
 def finalize_approvals(request):
     if request.method == "GET":
@@ -287,6 +292,8 @@ def heartbeat(request):
 
 
 def zip_courses():
+    """function to intelligently zip all the courses depending upon if their zips have been deleted due to
+        less number of downloads or not """
     for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
         flag = 0
         for name in dirs:
@@ -327,9 +334,8 @@ def zip_courses():
                     if is_changed == 1:
                         zf.close()
 
-    #delete_zips()
 
-
+# function to export the pasted or approved files from database_dir to file_sv_dir
 def export_files():
     for root, dirs, files in os.walk(DATABASE_DIR):
         for filename in files:
@@ -339,6 +345,7 @@ def export_files():
                 shutil.move(from_link, to_link)
 
 
+# function to provide the actual file location and name from the name of its metafile
 def get_file_loc(meta_file):
     desc = meta_file.split(TAG)
     if len(desc) == 3:
@@ -352,6 +359,7 @@ def get_file_loc(meta_file):
     return meta_file, None
 
 
+# function to build meta files for all the files which are manually pasted (uses the location)
 def build_meta_files():
     for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
         for filename in files:
@@ -369,6 +377,7 @@ def build_meta_files():
                     f.close()
 
 
+# function to get the size of entire database_dir (mostly zip files)
 def get_size():
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(DATABASE_DIR):
@@ -378,7 +387,9 @@ def get_size():
     return total_size
 
 
+# function to delete less frequently used zips until size of database_dir comes under size_limit
 def delete_zips():
+    # currently needs to be called manually (in testing phase)
     if get_size() < ZIP_SPACE_LIMIT:
         return
 

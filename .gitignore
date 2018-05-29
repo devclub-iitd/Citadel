@@ -106,3 +106,4 @@ media/
 database.txt
 database.json
 .vscode/
+.idea/
