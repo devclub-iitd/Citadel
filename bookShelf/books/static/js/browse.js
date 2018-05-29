@@ -114,7 +114,6 @@ function create_elem_col(path_prefix,name,is_file)
         var desc = name.split("==")
         if (desc.length==3){
             if (desc[2]=='.meta'){
-                console.log("hi")
                 name = desc[0]
                 var raw_loc = desc[1]
                 var dirs = raw_loc.split('-')

@@ -1,3 +1,5 @@
+import os
+
 TAG = "=="
 META_EXTENSION = ".meta"
 DATABASE_DIR = "../media/database"
@@ -9,13 +11,13 @@ def get_file_loc(meta_file):
 		function to provide the actual file location and name from the name of its metafile
 	"""
 	desc = meta_file.split(TAG)
-	if (len(desc)==3):
-		if(desc[-1]==META_EXTENSION):
+	if (len(desc) == 3):
+		if (desc[-1] == META_EXTENSION):
 			file_name = desc[0]
 			raw_loc = desc[1]
 			dirs = raw_loc.split('-')
-			file_dir = '/'.join(dirs)
-			file_loc = file_dir + '/' + file_name
+			file_dir = os.path.join(*dirs)
+			file_loc = os.path.join(file_dir, file_name)
 			return (file_name, file_loc)
 	return (meta_file, None)
 

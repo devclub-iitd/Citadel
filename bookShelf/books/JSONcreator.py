@@ -118,9 +118,9 @@ def recreate_path(path, name_of_file):
         Zip the courses again
         Forces Recreation of hierarchy
     """
+    views.zip_courses()
     views.build_meta_files()
     views.export_files()
-    views.zip_courses()
     heirarchy = generate_path(path)
     heirarchy = remove_zips(heirarchy)
     f = open(name_of_file, "w+")

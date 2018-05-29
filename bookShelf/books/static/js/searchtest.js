@@ -32,3 +32,18 @@ $(document).ready(function(){
 		});
 	})
 })
+
+
+
+$(document).ready(function(){
+
+	$("button")[1].addEventListener("click", function(){
+        $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data )
+        {
+            var DB=data;                        
+            update_view([]);                    
+            redraw_path_bar([["Home","#"]]);
+        })
+    });
+})
+
