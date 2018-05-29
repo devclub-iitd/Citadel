@@ -6,14 +6,11 @@ import operator
 import shutil
 import errno
 
-
-# Django Imports
-from django.shortcuts import render, redirect, HttpResponse
-
 import zipfile
 
 # Django Imports
-from django.shortcuts import render, redirect
+from datetime import datetime, timedelta
+from django.shortcuts import render, redirect, HttpResponse
 from django.http import Http404
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
@@ -35,8 +32,13 @@ UNAPPROVED_DIR = "../media/unapproved/"
 DATABASE_DICT_FILE_NAME = "database.json"
 SEPARATOR = "\\"
 TAG = "=="
-META_SPLIT_COMPONENTS=3
-META_EXTENSION=".meta"
+META_SPLIT_COMPONENTS = 3
+META_EXTENSION = ".meta"
+# time limit to store download stats of zip files
+ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
+# space limit of database directory
+ZIP_SPACE_LIMIT = 1e+10
+STATS_FILE = "course_downloads.txt"
 
 
 def index(request):
@@ -92,15 +94,14 @@ def upload(request):
 		return render(request, 'books/upload.html', {"profs": profs})
 
 
+# function to serve the zip files of entire courses
 def download_course(request):
 	course = request.GET.get('course', 'none')
 	if course == 'none':
 		return redirect('/books/')
 	parent_dir = course[0:2]
 	zip_location = DATABASE_DIR + '/' + parent_dir + '/' + course + '.zip'
-	if os.path.exists(zip_location) and os.path.isfile(zip_location):
-		return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
-	else:
+	if not(os.path.exists(zip_location) and os.path.isfile(zip_location)):
 		course_path = DATABASE_DIR + '/' + parent_dir + '/' + course
 		zf = zipfile.ZipFile(zip_location, "w")
 		for dirname, sudirs, files in os.walk(course_path):
@@ -113,10 +114,31 @@ def download_course(request):
 					meta_file = os.path.split(filename)[1]
 					file_loc = get_file_loc(meta_file)[1]
 					path = os.path.join(dirname, filename)
-					to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0], os.path.split(file_loc)[1])
+					to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
+											os.path.split(file_loc)[1])
 					zf.write(file_loc, arcname=to_write)
 		zf.close()
-		return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
+	# records the downloaded zip file in the stats file
+	with open(STATS_FILE, "r") as stats:
+		lines = stats.readlines()
+	start_time = lines[0].split(':')[1]
+	if start_time.strip('\n') == '' or datetime.now() > datetime.strptime(start_time.strip('\n'), '%d/%m/%Y') + ZIP_TIME_LIMIT:
+		lines[0] = lines[0].split(':')[0] + ":" + datetime.now().strftime("%d/%m/%Y") + '\n'
+		for k in range(1, len(lines)):
+			seperated = lines[k].split(":")
+			freq = 0
+			lines[k] = seperated[0] + ":" + str(freq) + '\n'
+	for k in range(1, len(lines)):
+		if lines[k].find(course) != -1:
+			seperated = lines[k].split(":")
+			freq = int(seperated[1])
+			freq = freq + 1
+			lines[k] = seperated[0] + ":" + str(freq) + '\n'
+			break
+
+	with open(STATS_FILE, "w") as stats:
+		stats.writelines(lines)
+	return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
 
 # Controller to Handle approval of requests
 @login_required
@@ -142,6 +164,7 @@ def remove_unapproved_document(request):
 	return redirect('/books/approve')
 
 
+# controller to approve the files and create the meta file of those files alongside in the database_dir
 @login_required
 def approve_unapproved_document(request):
 	fileDes = request.GET.get('name', 'none')
@@ -163,7 +186,7 @@ def approve_unapproved_document(request):
 			if tags[k] not in keys:
 				metafile.write(tags[k] + '\n')
 		metafile.close()
-	#    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+		#    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
 		return redirect('/books/remove_unapproved_document?name=' + fileDes)
 	except IOError as e:
 		if e.errno != errno.ENOENT:
@@ -179,7 +202,7 @@ def approve_unapproved_document(request):
 			if tags[k] not in keys:
 				metafile.write(tags[k] + '\n')
 		metafile.close()
-	#    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+		#    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
 		return redirect('/books/remove_unapproved_document?name=' + fileDes)
 
 
@@ -197,6 +220,8 @@ def rename(request):
 		return HttpResponse('<h1> Invalid use of Rename API</h1>')
 
 
+# controller to finalize all the approvals (calls the recreate path function from jsc)
+# admin needs to click on finalize approvals once after manually pasting new files.
 @login_required
 def finalize_approvals(request):
 	if request.method == "GET":
@@ -255,6 +280,23 @@ def APIsearch(request):
 
 
 
+@api_view()
+def APIsearch(request):
+	f = jsc.path_to_dict(DATABASE_DIR, DATABASE_DICT_FILE_NAME)  ####can this be drier? repeated code
+	keyword_list = (request.GET.get('query', "")).split()
+	print(keyword_list)
+	path = request.GET.get('path', "/")
+	path_prefix = search.get_path_prefix(path)
+	try:
+		db = jsc.navigate_path(f, path)
+	except Exception as e:
+		print("invalid path")
+		return Response({})
+	else:
+		result = search.search_dic(db, path_prefix, keyword_list)
+		return Response({"result": result})
+
+
 # testAPI
 @api_view()
 def heartbeat(request):
@@ -262,13 +304,15 @@ def heartbeat(request):
 
 
 def zip_courses():
+	"""function to intelligently zip all the courses depending upon if their zips have been deleted due to
+		less number of downloads or not """
 	for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
 		flag = 0
 		for name in dirs:
 			if len(name) == 2:
 				flag = 1
 				break
-		if root[len(DATABASE_DIR)+1:].count(os.sep) == 0 and flag == 0:
+		if root[len(DATABASE_DIR) + 1:].count(os.sep) == 0 and flag == 0:
 			for course in dirs:
 				course_path = os.path.join(root, course)
 				zip_file = os.path.join(root, course) + ".zip"
@@ -297,21 +341,21 @@ def zip_courses():
 								file_loc = get_file_loc(meta_file)[1]
 								path = os.path.join(dirname, filename)
 								to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
-								os.path.split(file_loc)[1])
+														os.path.split(file_loc)[1])
 								zf.write(file_loc, arcname=to_write)
 					if is_changed == 1:
 						zf.close()
 
-
+# function to export the pasted or approved files from database_dir to file_sv_dir
 def export_files():
 	for root, dirs, files in os.walk(DATABASE_DIR):
 		for filename in files:
-			if not filename.lower().endswith(('.zip','.meta')):
+			if not filename.lower().endswith(('.zip', '.meta')):
 				from_link = os.path.join(root, filename)
 				to_link = FILESV_DIR + '/' + os.path.split(from_link)[1]
 				shutil.move(from_link, to_link)
 
-
+# function to provide the actual file location and name from the name of its metafile
 def get_file_loc(meta_file):
 	desc = meta_file.split(TAG)
 	if (len(desc)==3):
@@ -324,6 +368,7 @@ def get_file_loc(meta_file):
 			return (file_name, file_loc)
 	return (meta_file, None)
 
+# function to build meta files for all the files which are manually pasted (uses the location)
 def build_meta_files():
 	for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
 		for filename in files:
@@ -339,5 +384,41 @@ def build_meta_files():
 						f.write(os.path.split(inner_path)[1] + '\n')
 						inner_path = os.path.split(inner_path)[0]
 					f.close()
+
+
+# function to get the size of entire database_dir (mostly zip files)
+def get_size():
+	total_size = 0
+	for dirpath, dirnames, filenames in os.walk(DATABASE_DIR):
+		for f in filenames:
+			fp = os.path.join(dirpath, f)
+			total_size += os.path.getsize(fp)
+	return total_size
+
+
+# function to delete less frequently used zips until size of database_dir comes under size_limit
+def delete_zips():
+	# currently needs to be called manually (in testing phase)
+	if get_size() < ZIP_SPACE_LIMIT:
+		return
+
+	with open(STATS_FILE, "r") as stats:
+		lines = stats.readlines()
+	data = []
+	for k in range(1, len(lines)):
+		seperated = lines[k].split(':')
+		course = seperated[0].strip()
+		freq = seperated[1].strip('\n')
+		data.append([course, int(freq)])
+	data.sort(key=lambda x: x[1])
+	cntr = 0
+	while get_size() > ZIP_SPACE_LIMIT:
+		course = data[cntr][0]
+		parent_dir = course[0:2]
+		zip_location = DATABASE_DIR + '/' + parent_dir + '/' + course + '.zip'
+		if os.path.exists(zip_location) and os.path.isfile(zip_location):
+			os.remove(zip_location)
+		cntr = cntr + 1
+
 
 

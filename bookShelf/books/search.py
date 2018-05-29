@@ -1,4 +1,3 @@
-
 from . import views
 DATABASE_DIR = "../media/database"
 EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others','Professors']
@@ -91,7 +90,4 @@ def get_path_prefix(path):
 	for node in temp_path:
 		path_prefix.append([node])
 	return path_prefix
-
-
-
-
+	

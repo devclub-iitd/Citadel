@@ -1,8 +1,8 @@
-//only run after browse.js
 
+//only run after browse.js
 $(document).ready(function(){
 	$("button")[0].addEventListener("click", function(){
-		DB={};;                        
+		DB={};
 		update_view([]);                    
 		redraw_path_bar([["Home","#"]]);
 
@@ -20,8 +20,6 @@ $(document).ready(function(){
 			    	// workaround; unneeded if frontend is redesigned
 			    	var l =  path_prefixer.length
 			    	path_prefixer[0].push(l)
-
-			    	
 			    	if (typeof(get_prefix_dict(path_prefixer))==="string"){
 			    		var is_file=true;
 			    	}

@@ -3,6 +3,7 @@ import json
 import collections
 from . import views
 
+
 class FilePath(Exception):
     """
         Raised when the path given is pointing to a file
@@ -18,7 +19,6 @@ class InvalidPath(Exception):
     pass
 
 def navigate_path(db,path):
-
     """
         Returns appropriate dict as pointed to by path.
         In case of invalid path raise appropriate exceptions
@@ -54,7 +54,6 @@ def truncate_db(db,depth):
 
 
 def build_nav_path(prefix,path):
-
     """
         Builds a list of tuple for access links.abs
         E.g.
@@ -85,9 +84,7 @@ def generate_path(path):
     return d
 
 def path_to_dict(path,name_of_file):
-
     """Checks if file with name exists and if it doesnt it recreates all the heirarchy."""
-
     if os.path.isfile(name_of_file):
         f = open(name_of_file, "r").read()
         heirarchy = json.loads(f)
@@ -101,6 +98,7 @@ def path_to_dict(path,name_of_file):
 
 
 def remove_zips(data):
+    """Function to remove all the zip files from the made database.json"""
     if not isinstance(data, (dict, list)):
         return data
     if isinstance(data, list):
@@ -110,10 +108,13 @@ def remove_zips(data):
 
 
 def recreate_path(path, name_of_file):
+    """Builds meta_files"""
+    """Export new files to FILE_SV directory"""
+    """Zip the courses again"""
+    """Forces Recreation of hierarchy"""
     views.build_meta_files()
     views.export_files()
     views.zip_courses()
-    """Forces the recreation of heirarchy."""
     heirarchy = generate_path(path)
     heirarchy = remove_zips(heirarchy)
     f = open(name_of_file, "w+")

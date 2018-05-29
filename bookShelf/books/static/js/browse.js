@@ -124,9 +124,6 @@ function create_elem_col(path_prefix,name,is_file)
         }
     }
 
-
-
-
     new_id += name+"/";
 
     path_prefix.push([name,"#"+new_id]);
@@ -137,7 +134,6 @@ function create_elem_col(path_prefix,name,is_file)
     var handler = get_event_handler_col(is_file,path_prefix.slice(),file_loc);
     
     btn.onclick = handler;
-
     if (path_prefix.length == 2){
         //to add the download course button
         var url = name;

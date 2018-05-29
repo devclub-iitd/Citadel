@@ -17,6 +17,8 @@ $(document).ready(function(){
 				for (var i=0; i< DBZ["result"].length;i++){
 
 			    	var path_prefixer=DBZ["result"][i]
+			    	var l =  path_prefixer.length
+
 			    	if (typeof(get_prefix_dict(path_prefixer))==="string"){
 			    		var is_file=true;
 			    	}
@@ -39,7 +41,7 @@ $(document).ready(function(){
 				                var file_loc = '../'+file_dir + '/' + name
 				            }
 				        }
-				  
+				  	
 				    var display_path=''
 				    console.log(path_prefixer)
 				    for (var j=0;j<l-1;j++){
