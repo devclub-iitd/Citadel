@@ -84,7 +84,9 @@ def generate_path(path):
     return d
 
 def path_to_dict(path,name_of_file):
-    """Checks if file with name exists and if it doesnt it recreates all the heirarchy."""
+    """
+        Checks if file with name exists and if it doesnt it recreates all the heirarchy.
+    """
     if os.path.isfile(name_of_file):
         f = open(name_of_file, "r").read()
         heirarchy = json.loads(f)
@@ -98,7 +100,9 @@ def path_to_dict(path,name_of_file):
 
 
 def remove_zips(data):
-    """Function to remove all the zip files from the made database.json"""
+    """
+        Function to remove all the zip files from the made database.json
+    """
     if not isinstance(data, (dict, list)):
         return data
     if isinstance(data, list):
@@ -108,10 +112,12 @@ def remove_zips(data):
 
 
 def recreate_path(path, name_of_file):
-    """Builds meta_files"""
-    """Export new files to FILE_SV directory"""
-    """Zip the courses again"""
-    """Forces Recreation of hierarchy"""
+    """
+        Builds meta_files
+        Export new files to FILE_SV directory
+        Zip the courses again
+        Forces Recreation of hierarchy
+    """
     views.build_meta_files()
     views.export_files()
     views.zip_courses()

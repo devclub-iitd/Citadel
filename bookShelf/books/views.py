@@ -39,6 +39,8 @@ ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
 # space limit of database directory
 ZIP_SPACE_LIMIT = 1e+10
 STATS_FILE = "course_downloads.txt"
+# tags to exclude from appearing in meta files
+EXCLUDED_TAGS = ['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others','Professors']
 
 
 def index(request):
@@ -67,8 +69,10 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
 	return toWriteFileName
 
 
-# Controller to Handle Upload of Documents
 def upload(request):
+	"""
+		Controller to Handle Upload of Documents
+	"""
 	if request.method == 'POST':
 		course_code = request.POST.get('course_code', "None").upper()
 		sem = request.POST.get('sem', "None")
@@ -94,8 +98,10 @@ def upload(request):
 		return render(request, 'books/upload.html', {"profs": profs})
 
 
-# function to serve the zip files of entire courses
 def download_course(request):
+	"""
+		function to serve the zip files of entire courses
+	"""
 	course = request.GET.get('course', 'none')
 	if course == 'none':
 		return redirect('/books/')
@@ -118,7 +124,9 @@ def download_course(request):
 											os.path.split(file_loc)[1])
 					zf.write(file_loc, arcname=to_write)
 		zf.close()
-	# records the downloaded zip file in the stats file
+	"""
+		records the downloaded zip file in the stats file
+	"""
 	with open(STATS_FILE, "r") as stats:
 		lines = stats.readlines()
 	start_time = lines[0].split(':')[1]
@@ -140,9 +148,12 @@ def download_course(request):
 		stats.writelines(lines)
 	return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
 
-# Controller to Handle approval of requests
+	
 @login_required
 def approve(request):
+	"""
+		Controller to Handle approval of requests
+	"""
 	unapproved_documents = []
 	for path, subdirs, files in os.walk(UNAPPROVED_DIR):
 		for filename in files:
@@ -164,9 +175,11 @@ def remove_unapproved_document(request):
 	return redirect('/books/approve')
 
 
-# controller to approve the files and create the meta file of those files alongside in the database_dir
 @login_required
 def approve_unapproved_document(request):
+	"""
+		controller to approve the files and create the meta file of those files alongside in the database_dir
+	"""
 	fileDes = request.GET.get('name', 'none')
 	fileName = fileDes.split(TAG)
 	seperatedlist = fileName[0].split(SEPARATOR)
@@ -186,7 +199,6 @@ def approve_unapproved_document(request):
 			if tags[k] not in keys:
 				metafile.write(tags[k] + '\n')
 		metafile.close()
-		#    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
 		return redirect('/books/remove_unapproved_document?name=' + fileDes)
 	except IOError as e:
 		if e.errno != errno.ENOENT:
@@ -202,7 +214,6 @@ def approve_unapproved_document(request):
 			if tags[k] not in keys:
 				metafile.write(tags[k] + '\n')
 		metafile.close()
-		#    jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
 		return redirect('/books/remove_unapproved_document?name=' + fileDes)
 
 
@@ -220,10 +231,12 @@ def rename(request):
 		return HttpResponse('<h1> Invalid use of Rename API</h1>')
 
 
-# controller to finalize all the approvals (calls the recreate path function from jsc)
-# admin needs to click on finalize approvals once after manually pasting new files.
 @login_required
 def finalize_approvals(request):
+	"""
+		controller to finalize all the approvals (calls the recreate path function from jsc)
+		admin needs to click on finalize approvals once after manually pasting new files.
+	"""
 	if request.method == "GET":
 		jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
 		return redirect('/books/approve')
@@ -264,7 +277,9 @@ def APIstructure(request):
 
 @api_view()
 def APIsearch(request):
-	#gives a list of all path_prefix objects matching search terms
+	"""
+		gives a list of all path_prefix objects matching search terms
+	"""
 	f = jsc.path_to_dict(DATABASE_DIR,DATABASE_DICT_FILE_NAME)    ####can this be drier? repeated code
 	keyword_list=(request.GET.get('query',"")).split()    
 	path=request.GET.get('path',"/")
@@ -279,24 +294,6 @@ def APIsearch(request):
 		return Response({"result":result})
 
 
-
-@api_view()
-def APIsearch(request):
-	f = jsc.path_to_dict(DATABASE_DIR, DATABASE_DICT_FILE_NAME)  ####can this be drier? repeated code
-	keyword_list = (request.GET.get('query', "")).split()
-	print(keyword_list)
-	path = request.GET.get('path', "/")
-	path_prefix = search.get_path_prefix(path)
-	try:
-		db = jsc.navigate_path(f, path)
-	except Exception as e:
-		print("invalid path")
-		return Response({})
-	else:
-		result = search.search_dic(db, path_prefix, keyword_list)
-		return Response({"result": result})
-
-
 # testAPI
 @api_view()
 def heartbeat(request):
@@ -304,8 +301,11 @@ def heartbeat(request):
 
 
 def zip_courses():
-	"""function to intelligently zip all the courses depending upon if their zips have been deleted due to
-		less number of downloads or not """
+	"""
+		function to intelligently zip all the courses
+		depending upon if their zips have been deleted 
+		due to less number of downloads or not 
+	"""
 	for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
 		flag = 0
 		for name in dirs:
@@ -346,8 +346,11 @@ def zip_courses():
 					if is_changed == 1:
 						zf.close()
 
-# function to export the pasted or approved files from database_dir to file_sv_dir
+
 def export_files():
+	"""
+		function to export the pasted or approved files from database_dir to file_sv_dir
+	"""
 	for root, dirs, files in os.walk(DATABASE_DIR):
 		for filename in files:
 			if not filename.lower().endswith(('.zip', '.meta')):
@@ -355,8 +358,11 @@ def export_files():
 				to_link = FILESV_DIR + '/' + os.path.split(from_link)[1]
 				shutil.move(from_link, to_link)
 
-# function to provide the actual file location and name from the name of its metafile
+				
 def get_file_loc(meta_file):
+	"""
+		function to provide the actual file location and name from the name of its metafile
+	"""
 	desc = meta_file.split(TAG)
 	if (len(desc)==3):
 		if(desc[-1]==META_EXTENSION):
@@ -368,8 +374,11 @@ def get_file_loc(meta_file):
 			return (file_name, file_loc)
 	return (meta_file, None)
 
-# function to build meta files for all the files which are manually pasted (uses the location)
+
 def build_meta_files():
+	"""
+		function to build meta files for all the files which are manually pasted (uses the location)
+	"""
 	for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
 		for filename in files:
 			if not filename.lower().endswith(('.meta', '.zip')):
@@ -381,13 +390,16 @@ def build_meta_files():
 					inner_path = os.path.split(inner_path)[0]
 					inner_path = os.path.split(inner_path)[0]
 					while os.path.split(inner_path)[0] is not '':
-						f.write(os.path.split(inner_path)[1] + '\n')
+						if os.path.split(inner_path)[1] not in EXCLUDED_TAGS:
+							f.write(os.path.split(inner_path)[1] + '\n')
 						inner_path = os.path.split(inner_path)[0]
 					f.close()
 
 
-# function to get the size of entire database_dir (mostly zip files)
 def get_size():
+	"""
+		function to get the size of entire database_dir (mostly zip files)
+	"""
 	total_size = 0
 	for dirpath, dirnames, filenames in os.walk(DATABASE_DIR):
 		for f in filenames:
@@ -396,9 +408,12 @@ def get_size():
 	return total_size
 
 
-# function to delete less frequently used zips until size of database_dir comes under size_limit
+
 def delete_zips():
-	# currently needs to be called manually (in testing phase)
+	"""
+		function to delete less frequently used zips until size of database_dir comes under size_limit
+		currently needs to be called manually (in testing phase)
+	"""
 	if get_size() < ZIP_SPACE_LIMIT:
 		return
 
