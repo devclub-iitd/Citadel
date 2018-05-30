@@ -95,6 +95,9 @@ Tracking and Page hits are currently implemented in two ways:
 * /books/api/structure/ : would return the whole directory structure
 ```
 
+# Report Bugs/Suggestions
+Follow this link - http://bit.do/bugsuggestion to report a bug or give a suggestion.
+
 
 
 						
