@@ -1,5 +1,11 @@
 import json
 import os
+import shutil
+
+STATS_FILE = 'course_downloads.txt'
+dest = os.path.join('..', 'bookShelf', STATS_FILE)
+
+shutil.copy(STATS_FILE, dest)
 
 
 with open('course_codes.json') as data_file:    
@@ -19,7 +25,7 @@ for course in courses:
 
     # dept = courses_dept[course_start]
     dept = course_start
-    print(course,dept)
+    print(course, dept)
     if not os.path.exists('DATA/'+dept):
         os.makedirs('DATA/'+dept)
     if not os.path.exists('DATA/'+dept+'/'+course):
@@ -38,3 +44,4 @@ for course in courses:
         os.makedirs('DATA/'+dept+'/'+course+'/Others')
     if not os.path.exists('DATA/'+dept+'/'+course+'/Professors'):
         os.makedirs('DATA/'+dept+'/'+course+'/Professors')  
+
