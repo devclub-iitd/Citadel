@@ -49,7 +49,7 @@ def index(request):
 
 def getFileName(course_code, sem, year, type_file, prof, filename, other):
 	toWriteFileName = ""
-	fileNamePrefix = "[" + sem + year[2:] + "]"
+	fileNamePrefix = "[" + sem + year[2:] + "]"+"-"+course_code+"-"+type_file
 	if (other != 'None' and any(x.isalpha() for x in other)):
 		origFileName = other
 	else:
@@ -59,10 +59,13 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
 
 	if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
 		dirPath = dirPath + SEPARATOR + "Question-Papers" + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + type_file + "-" + course_code + fileExtension + TAG + course_code + SEPARATOR + type_file
-	elif (type_file == 'Books' or type_file == 'Others'):
+		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + fileExtension + TAG + course_code + SEPARATOR + type_file
+	elif (type_file == 'Books'):
 		dirPath = dirPath + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
+		toWriteFileName = dirPath + SEPARATOR + "Book: "+origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
+	elif (type_file == 'Others'):
+		dirPath = dirPath + SEPARATOR + type_file
+		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
 	else:
 		dirPath = dirPath + SEPARATOR + "Professors" + SEPARATOR + prof + SEPARATOR + type_file
 		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
@@ -155,11 +158,19 @@ def approve(request):
 	"""
 		Controller to Handle approval of requests
 	"""
-	unapproved_documents = []
+	unapproved_documents = {}
 	for path, subdirs, files in os.walk(UNAPPROVED_DIR):
 		for filename in files:
+			arg = False
 			f = os.path.join(path, filename)
-			unapproved_documents.append(str(f)[str(f).rindex(os.sep) + 1:])
+			name = f.split(TAG)[0]
+			name = name.split(SEPARATOR)[-1]
+			check = os.path.join(FILESV_DIR, name)
+			print(check)
+			if os.path.exists(check) and os.path.isfile(check):
+				arg = True
+			unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]]=arg
+
 	if len(unapproved_documents) == 0:
 		error = "No Unapproved documents present, please ask people to upload material and contribute to the Citadel"
 	else:

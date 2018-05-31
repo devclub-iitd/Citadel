@@ -45,7 +45,7 @@ $(document).ready(function(){
 				    var display_path=''
 				    console.log(path_prefixer)
 				    for (var j=0;j<l-1;j++){
-				    	display_path+= '/'+path_prefixer[j][0]
+				    	display_path+= path_prefixer[j][0]+'/'
 				    }
 				    display_path+=name
 				    var html = "<div><a href="+file_loc+" target = '_blank'>"+display_path+"</a></div>"

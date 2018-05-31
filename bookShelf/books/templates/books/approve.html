@@ -21,12 +21,14 @@
 <div class="panel panel-default">
     <div class="panel-body">
     <center><h6>{{ error }}</h6></center>
-    {% for doc in unapproved_documents%}
+    {% for doc, repeat in unapproved_documents.items %}
         <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
         <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
         <a style="position: absolute;right: 27%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>
         <a style="position: absolute;right: 21%" id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a>
-        <br><br>
+        {%if repeat%}
+        <strong> File with same name exists !</strong> <br/>
+        {%endif%}
     {% endfor %}
     </div>
 </div>
