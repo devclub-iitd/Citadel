@@ -63,9 +63,6 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
 	elif (type_file == 'Books'):
 		dirPath = dirPath + SEPARATOR + type_file
 		toWriteFileName = dirPath + SEPARATOR + "Book: "+origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
-	elif (type_file == 'Others'):
-		dirPath = dirPath + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
 	else:
 		dirPath = dirPath + SEPARATOR + "Professors" + SEPARATOR + prof + SEPARATOR + type_file
 		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
@@ -91,7 +88,15 @@ def upload(request):
 			directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, filename))
 			if not os.path.exists(directory):
 				os.makedirs(directory)
-			destination = open(os.path.join(UNAPPROVED_DIR, filename), "wb+")
+			file_path = os.path.join(UNAPPROVED_DIR, filename)
+			if os.path.exists(file_path) and os.path.isfile(file_path):
+				i=1
+				temp_path=file_path
+				while os.path.exists(temp_path) and os.path.isfile(temp_path):
+					temp_path=file_path+'('+str(i)+')'
+					i+=1
+				file_path=temp_path  
+			destination = open(file_path, "wb+")
 			for chunk in document.chunks():
 				destination.write(chunk)
 			destination.close()
