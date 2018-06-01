@@ -49,7 +49,7 @@ def index(request):
 
 def getFileName(course_code, sem, year, type_file, prof, filename, other):
 	toWriteFileName = ""
-	fileNamePrefix = "[" + sem + year[2:] + "]"+"-"+course_code+"-"+type_file
+	fileNamePrefix = "[" + sem + year[2:] + "]" + "-" + course_code + "-" + type_file
 	if (other != 'None' and any(x.isalpha() for x in other)):
 		origFileName = other
 	else:
@@ -59,13 +59,13 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
 
 	if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
 		dirPath = dirPath + SEPARATOR + "Question-Papers" + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + fileExtension + TAG + course_code + SEPARATOR + type_file
+		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + fileExtension + TAG + course_code + SEPARATOR + type_file + fileExtension
 	elif (type_file == 'Books'):
 		dirPath = dirPath + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + "Book: "+origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
+		toWriteFileName = dirPath + SEPARATOR + "Book: " + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof + fileExtension
 	else:
 		dirPath = dirPath + SEPARATOR + "Professors" + SEPARATOR + prof + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof
+		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof + fileExtension
 	return toWriteFileName
 
 
@@ -90,12 +90,13 @@ def upload(request):
 				os.makedirs(directory)
 			file_path = os.path.join(UNAPPROVED_DIR, filename)
 			if os.path.exists(file_path) and os.path.isfile(file_path):
-				i=1
-				temp_path=file_path
+				i = 1
+				temp_path = '.'.join(file_path.split('.')[:-1])
+				ext = file_path.split('.')[-1]
 				while os.path.exists(temp_path) and os.path.isfile(temp_path):
-					temp_path=file_path+'('+str(i)+')'
-					i+=1
-				file_path=temp_path  
+					temp_path = file_path + '(' + str(i) + ')'
+					i += 1
+				file_path = temp_path + '.' + ext
 			destination = open(file_path, "wb+")
 			for chunk in document.chunks():
 				destination.write(chunk)
@@ -127,10 +128,13 @@ def download_course(request):
 				else:
 					meta_file = os.path.split(filename)[1]
 					file_loc = get_file_loc(meta_file)[1]
-					path = os.path.join(dirname, filename)
-					to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
+					if os.path.exists(file_loc) and os.path.isfile(file_loc):
+						path = os.path.join(dirname, filename)
+						to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
 											os.path.split(file_loc)[1])
-					zf.write(file_loc, arcname=to_write)
+						zf.write(file_loc, arcname=to_write)
+					else:
+						os.remove(os.path.join(dirname, filename))
 		zf.close()
 	"""
 		records the downloaded zip file in the stats file
@@ -155,7 +159,9 @@ def download_course(request):
 
 	with open(STATS_FILE, "w") as stats:
 		stats.writelines(lines)
-	return redirect('/../media/database/' + parent_dir + '/' + course + '.zip')
+	loc = DATABASE_DIR.split(os.sep)
+	path = '/'.join(loc)
+	return redirect('/' + path + '/' + parent_dir + '/' + course + '.zip')
 
 
 @login_required
@@ -168,13 +174,14 @@ def approve(request):
 		for filename in files:
 			arg = False
 			f = os.path.join(path, filename)
+			name = '.'.join(f.split('.')[:-1])
 			name = f.split(TAG)[0]
 			name = name.split(SEPARATOR)[-1]
 			check = os.path.join(FILESV_DIR, name)
 			print(check)
 			if os.path.exists(check) and os.path.isfile(check):
 				arg = True
-			unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]]=arg
+			unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]] = arg
 
 	if len(unapproved_documents) == 0:
 		error = "No Unapproved documents present, please ask people to upload material and contribute to the Citadel"
@@ -242,7 +249,8 @@ def rename(request):
 		directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
 		if not os.path.exists(directory):
 			os.makedirs(directory)
-		shutil.copy(os.path.join(UNAPPROVED_DIR, request.POST.get('org')), os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
+		shutil.copy(os.path.join(UNAPPROVED_DIR, request.POST.get('org')),
+					os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
 		return redirect('/books/remove_unapproved_document?name=' + request.POST.get('org'))
 	else:
 		return HttpResponse('<h1> Invalid use of Rename API</h1>')
@@ -321,8 +329,8 @@ def heartbeat(request):
 def zip_courses():
 	"""
 		function to intelligently zip all the courses
-		depending upon if their zips have been deleted 
-		due to less number of downloads or not 
+		depending upon if their zips have been deleted
+		due to less number of downloads or not
 	"""
 	for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
 		flag = 0
@@ -357,10 +365,17 @@ def zip_courses():
 							else:
 								meta_file = os.path.split(filename)[1]
 								file_loc = get_file_loc(meta_file)[1]
-								path = os.path.join(dirname, filename)
-								to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
+								if os.path.exists(file_loc) and os.path.isfile(file_loc):
+									path = os.path.join(dirname, filename)
+									to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
 														os.path.split(file_loc)[1])
-								zf.write(file_loc, arcname=to_write)
+									zf.write(file_loc, arcname=to_write)
+								else:
+									name = get_file_loc(meta_file)[0]
+									path = os.path.split(os.path.join(dirname, filename))[0]
+									alt_loc = os.path.join(path, name)
+									if not(os.path.exists(alt_loc) and os.path.isfile(alt_loc)):
+										os.remove(os.path.join(dirname, filename))
 					if is_changed == 1:
 						zf.close()
 
