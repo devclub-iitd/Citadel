@@ -18,14 +18,15 @@
 
 <center><p>Please review the documents carefully before approving them.</p></center>
 
-<div class="panel panel-default">
-    <div class="panel-body">
+<div class="panel panel-default" style="height: 80%;">
+    <div class="panel-body" style="height: 80%;">
     <center><h6>{{ error }}</h6></center>
     {% for doc in unapproved_documents%}
         <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
-        <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
-        <a style="position: absolute;right: 27%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>
-        <a style="position: absolute;right: 21%" id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a>
+        <div style="float: right;">
+        <a id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>&nbsp|
+        <a id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>&nbsp|
+        <a id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a></div>
         <br><br>
     {% endfor %}
     </div>
