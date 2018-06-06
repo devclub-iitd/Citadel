@@ -26,8 +26,7 @@ from books import JSONcreator as jsc
 
 DATABASE_DIR = os.path.join('..', 'media', 'database')
 DATABASE_URL = "/media/database"
-FILESV_CODE = "..-media-files"
-FILESV_DIR = os.path.join('..', 'media', 'files')
+BULK_UP_DIR = os.path.join('..', 'media', 'bulk')
 UNAPPROVED_DIR = os.path.join('..', 'media', 'unapproved')
 DATABASE_DICT_FILE_NAME = "database.json"
 SEPARATOR = "$"
@@ -36,11 +35,16 @@ META_SPLIT_COMPONENTS = 3
 META_EXTENSION = ".meta"
 # time limit to store download stats of zip files
 ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
-# space limit of database directory
-ZIP_SPACE_LIMIT = 1e+10
-STATS_FILE = "course_downloads.txt"
+# file to record download stats of zips
+STATS_FILE = "course_downloads.json"
+# file to record all changes to database_dir
+JOURNAL = "task_file.json"
 # tags to exclude from appearing in meta files
-EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Minor1', 'Minor2', 'Major', 'Books', 'Others', 'Professors']
+EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Minor1', 'Minor2', 'Major', 'Books', 'Others', 'Professors',
+				 'Tutorials', 'Notes', 'Lectures/Slides', 'Lectures', 'Slides']
+# handles for addition and removal of files to database_dir
+add = "additions"
+rm = "removals"
 
 
 def index(request):
@@ -48,9 +52,8 @@ def index(request):
 
 
 def getFileName(course_code, sem, year, type_file, prof, filename, other):
-	toWriteFileName = ""
-	fileNamePrefix = "[" + sem + year[2:] + "]" + "-" + course_code + "-" + type_file
-	if (other != 'None' and any(x.isalpha() for x in other)):
+	fileNamePrefix = "[" + sem + year[2:] + "]" + "-" + course_code
+	if other != 'None' and any(x.isalpha() for x in other):
 		origFileName = other
 	else:
 		origFileName = '.'.join(filename.split('.')[:-1])
@@ -59,14 +62,17 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
 
 	if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
 		dirPath = dirPath + SEPARATOR + "Question-Papers" + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + fileExtension + TAG + course_code + SEPARATOR + type_file + fileExtension
-	elif (type_file == 'Books'):
+		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + type_file + fileExtension
+		tags = [course_code, type_file]
+	elif (type_file == 'Books' or type_file == 'Others'):
 		dirPath = dirPath + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + "Book: " + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof + fileExtension
+		toWriteFileName = dirPath + SEPARATOR + origFileName + fileExtension
+		tags = [course_code, prof]
 	else:
 		dirPath = dirPath + SEPARATOR + "Professors" + SEPARATOR + prof + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension + TAG + course_code + SEPARATOR + prof + fileExtension
-	return toWriteFileName
+		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension
+		tags = [course_code, prof]
+	return toWriteFileName, tags
 
 
 def upload(request):
@@ -81,10 +87,10 @@ def upload(request):
 		prof = request.POST.get('professor', "None")
 		documents = request.FILES.getlist('documents')
 		other_text = request.POST.get('customFilename', "None")
-		if (len(documents) > 1):
+		if len(documents) > 1:
 			other_text = 'None'
 		for document in documents:
-			filename = getFileName(course_code, sem, year, type_file, prof, document.name, other_text)
+			[filename, tags] = getFileName(course_code, sem, year, type_file, prof, document.name, other_text)
 			directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, filename))
 			if not os.path.exists(directory):
 				os.makedirs(directory)
@@ -97,10 +103,19 @@ def upload(request):
 					temp_path = file_path + '(' + str(i) + ')'
 					i += 1
 				file_path = temp_path + '.' + ext
+			destination_meta = file_path + '.meta'
 			destination = open(file_path, "wb+")
 			for chunk in document.chunks():
 				destination.write(chunk)
 			destination.close()
+			keys = []
+			if os.path.exists(destination_meta) and os.path.isfile(destination_meta):
+				keys = [line.rstrip('\n') for line in open(destination_meta)]
+			metafile = open(destination_meta, "a+")
+			for k in range(len(tags)):
+				if tags[k] not in keys:
+					metafile.write(tags[k] + '\n')
+			metafile.close()
 		return render(request, 'books/thanks.html')
 	else:
 		profs = json.loads(open("profs.json", "r").read(), object_pairs_hook=OrderedDict)
@@ -125,40 +140,16 @@ def download_course(request):
 					path = os.path.join(dirname, filename)
 					to_write = os.path.relpath(path, course_path)
 					zf.write(path, arcname=to_write)
-				else:
-					meta_file = os.path.split(filename)[1]
-					file_loc = get_file_loc(meta_file)[1]
-					if os.path.exists(file_loc) and os.path.isfile(file_loc):
-						path = os.path.join(dirname, filename)
-						to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
-											os.path.split(file_loc)[1])
-						zf.write(file_loc, arcname=to_write)
-					else:
-						os.remove(os.path.join(dirname, filename))
 		zf.close()
 	"""
 		records the downloaded zip file in the stats file
 	"""
-	with open(STATS_FILE, "r") as stats:
-		lines = stats.readlines()
-	start_time = lines[0].split(':')[1]
-	if start_time.strip('\n') == '' or datetime.now() > datetime.strptime(start_time.strip('\n'),
-																		  '%d/%m/%Y') + ZIP_TIME_LIMIT:
-		lines[0] = lines[0].split(':')[0] + ":" + datetime.now().strftime("%d/%m/%Y") + '\n'
-		for k in range(1, len(lines)):
-			seperated = lines[k].split(":")
-			freq = 0
-			lines[k] = seperated[0] + ":" + str(freq) + '\n'
-	for k in range(1, len(lines)):
-		if lines[k].find(course) != -1:
-			seperated = lines[k].split(":")
-			freq = int(seperated[1])
-			freq = freq + 1
-			lines[k] = seperated[0] + ":" + str(freq) + '\n'
-			break
-
-	with open(STATS_FILE, "w") as stats:
-		stats.writelines(lines)
+	with open(STATS_FILE, "r") as file:
+		stats = json.load(file)
+	stats[course]["downloads"] = stats[course]["downloads"] + 1
+	stats[course]["last"] = datetime.now().strftime("%d/%m/%Y")
+	with open(STATS_FILE, "w") as file:
+		json.dump(stats, file)
 	loc = DATABASE_DIR.split(os.sep)
 	path = '/'.join(loc)
 	return redirect('/' + path + '/' + parent_dir + '/' + course + '.zip')
@@ -172,16 +163,15 @@ def approve(request):
 	unapproved_documents = {}
 	for path, subdirs, files in os.walk(UNAPPROVED_DIR):
 		for filename in files:
-			arg = False
-			f = os.path.join(path, filename)
-			name = '.'.join(f.split('.')[:-1])
-			name = f.split(TAG)[0]
-			name = name.split(SEPARATOR)[-1]
-			check = os.path.join(FILESV_DIR, name)
-			print(check)
-			if os.path.exists(check) and os.path.isfile(check):
-				arg = True
-			unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]] = arg
+			if not filename.endswith('.meta'):
+				arg = False
+				f = os.path.join(path, filename)
+				name = f.split(SEPARATOR)[-1]
+				check = os.path.join(BULK_UP_DIR, name)
+				print(check)
+				if os.path.exists(check) and os.path.isfile(check):
+					arg = True
+				unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]] = arg
 
 	if len(unapproved_documents) == 0:
 		error = "No Unapproved documents present, please ask people to upload material and contribute to the Citadel"
@@ -192,8 +182,11 @@ def approve(request):
 
 @login_required
 def remove_unapproved_document(request):
+	name = request.GET.get('name', 'none')
+	metafile = name + '.meta'
 	try:
 		os.remove(os.path.join(UNAPPROVED_DIR, request.GET.get('name', 'none')))
+		os.remove(os.path.join(UNAPPROVED_DIR, metafile))
 	except:
 		return HttpResponse('<h1>No such file exists. Maybe it was manually deleted</h1>')
 	return redirect('/books/approve')
@@ -204,41 +197,26 @@ def approve_unapproved_document(request):
 	"""
 		controller to approve the files and create the meta file of those files alongside in the database_dir
 	"""
-	fileDes = request.GET.get('name', 'none')
-	fileName = fileDes.split(TAG)
-	seperatedlist = fileName[0].split(SEPARATOR)
-	tags = fileName[1].split(SEPARATOR)
+	fileName = request.GET.get('name', 'none')
+	fileMeta = fileName + '.meta'
+	seperatedlist = fileName.split(SEPARATOR)
 	destination = DATABASE_DIR
 	for directory in seperatedlist:
 		destination = os.path.join(destination, directory)
-	file = destination.split('.')
+	destination_meta = destination + '.meta'
+
 	try:
-		shutil.copy(os.path.join(UNAPPROVED_DIR, fileDes), destination)
-		destination_meta = '.'.join(file[:-1]) + "." + file[-1] + TAG + FILESV_CODE + TAG + '.meta'
-		keys = []
-		if os.path.exists(destination_meta) and os.path.isfile(destination_meta):
-			keys = [line.rstrip('\n') for line in open(destination_meta)]
-		metafile = open(destination_meta, "a+")
-		for k in range(len(tags)):
-			if tags[k] not in keys:
-				metafile.write(tags[k] + '\n')
-		metafile.close()
-		return redirect('/books/remove_unapproved_document?name=' + fileDes)
+		shutil.copy(os.path.join(UNAPPROVED_DIR, fileName), destination)
+		shutil.copy(os.path.join(UNAPPROVED_DIR, fileMeta), destination_meta)
 	except IOError as e:
 		if e.errno != errno.ENOENT:
 			raise
 		os.makedirs(os.path.dirname(destination), exist_ok=True)
-		shutil.copy(os.path.join(UNAPPROVED_DIR, fileDes), destination)
-		destination_meta = '.'.join(file[:-1]) + "." + file[-1] + TAG + FILESV_CODE + TAG + '.meta'
-		keys = []
-		if os.path.exists(destination_meta) and os.path.isfile(destination_meta):
-			keys = [line.rstrip('\n') for line in open(destination_meta)]
-		metafile = open(destination_meta, "a+")
-		for k in range(len(tags)):
-			if tags[k] not in keys:
-				metafile.write(tags[k] + '\n')
-		metafile.close()
-		return redirect('/books/remove_unapproved_document?name=' + fileDes)
+		shutil.copy(os.path.join(UNAPPROVED_DIR, fileName), destination)
+		shutil.copy(os.path.join(UNAPPROVED_DIR, fileMeta), destination_meta)
+
+	add_tasks(add, [os.path.relpath(destination, DATABASE_DIR)])
+	return redirect('/books/remove_unapproved_document?name=' + fileName)
 
 
 @login_required
@@ -249,21 +227,93 @@ def rename(request):
 		directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
 		if not os.path.exists(directory):
 			os.makedirs(directory)
+		meta_final = request.POST.get('final') + '.meta'
+		meta_org = request.POST.get('org') + '.meta'
 		shutil.copy(os.path.join(UNAPPROVED_DIR, request.POST.get('org')),
 					os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
+		shutil.copy(os.path.join(UNAPPROVED_DIR, meta_org),
+					os.path.join(UNAPPROVED_DIR, meta_final))
 		return redirect('/books/remove_unapproved_document?name=' + request.POST.get('org'))
 	else:
 		return HttpResponse('<h1> Invalid use of Rename API</h1>')
 
 
 @login_required
-def finalize_approvals(request):
+def bulk_approve(request):
 	"""
-		controller to finalize all the approvals (calls the recreate path function from jsc)
+		controller to approve the bulk pasted files
 		admin needs to click on finalize approvals once after manually pasting new files.
 	"""
 	if request.method == "GET":
+		build_meta_files()
+		paths = export_files()
+		add_tasks(add, paths)
+		return redirect('/books/finalize_approvals')
+	else:
+		return redirect('/books/approve')
+
+
+@login_required
+def force_integrity(request):
+	"""
+		controller to force recreate the json heirarchy and also take care of
+		dangling meta files, and create missing meta files
+	"""
+	if request.method == "GET":
+		for root, dirs, files in os.walk(DATABASE_DIR):
+			for filename in files:
+				if not filename.endswith('.zip'):
+					if filename.endswith('.meta'):
+						pathname = os.path.join(root, '.'.join(filename.split('.')[:-1]))
+						if not (os.path.exists(pathname) and os.path.isfile(pathname)):
+							os.remove(os.path.join(root, filename))
+					else:
+						metafilename = filename + '.meta'
+						metafile = os.path.join(root, metafilename)
+						if not (os.path.exists(metafile) and os.path.isfile(metafile)):
+							f = open(metafile, 'w')
+							inner_path = os.path.relpath(metafile, DATABASE_DIR)
+							inner_path = os.path.split(inner_path)[0]
+							while os.path.split(inner_path)[0] is not '':
+								if os.path.split(inner_path)[1] not in EXCLUDED_TAGS:
+									f.write(os.path.split(inner_path)[1] + '\n')
+								inner_path = os.path.split(inner_path)[0]
+							f.close()
+
 		jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
+		return redirect('/books/approve')
+	else:
+		return redirect('/books/approve')
+
+
+@login_required
+def finalize_approvals(request):
+	if request.method == "GET":
+		with open(JOURNAL, "r") as file:
+			tasks = json.load(file)
+		for course in tasks[rm]:
+			if tasks[rm][course]:
+				zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
+				if os.path.exists(zip_location) and os.path.isfile(zip_location):
+					os.remove(zip_location)
+				# INSERT CODE TO MODIFY (REMOVE ENTRIES FROM) DATABASE.JSON
+				tasks[rm][course] = {}
+
+		for course in tasks[add]:
+			if tasks[add][course]:
+				zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
+				if os.path.exists(zip_location) and os.path.isfile(zip_location):
+					zf = zipfile.ZipFile(zip_location, "a")
+					for file_path in tasks[add][course]:
+						path = os.path.join(DATABASE_DIR, file_path)
+						to_write = tasks[add][course][file_path]
+						zf.write(path, arcname=to_write)
+						# INSERT CODE TO MODIFY (ADD ENTRIES FROM) DATABASE.JSON
+					zf.close()
+				tasks[add][course] = {}
+
+		with open(JOURNAL, "w") as file:
+			json.dump(tasks, file)
 		return redirect('/books/approve')
 	else:
 		return redirect('/books/approve')
@@ -326,101 +376,37 @@ def heartbeat(request):
 	return Response({"message": "Server is up!"})
 
 
-def zip_courses():
-	"""
-		function to intelligently zip all the courses
-		depending upon if their zips have been deleted
-		due to less number of downloads or not
-	"""
-	for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
-		flag = 0
-		for name in dirs:
-			if len(name) == 2:
-				flag = 1
-				break
-		if root[len(DATABASE_DIR) + 1:].count(os.sep) == 0 and flag == 0:
-			for course in dirs:
-				course_path = os.path.join(root, course)
-				zip_file = os.path.join(root, course) + ".zip"
-				if os.path.exists(zip_file) and os.path.isfile(zip_file):
-					zf = zipfile.ZipFile(zip_file, "a")
-					for dirname, sudirs, files in os.walk(os.path.join(root, course)):
-						for filename in files:
-							if not filename.lower().endswith('.meta'):
-								path = os.path.join(dirname, filename)
-								to_write = os.path.relpath(path, course_path)
-								zf.write(path, arcname=to_write)
-					zf.close()
-				else:
-					is_changed = 0
-					for dirname, sudirs, files in os.walk(os.path.join(root, course)):
-						for filename in files:
-							if is_changed == 0:
-								zf = zipfile.ZipFile(zip_file, "w")
-								is_changed = 1
-							if not filename.lower().endswith('.meta'):
-								path = os.path.join(dirname, filename)
-								to_write = os.path.relpath(path, course_path)
-								zf.write(path, arcname=to_write)
-							else:
-								meta_file = os.path.split(filename)[1]
-								file_loc = get_file_loc(meta_file)[1]
-								if os.path.exists(file_loc) and os.path.isfile(file_loc):
-									path = os.path.join(dirname, filename)
-									to_write = os.path.join(os.path.split(os.path.relpath(path, course_path))[0],
-														os.path.split(file_loc)[1])
-									zf.write(file_loc, arcname=to_write)
-								else:
-									name = get_file_loc(meta_file)[0]
-									path = os.path.split(os.path.join(dirname, filename))[0]
-									alt_loc = os.path.join(path, name)
-									if not(os.path.exists(alt_loc) and os.path.isfile(alt_loc)):
-										os.remove(os.path.join(dirname, filename))
-					if is_changed == 1:
-						zf.close()
-
-
 def export_files():
 	"""
-		function to export the pasted or approved files from database_dir to file_sv_dir
+		function to export the pasted files from bulk_up_dir to database_dir
 	"""
-	for root, dirs, files in os.walk(DATABASE_DIR):
+	paths = []
+	for root, dirs, files in os.walk(BULK_UP_DIR):
 		for filename in files:
-			if not filename.lower().endswith(('.zip', '.meta')):
-				from_link = os.path.join(root, filename)
-				to_link = os.path.join(FILESV_DIR, os.path.split(from_link)[1])
-				shutil.move(from_link, to_link)
+			from_link = os.path.join(root, filename)
+			to_link = os.path.join(DATABASE_DIR, os.path.relpath(from_link, BULK_UP_DIR))
+			directory = os.path.dirname(to_link)
+			if not os.path.exists(directory):
+				os.makedirs(directory)
+			shutil.move(from_link, to_link)
+			if not filename.endswith('.meta'):
+				paths.append(os.path.relpath(to_link, DATABASE_DIR))
 
-
-def get_file_loc(meta_file):
-	"""
-		function to provide the actual file location and name from the name of its metafile
-	"""
-	desc = meta_file.split(TAG)
-	if (len(desc) == 3):
-		if (desc[-1] == META_EXTENSION):
-			file_name = desc[0]
-			raw_loc = desc[1]
-			dirs = raw_loc.split('-')
-			file_dir = os.path.join(*dirs)
-			file_loc = os.path.join(file_dir, file_name)
-			return (file_name, file_loc)
-	return (meta_file, None)
+	return paths
 
 
 def build_meta_files():
 	"""
 		function to build meta files for all the files which are manually pasted (uses the location)
 	"""
-	for root, dirs, files in os.walk(DATABASE_DIR, topdown=True):
+	for root, dirs, files in os.walk(BULK_UP_DIR, topdown=True):
 		for filename in files:
-			if not filename.lower().endswith(('.meta', '.zip')):
+			if not filename.lower().endswith('.meta'):
 				file_loc = os.path.join(root, filename)
-				metafile_loc = file_loc + TAG + FILESV_CODE + TAG + '.meta'
+				metafile_loc = file_loc + '.meta'
 				if not (os.path.exists(metafile_loc) and os.path.isfile(metafile_loc)):
 					f = open(metafile_loc, 'w')
-					inner_path = os.path.relpath(metafile_loc, DATABASE_DIR)
-					inner_path = os.path.split(inner_path)[0]
+					inner_path = os.path.relpath(metafile_loc, BULK_UP_DIR)
 					inner_path = os.path.split(inner_path)[0]
 					while os.path.split(inner_path)[0] is not '':
 						if os.path.split(inner_path)[1] not in EXCLUDED_TAGS:
@@ -429,40 +415,11 @@ def build_meta_files():
 					f.close()
 
 
-def get_size():
-	"""
-		function to get the size of entire database_dir (mostly zip files)
-	"""
-	total_size = 0
-	for dirpath, dirnames, filenames in os.walk(DATABASE_DIR):
-		for f in filenames:
-			fp = os.path.join(dirpath, f)
-			total_size += os.path.getsize(fp)
-	return total_size
-
-
-def delete_zips():
-	"""
-		function to delete less frequently used zips until size of database_dir comes under size_limit
-		currently needs to be called manually (in testing phase)
-	"""
-	if get_size() < ZIP_SPACE_LIMIT:
-		return
-
-	with open(STATS_FILE, "r") as stats:
-		lines = stats.readlines()
-	data = []
-	for k in range(1, len(lines)):
-		seperated = lines[k].split(':')
-		course = seperated[0].strip()
-		freq = seperated[1].strip('\n')
-		data.append([course, int(freq)])
-	data.sort(key=lambda x: x[1])
-	cntr = 0
-	while get_size() > ZIP_SPACE_LIMIT:
-		course = data[cntr][0]
-		parent_dir = course[0:2]
-		zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
-		if os.path.exists(zip_location) and os.path.isfile(zip_location):
-			os.remove(zip_location)
-		cntr = cntr + 1
+def add_tasks(type_of_change, paths):
+	with open(JOURNAL, "r") as file:
+		tasks = json.load(file)
+	for path in paths:
+		separated_path = path.split(os.sep)
+		tasks[type_of_change][separated_path[1]][path] = os.path.join(*separated_path[2:])
+	with open(JOURNAL, "w") as file:
+		json.dump(tasks, file)

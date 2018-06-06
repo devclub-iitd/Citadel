@@ -41,10 +41,11 @@ pip3 install -r requirements.txt
 mkdir media
 mkdir media/database
 mkdir media/unapproved
-mkdir media/files
-cd make_folder
+mkdir media/bulk
+cd ../make_folder
 python make_folder.py
 mv DATA/* ../media/database/
+mv DATA/* ../media/bulk/
 cd bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)

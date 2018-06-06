@@ -2,10 +2,13 @@ import json
 import os
 import shutil
 
-STATS_FILE = 'course_downloads.txt'
-dest = os.path.join('..', 'bookShelf', STATS_FILE)
+STATS_FILE = 'course_downloads.json'
+JOURNAL = "task_file.json"
 
-shutil.copy(STATS_FILE, dest)
+dest1 = os.path.join('..', 'bookShelf', STATS_FILE)
+dest2 = os.path.join('..', 'bookShelf', JOURNAL)
+shutil.copy(STATS_FILE, dest1)
+shutil.copy(JOURNAL, dest2)
 
 
 with open('course_codes.json') as data_file:    
@@ -20,10 +23,7 @@ if not os.path.exists('DATA'):
 
 for course in courses:
     course_start = course[:2]
-    # if course_start not in courses_dept:
-        # continue
 
-    # dept = courses_dept[course_start]
     dept = course_start
     print(course, dept)
     if not os.path.exists('DATA/'+dept):

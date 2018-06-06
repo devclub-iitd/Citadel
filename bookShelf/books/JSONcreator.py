@@ -99,30 +99,24 @@ def path_to_dict(path,name_of_file):
     return heirarchy
 
 
-def remove_zips(data):
+def remove_zips_and_metas(data):
     """
         Function to remove all the zip files from the made database.json
     """
     if not isinstance(data, (dict, list)):
         return data
     if isinstance(data, list):
-        return [remove_zips(val) for val in data]
-    return {k: remove_zips(val) for k, val in data.items()
-            if not k.lower().endswith('.zip')}
+        return [remove_zips_and_metas(val) for val in data]
+    return {k: remove_zips_and_metas(val) for k, val in data.items()
+            if not k.lower().endswith(('.zip', '.meta'))}
 
 
 def recreate_path(path, name_of_file):
     """
-        Builds meta_files
-        Export new files to FILE_SV directory
-        Zip the courses again
         Forces Recreation of hierarchy
     """
-    views.zip_courses()
-    views.build_meta_files()
-    views.export_files()
     heirarchy = generate_path(path)
-    heirarchy = remove_zips(heirarchy)
+    heirarchy = remove_zips_and_metas(heirarchy)
     f = open(name_of_file, "w+")
     f.write(json.dumps(heirarchy))
     return heirarchy
