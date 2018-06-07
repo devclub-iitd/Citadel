@@ -52,7 +52,7 @@ def index(request):
 
 
 def getFileName(course_code, sem, year, type_file, prof, filename, other):
-	fileNamePrefix = "[" + sem + year[2:] + "]" + "-" + course_code
+	fileNamePrefix = "[" + sem + year[2:] + "]"
 	if other != 'None' and any(x.isalpha() for x in other):
 		origFileName = other
 	else:
@@ -62,7 +62,7 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
 
 	if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
 		dirPath = dirPath + SEPARATOR + "Question-Papers" + SEPARATOR + type_file
-		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + type_file + fileExtension
+		toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + course_code + "-" + type_file + fileExtension
 		tags = [course_code, type_file]
 	elif (type_file == 'Books' or type_file == 'Others'):
 		dirPath = dirPath + SEPARATOR + type_file
