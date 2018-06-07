@@ -17,6 +17,10 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import RedirectView
 
+from books import views
+
+views.startup_function()
+
 urlpatterns = [
     url(r'^accounts/login/$', RedirectView.as_view(url='/books/userlogin', permanent=True)),
     url(r'^books/', include('books.urls')),
@@ -30,3 +34,4 @@ from django.conf.urls.static import static
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

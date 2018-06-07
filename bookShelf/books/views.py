@@ -45,6 +45,9 @@ EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Minor1', 'Minor2', 'Major', 
 # handles for addition and removal of files to database_dir
 add = "additions"
 rm = "removals"
+# original locations for json files
+stats_loc = os.path.join('..', 'make_folder', STATS_FILE)
+journal_loc = os.path.join('..', 'make_folder', JOURNAL)
 
 
 def index(request):
@@ -289,31 +292,7 @@ def force_integrity(request):
 @login_required
 def finalize_approvals(request):
 	if request.method == "GET":
-		with open(JOURNAL, "r") as file:
-			tasks = json.load(file)
-		for course in tasks[rm]:
-			if tasks[rm][course]:
-				zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
-				if os.path.exists(zip_location) and os.path.isfile(zip_location):
-					os.remove(zip_location)
-				# INSERT CODE TO MODIFY (REMOVE ENTRIES FROM) DATABASE.JSON
-				tasks[rm][course] = {}
-
-		for course in tasks[add]:
-			if tasks[add][course]:
-				zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
-				if os.path.exists(zip_location) and os.path.isfile(zip_location):
-					zf = zipfile.ZipFile(zip_location, "a")
-					for file_path in tasks[add][course]:
-						path = os.path.join(DATABASE_DIR, file_path)
-						to_write = tasks[add][course][file_path]
-						zf.write(path, arcname=to_write)
-						# INSERT CODE TO MODIFY (ADD ENTRIES FROM) DATABASE.JSON
-					zf.close()
-				tasks[add][course] = {}
-
-		with open(JOURNAL, "w") as file:
-			json.dump(tasks, file)
+		finalize_function()
 		return redirect('/books/approve')
 	else:
 		return redirect('/books/approve')
@@ -423,3 +402,39 @@ def add_tasks(type_of_change, paths):
 		tasks[type_of_change][separated_path[1]][path] = os.path.join(*separated_path[2:])
 	with open(JOURNAL, "w") as file:
 		json.dump(tasks, file)
+
+
+def finalize_function():
+	with open(JOURNAL, "r") as file:
+		tasks = json.load(file)
+	for course in tasks[rm]:
+		if tasks[rm][course]:
+			zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
+			if os.path.exists(zip_location) and os.path.isfile(zip_location):
+				os.remove(zip_location)
+			# INSERT CODE TO MODIFY (REMOVE ENTRIES FROM) DATABASE.JSON
+			tasks[rm][course] = {}
+
+	for course in tasks[add]:
+		if tasks[add][course]:
+			zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
+			if os.path.exists(zip_location) and os.path.isfile(zip_location):
+				zf = zipfile.ZipFile(zip_location, "a")
+				for file_path in tasks[add][course]:
+					path = os.path.join(DATABASE_DIR, file_path)
+					to_write = tasks[add][course][file_path]
+					zf.write(path, arcname=to_write)
+				# INSERT CODE TO MODIFY (ADD ENTRIES FROM) DATABASE.JSON
+				zf.close()
+			tasks[add][course] = {}
+
+	with open(JOURNAL, "w") as file:
+		json.dump(tasks, file)
+
+
+def startup_function():
+    if not (os.path.exists(STATS_FILE) and os.path.isfile(STATS_FILE)):
+        shutil.copy(stats_loc, STATS_FILE)
+    if not (os.path.exists(JOURNAL) and os.path.isfile(JOURNAL)):
+        shutil.copy(journal_loc, JOURNAL)
+    finalize_function()
