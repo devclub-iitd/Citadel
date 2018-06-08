@@ -44,7 +44,7 @@ mkdir media/unapproved
 mkdir media/bulk
 cd ../make_folder
 python make_folder.py
-mv DATA/* ../media/database/
+cp DATA/* ../media/database/
 mv DATA/* ../media/bulk/
 cd bookShelf
 python manage.py migrate
