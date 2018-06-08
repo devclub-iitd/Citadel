@@ -3,12 +3,9 @@ import os
 import shutil
 
 STATS_FILE = 'course_downloads.json'
-JOURNAL = "task_file.json"
 
 dest1 = os.path.join('..', 'bookShelf', STATS_FILE)
-dest2 = os.path.join('..', 'bookShelf', JOURNAL)
 shutil.copy(STATS_FILE, dest1)
-shutil.copy(JOURNAL, dest2)
 
 
 with open('course_codes.json') as data_file:    

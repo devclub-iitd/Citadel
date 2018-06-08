@@ -48,6 +48,11 @@ rm = "removals"
 # original locations for json files
 stats_loc = os.path.join('..', 'make_folder', STATS_FILE)
 journal_loc = os.path.join('..', 'make_folder', JOURNAL)
+# task_file list key names
+COURSE = 'course'
+PATH = 'path'
+TYPE = 'type'
+TIMESTAMP = 'timestamp'
 
 
 def index(request):
@@ -135,15 +140,7 @@ def download_course(request):
 	parent_dir = course[0:2]
 	zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
 	if not (os.path.exists(zip_location) and os.path.isfile(zip_location)):
-		course_path = os.path.join(DATABASE_DIR, parent_dir, course)
-		zf = zipfile.ZipFile(zip_location, "w")
-		for dirname, sudirs, files in os.walk(course_path):
-			for filename in files:
-				if not filename.lower().endswith('.meta'):
-					path = os.path.join(dirname, filename)
-					to_write = os.path.relpath(path, course_path)
-					zf.write(path, arcname=to_write)
-		zf.close()
+		zip_course(course)
 	"""
 		records the downloaded zip file in the stats file
 	"""
@@ -395,46 +392,83 @@ def build_meta_files():
 
 
 def add_tasks(type_of_change, paths):
+	"""
+	 function to add tasks to task_file.json, either in bulk or on each approval
+	"""
 	with open(JOURNAL, "r") as file:
 		tasks = json.load(file)
 	for path in paths:
+		task = {}
 		separated_path = path.split(os.sep)
-		tasks[type_of_change][separated_path[1]][path] = os.path.join(*separated_path[2:])
+		task[COURSE] = separated_path[1]
+		task[TYPE] = type_of_change
+		task[PATH] = path
+		task[TIMESTAMP] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+		tasks.append(task)
 	with open(JOURNAL, "w") as file:
 		json.dump(tasks, file)
 
 
 def finalize_function():
+	"""
+		function to execute task_file.json course wise, task wise and modify zips and database.json
+	"""
 	with open(JOURNAL, "r") as file:
 		tasks = json.load(file)
-	for course in tasks[rm]:
-		if tasks[rm][course]:
-			zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
+	sorted_tasks = sorted(tasks, key=lambda k: k[COURSE])
+	if len(sorted_tasks) > 0:
+		task = sorted_tasks[0]
+		previous_course = task[COURSE]
+		zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
+		if os.path.exists(zip_location) and os.path.isfile(zip_location):
+			zip_present = 1
+			os.remove(zip_location)
+		else:
+			zip_present = 0
+	while len(sorted_tasks) > 0:
+		task = sorted_tasks.pop(0)
+		# code to use the task[PATH] and task[TYPE] to modify database.json
+		# as required by the frontend and API call
+		if task[COURSE] != previous_course:
+			if zip_present == 1:
+				zip_course(previous_course)
+			previous_course = task[COURSE]
+			zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
 			if os.path.exists(zip_location) and os.path.isfile(zip_location):
 				os.remove(zip_location)
-			# INSERT CODE TO MODIFY (REMOVE ENTRIES FROM) DATABASE.JSON
-			tasks[rm][course] = {}
-
-	for course in tasks[add]:
-		if tasks[add][course]:
-			zip_location = os.path.join(DATABASE_DIR, course[0:2], course + '.zip')
-			if os.path.exists(zip_location) and os.path.isfile(zip_location):
-				zf = zipfile.ZipFile(zip_location, "a")
-				for file_path in tasks[add][course]:
-					path = os.path.join(DATABASE_DIR, file_path)
-					to_write = tasks[add][course][file_path]
-					zf.write(path, arcname=to_write)
-				# INSERT CODE TO MODIFY (ADD ENTRIES FROM) DATABASE.JSON
-				zf.close()
-			tasks[add][course] = {}
+				zip_present = 1
+			else:
+				zip_present = 0
 
 	with open(JOURNAL, "w") as file:
-		json.dump(tasks, file)
+		json.dump(sorted_tasks, file)
 
 
 def startup_function():
-    if not (os.path.exists(STATS_FILE) and os.path.isfile(STATS_FILE)):
-        shutil.copy(stats_loc, STATS_FILE)
-    if not (os.path.exists(JOURNAL) and os.path.isfile(JOURNAL)):
-        shutil.copy(journal_loc, JOURNAL)
-    finalize_function()
+	"""
+		function called on each server start
+	"""
+	if not (os.path.exists(STATS_FILE) and os.path.isfile(STATS_FILE)):
+		shutil.copy(stats_loc, STATS_FILE)
+	if not (os.path.exists(JOURNAL) and os.path.isfile(JOURNAL)):
+		tasks = []
+		with open(JOURNAL, "w") as file:
+			json.dump(tasks, file)
+	finalize_function()
+
+
+def zip_course(course):
+	"""
+	 function to zip courses given a course code
+	"""
+	parent_dir = course[0:2]
+	zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
+	course_path = os.path.join(DATABASE_DIR, parent_dir, course)
+	zf = zipfile.ZipFile(zip_location, "w")
+	for dirname, sudirs, files in os.walk(course_path):
+		for filename in files:
+			if not filename.lower().endswith('.meta'):
+				path = os.path.join(dirname, filename)
+				to_write = os.path.relpath(path, course_path)
+				zf.write(path, arcname=to_write)
+	zf.close()
