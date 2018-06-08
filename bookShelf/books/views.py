@@ -182,14 +182,29 @@ def approve(request):
 
 @login_required
 def remove_unapproved_document(request):
-	name = request.GET.get('name', 'none')
-	metafile = name + '.meta'
-	try:
-		os.remove(os.path.join(UNAPPROVED_DIR, request.GET.get('name', 'none')))
-		os.remove(os.path.join(UNAPPROVED_DIR, metafile))
-	except:
-		return HttpResponse('<h1>No such file exists. Maybe it was manually deleted</h1>')
-	return redirect('/books/approve')
+	path_to_file = os.path.join(UNAPPROVED_DIR, request.GET.get('name', 'none'))
+	path_to_meta = path_to_file + '.meta'
+	flag = 0
+	if os.path.exists(path_to_file) and os.path.isfile(path_to_file):
+		os.remove(path_to_file)
+	else:
+		flag = flag + 1
+	if os.path.exists(path_to_meta) and os.path.isfile(path_to_meta):
+		os.remove(path_to_meta)
+	else:
+		flag = flag + 2
+
+	def switch(arg):
+		result = {
+			1: '<h1>No such file exists. Maybe it was manually deleted. MetaFile was successfully deleted.</h1>',
+			2: '<h1>MetaFile didn\'t exist. Maybe it was manually deleted. File was successfully deleted.</h1>',
+			3: 'No such file or corresponding metafile existed. Maybe they were deleted manually'
+		}
+		return result.get(arg, "Something went wrong. Please check manually")
+	if flag == 0:
+		return redirect('/books/approve')
+	else:
+		return HttpResponse(switch(flag))
 
 
 @login_required
