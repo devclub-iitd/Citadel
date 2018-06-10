@@ -97,7 +97,7 @@ def get_search_list(db,result,path_prefix,keyword_list):
 def search_dic(db,path_prefix,keyword_list):
 	"""
 		sorts results based on no of matches, perfect matches, and depth in structure.
-		python search is stable, so sorted in reverse order of criteria importance
+		python sort is stable, so sorted in reverse order of criteria importance
 	"""
 	result=[]
 	get_search_list(db,result,path_prefix,keyword_list)

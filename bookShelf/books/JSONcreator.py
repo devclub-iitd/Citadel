@@ -18,13 +18,16 @@ class InvalidPath(Exception):
     """
     pass
 
-def navigate_path(db,path):
+def navigate_path(db,path,forced):
     """
         Returns appropriate dict as pointed to by path.
         In case of invalid path raise appropriate exceptions
+        If forced, creates path if it doesn't exist
     """
-    keys = list(filter(None, path.split("/")))
+    keys = list(filter(None, path.split(os.sep)))
     for key in keys:
+        if forced and key not in db.keys():
+        	db[key]={}
         try:
             db = db[key]
         except Exception as e:

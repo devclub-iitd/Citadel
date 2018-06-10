@@ -106,9 +106,10 @@ def upload(request):
 			if os.path.exists(file_path) and os.path.isfile(file_path):
 				i = 1
 				temp_path = '.'.join(file_path.split('.')[:-1])
+				print(temp_path)
 				ext = file_path.split('.')[-1]
-				while os.path.exists(temp_path) and os.path.isfile(temp_path):
-					temp_path = file_path + '(' + str(i) + ')'
+				while os.path.exists(temp_path+'.'+ext) and os.path.isfile(temp_path+'.'+ext):
+					temp_path = temp_path + '(' + str(i) + ')'
 					i += 1
 				file_path = temp_path + '.' + ext
 			destination_meta = file_path + '.meta'
@@ -168,7 +169,6 @@ def approve(request):
 				f = os.path.join(path, filename)
 				name = f.split(SEPARATOR)[-1]
 				check = os.path.join(BULK_UP_DIR, name)
-				print(check)
 				if os.path.exists(check) and os.path.isfile(check):
 					arg = True
 				unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]] = arg
@@ -330,10 +330,10 @@ def userlogout(request):
 @api_view()
 def APIstructure(request):
 	f = jsc.path_to_dict(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
-	path = request.GET.get('path', "/")
+	path = request.GET.get('path', os.sep)
 	depth = int(request.GET.get('depth', 3))
 	try:
-		db = jsc.navigate_path(f, path)
+		db = jsc.navigate_path(f, path, False)
 	except Exception as e:
 		print("invalid path")
 		return Response({})
@@ -352,7 +352,7 @@ def APIsearch(request):
 	path = request.GET.get('path', "/")
 	path_prefix = search.get_path_prefix(path)
 	try:
-		db = jsc.navigate_path(f, path)
+		db = jsc.navigate_path(f, path, False)
 	except Exception as e:
 		print("invalid path")
 		return Response({})
@@ -441,9 +441,9 @@ def finalize_function():
 		else:
 			zip_present = 0
 	while len(sorted_tasks) > 0:
+		
+		tasks_handler(sorted_tasks)
 		task = sorted_tasks.pop(0)
-		# code to use the task[PATH] and task[TYPE] to modify database.json
-		# as required by the frontend and API call
 		if task[COURSE] != previous_course:
 			if zip_present == 1:
 				zip_course(previous_course)
@@ -458,6 +458,21 @@ def finalize_function():
 	with open(JOURNAL, "w") as file:
 		json.dump(sorted_tasks, file)
 
+def tasks_handler(tasks):
+	"""
+		controller to modify database.json according to task
+	"""
+	with open(DATABASE_DICT_FILE_NAME, "r") as file:
+		data = json.load(file)
+	for task in tasks:
+		if task[TYPE]=="additions":
+			db=data
+			separated_path=(task[PATH]).split(os.sep)
+			print((os.sep).join(separated_path[:-1]))
+			db=jsc.navigate_path(db, (os.sep).join(separated_path[:-1]), True)
+			db[separated_path[-1]]=(DATABASE_DIR + task[PATH])[2:]
+	with open(DATABASE_DICT_FILE_NAME, "w") as file:
+		json.dump(data, file)
 
 def startup_function():
 	"""
