@@ -28,7 +28,6 @@ $(document).ready(function(){
 					    	display_path+= path_prefixer[j][0]+'/'
 					    }
 					    display_path+=name
-					    console.log(MEDIA_PREFIX+display_path)
 					    var html = "<div><a href="+MEDIA_PREFIX+display_path+" target = '_blank'>"+display_path+"</a></div>"
 					    var link = $.parseHTML(html)
 					    

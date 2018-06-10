@@ -106,7 +106,6 @@ def upload(request):
 			if os.path.exists(file_path) and os.path.isfile(file_path):
 				i = 1
 				temp_path = '.'.join(file_path.split('.')[:-1])
-				print(temp_path)
 				ext = file_path.split('.')[-1]
 				while os.path.exists(temp_path+'.'+ext) and os.path.isfile(temp_path+'.'+ext):
 					temp_path = temp_path + '(' + str(i) + ')'
@@ -236,19 +235,29 @@ def approve_unapproved_document(request):
 
 @login_required
 def rename(request):
+	#use try blocks
 	if request.method == "GET":
-		return render(request, "books/rename.html", {"org": request.GET.get('name', 'none')})
+		if request.GET.get('name', '')=='':
+			return HttpResponse('<h1> Invalid use of Rename API</h1>')
+		with open(os.path.join(UNAPPROVED_DIR, request.GET.get('name') + '.meta'), "r") as file:
+			tags=file.read()
+		return render(request, "books/rename.html", {"org": name, "tags": tags})
 	elif request.method == "POST":
-		directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
-		if not os.path.exists(directory):
-			os.makedirs(directory)
-		meta_final = request.POST.get('final') + '.meta'
-		meta_org = request.POST.get('org') + '.meta'
-		shutil.copy(os.path.join(UNAPPROVED_DIR, request.POST.get('org')),
-					os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
-		shutil.copy(os.path.join(UNAPPROVED_DIR, meta_org),
-					os.path.join(UNAPPROVED_DIR, meta_final))
-		return redirect('/books/remove_unapproved_document?name=' + request.POST.get('org'))
+		with open(os.path.join(UNAPPROVED_DIR, request.POST.get('org') + '.meta'), "w") as file:
+			file.write(request.POST.get('tags',''))
+		if request.POST.get('final') != '' and request.POST.get('final') != request.POST.get('org'):
+			directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
+
+			if not os.path.exists(directory):
+				os.makedirs(directory)
+			meta_final = request.POST.get('final') + '.meta'
+			meta_org = request.POST.get('org') + '.meta'
+			shutil.copy(os.path.join(UNAPPROVED_DIR, request.POST.get('org')),
+						os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
+			shutil.copy(os.path.join(UNAPPROVED_DIR, meta_org),
+						os.path.join(UNAPPROVED_DIR, meta_final))
+			return redirect('/books/remove_unapproved_document?name=' + request.POST.get('org'))
+		return redirect('/books/approve')
 	else:
 		return HttpResponse('<h1> Invalid use of Rename API</h1>')
 
@@ -468,7 +477,6 @@ def tasks_handler(tasks):
 		if task[TYPE]=="additions":
 			db=data
 			separated_path=(task[PATH]).split(os.sep)
-			print((os.sep).join(separated_path[:-1]))
 			db=jsc.navigate_path(db, (os.sep).join(separated_path[:-1]), True)
 			db[separated_path[-1]]=(DATABASE_DIR + task[PATH])[2:]
 	with open(DATABASE_DICT_FILE_NAME, "w") as file:

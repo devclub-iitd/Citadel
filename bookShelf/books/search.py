@@ -2,24 +2,8 @@ import os
 
 TAG = "=="
 META_EXTENSION = ".meta"
-DATABASE_DIR = "../media/database"
+DATABASE_DIR = os.path.join("..","media","database")
 EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others','Professors']
-
-				
-def get_file_loc(meta_file):
-	"""
-		function to provide the actual file location and name from the name of its metafile
-	"""
-	desc = meta_file.split(TAG)
-	if (len(desc) == 3):
-		if (desc[-1] == META_EXTENSION):
-			file_name = desc[0]
-			raw_loc = desc[1]
-			dirs = raw_loc.split('-')
-			file_dir = os.path.join(*dirs)
-			file_loc = os.path.join(file_dir, file_name)
-			return (file_name, file_loc)
-	return (meta_file, None)
 
 def searchterm_match(term, string):
 	"""
@@ -57,8 +41,9 @@ def get_meta(meta_path_prefix, check_list):
 	"""
 	path=''
 	for node in meta_path_prefix:
-		path+= '/'+ node[0]
-	path=DATABASE_DIR+path
+		path+= os.sep+ node[0]
+	path=DATABASE_DIR+path+'.meta'
+	#try block here
 	f = open(path, "r")
 	for line in f:
 		check_list.append(line.rstrip())
@@ -71,26 +56,17 @@ def get_search_list(db,result,path_prefix,keyword_list):
 	"""
 	for key in db:
 		is_dict=type(db[key]) is dict
-		name=key
-		check_list=[]
+		check_list=[key]
+		new_path_prefix=path_prefix[:]
+		new_path_prefix.append([key])
 		if not is_dict:
-			(name,location)=get_file_loc(name)
-			if location != None :
-				meta_path_prefix=path_prefix[:]
-				meta_path_prefix.append([key])
-				get_meta(meta_path_prefix,check_list)
-				pass
+			get_meta(new_path_prefix,check_list)
 
-		check_list.append(name)
 		(matches,perfect_matches)=match_string(keyword_list, check_list)
 		if matches and key not in EXCLUDE_SET:
-			new_path_prefix=path_prefix[:]
-			new_path_prefix.append([key])
 			result.append((new_path_prefix,matches,perfect_matches))
 
 		if is_dict:
-			new_path_prefix=path_prefix[:]
-			new_path_prefix.append([key])
 			get_search_list(db[key],result,new_path_prefix,keyword_list)
 
 
@@ -114,7 +90,7 @@ def get_path_prefix(path):
 	"""
 		gets path_prefixe given path
 	"""
-	temp_path=list(filter(None, path.split("/")))
+	temp_path=list(filter(None, path.split(os.sep)))
 	j=0
 	path_prefix=[]
 	for node in temp_path:

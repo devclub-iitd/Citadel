@@ -17,10 +17,18 @@
     <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform">
     {% csrf_token %}
     <label>Original file name</label>
+    <br>
     <input style="width:60%" type="text" name="org" value="{{org}}">
     <br>
     <label>New file name</label>
+    <br>
     <input style="width:60%" type="text" name="final">
+    <br>
+    <label>Tags</label>
+    <br>
+    <textarea name="tags" cols="40" rows="5" >{{tags}}</textarea>
+    <br>
     <button type="submit">Rename</button>
+    <button type="reset">Reset</button>
     </form>
 {% endblock %}
