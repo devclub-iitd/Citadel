@@ -45,7 +45,7 @@ mkdir media/bulk
 cd ../make_folder
 python make_folder.py
 cp DATA/* ../media/database/
-mv DATA/* ../media/bulk/
+cp DATA/* ../media/bulk/
 cd bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)
