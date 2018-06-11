@@ -147,7 +147,7 @@ def download_course(request):
 	with open(STATS_FILE, "r") as file:
 		stats = json.load(file)
 	stats[course]["downloads"] = stats[course]["downloads"] + 1
-	stats[course]["last"] = datetime.now().strftime("%d/%m/%Y")
+	stats[course]["last"] = datetime.now().strftime("%Y%m%d")
 	with open(STATS_FILE, "w") as file:
 		json.dump(stats, file)
 	loc = DATABASE_DIR.split(os.sep)
