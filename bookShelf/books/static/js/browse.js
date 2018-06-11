@@ -109,7 +109,7 @@ function create_elem_col(path_prefix,name,is_file)
         new_id += path_prefix[i][0]+"/";
     }
 
-    new_id += name+"/";
+    new_id += name;
 
     path_prefix.push([name,"#"+new_id]);
 
