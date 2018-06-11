@@ -46,7 +46,9 @@ def get_meta(meta_path_prefix, check_list):
 	#try block here
 	f = open(path, "r")
 	for line in f:
-		check_list.append(line.rstrip())
+		strip_line=line.rstrip()
+		if strip_line != '':
+			check_list.append(strip_line)
 	f.close()
 
 

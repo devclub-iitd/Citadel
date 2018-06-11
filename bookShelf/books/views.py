@@ -240,11 +240,16 @@ def rename(request):
 		if request.GET.get('name', '')=='':
 			return HttpResponse('<h1> Invalid use of Rename API</h1>')
 		with open(os.path.join(UNAPPROVED_DIR, request.GET.get('name') + '.meta'), "r") as file:
-			tags=file.read()
-		return render(request, "books/rename.html", {"org": request.GET.get('name'), "tags": tags})
+			taglist=[]
+			for line in file:
+				strip_line=line.rstrip()
+				if strip_line != '':
+					taglist.append(strip_line)
+		return render(request, "books/rename.html", {"org": request.GET.get('name'), "tags": ', '.join(taglist)})
 	elif request.method == "POST":
 		with open(os.path.join(UNAPPROVED_DIR, request.POST.get('org') + '.meta'), "w") as file:
-			file.write(request.POST.get('tags',''))
+			for tag in request.POST.get("tags",'').split(','):
+				file.write(tag + '\n')
 		if request.POST.get('final') != '' and request.POST.get('final') != request.POST.get('org'):
 			directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
 

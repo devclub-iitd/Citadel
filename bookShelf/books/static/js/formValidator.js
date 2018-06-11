@@ -34,9 +34,9 @@ document.getElementById("upload-btn").addEventListener("click", function() {
         document.getElementById("other").setCustomValidity("");
     }
     if (exam=="other" && other_text=="") {
-        document.getElementById("custtomFilename").setCustomValidity("Please enter the file name as well");
+        document.getElementById("customFilename").setCustomValidity("Please enter the file name as well");
     } else {
-        document.getElementById("custtomFilename").setCustomValidity("");            
+        document.getElementById("customFilename").setCustomValidity("");            
     }
 });
 

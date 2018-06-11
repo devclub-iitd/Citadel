@@ -3,6 +3,8 @@
 {% load extra_tags %}
 
 {% block nav %}
+    <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
+
 <div class="d-flex flex-row justify-content-center" id="path">
     <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb" id="path-bar">
@@ -14,7 +16,7 @@
 {% endblock %}
 
 {% block body %}
-    <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform">
+    <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform" id="form">
     {% csrf_token %}
     <label>Original file name</label>
     <br>
@@ -25,10 +27,15 @@
     <input style="width:60%" type="text" name="final">
     <br>
     <label>Tags</label>
-    <br>
-    <textarea name="tags" cols="40" rows="5" >{{tags}}</textarea>
-    <br>
-    <button type="submit">Rename</button>
+        <br>
+    <span id='tagbox'>
+    </span>
+        <br>
+    <input id="fake-input" placeholder="Enter tags here, eg. Major, Practical, Tutorial" value="{{tags}}">
+        <br>
+    <button id="submit">Submit</button>
     <button type="reset">Reset</button>
+
     </form>
+    <script src="{% static 'js/tagtest.js' %}"></script>
 {% endblock %}
