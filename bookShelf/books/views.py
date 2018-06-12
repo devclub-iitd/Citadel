@@ -35,6 +35,8 @@ SEPARATOR = "$"
 TAG = "=="
 META_SPLIT_COMPONENTS = 3
 META_EXTENSION = ".meta"
+TAG_SEPARATOR=','
+TAG_LIST_SEPARATOR=',,'
 # time limit to store download stats of zip files
 ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
 # file to record download stats of zips
@@ -73,16 +75,13 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
     if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
         dirPath = dirPath + SEPARATOR + "Question-Papers" + SEPARATOR + type_file
         toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + course_code + "-" + type_file + fileExtension
-        tags = [course_code, type_file]
     elif (type_file == 'Books' or type_file == 'Others'):
         dirPath = dirPath + SEPARATOR + type_file
         toWriteFileName = dirPath + SEPARATOR + origFileName + fileExtension
-        tags = [course_code, prof]
     else:
         dirPath = dirPath + SEPARATOR + "Professors" + SEPARATOR + prof + SEPARATOR + type_file
         toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension
-        tags = [course_code, prof]
-    return toWriteFileName, tags
+    return toWriteFileName
 
 
 def upload(request):
@@ -97,12 +96,21 @@ def upload(request):
         prof = request.POST.get('professor', "None")
         documents = request.FILES.getlist('documents')
         other_text = request.POST.get('customFilename', "None")
+        tagstring = request.POST.get('tag-string', "")
+        taglist=tagstring.split(TAG_LIST_SEPARATOR)
+        for i in range(len(taglist)):
+        	taglist[i]=taglist[i].split(TAG_SEPARATOR)
+        if len(taglist)!=len(documents):
+        	return HttpResponse(content="Bad Request, incorrectly formatted tags",status=400)
 
         ## Ignoring the alternate filename filed when number of files uploaded is more than 1
         if len(documents) > 1:
+
             other_text = 'None'
+
+        j=0
         for document in documents:
-            [filename, tags] = getFileName(course_code, sem, year, type_file, prof, document.name, other_text)
+            filename = getFileName(course_code, sem, year, type_file, prof, document.name, other_text)
             directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, filename))
             if not os.path.exists(directory):
                 os.makedirs(directory)
@@ -122,15 +130,17 @@ def upload(request):
                 destination.write(chunk)
             destination.close()
             
+            tags=taglist[j]
             keys = []
             destination_meta = file_path + '.meta'
             if os.path.isfile(destination_meta):
                 keys = [line.rstrip('\n') for line in open(destination_meta)]
             metafile = open(destination_meta, "a+")
             for k in range(len(tags)):
-                if tags[k] not in keys:
+                if tags[k] not in keys and tags[k].rstrip()!='':
                     metafile.write(tags[k] + '\n')
             metafile.close()
+            j+=1
         return render(request, 'books/thanks.html')
 
     else:

@@ -1,3 +1,6 @@
+//TODO: Extend to include all cases, next button no longer triggers request,
+// and auto validation can no longer be relied upon
+
 var start = 2005;
 var end = new Date().getFullYear();
 var options = "";
@@ -14,7 +17,7 @@ document.getElementById("customFilename").addEventListener("input", function() {
     }
 });
 document.getElementById("upload-btn").addEventListener("click", function() {
-    // console.log("yo");
+
     var radios = document.getElementsByName("type_exam");
     var course_code = document.getElementById("upload-form").elements[1].value;
     var sem = document.getElementById("upload-form").elements[2].value;

@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block body %}
-    <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform" id="form">
+    <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform">
     {% csrf_token %}
     <label>Original file name</label>
     <br>
@@ -28,14 +28,16 @@
     <br>
     <label>Tags</label>
         <br>
-    <span id='tagbox'>
+    <span class='tagbox'>
     </span>
         <br>
-    <input id="fake-input" placeholder="Enter tags here, eg. Major, Practical, Tutorial" value="{{tags}}">
+    <input class="fake-input" placeholder="Enter tags here, eg. Major, Practical, Tutorial" value="{{tags}}">
         <br>
-    <button id="submit">Submit</button>
+    <button type="button" class="submit">Submit</button>
     <button type="reset">Reset</button>
 
     </form>
     <script src="{% static 'js/tagtest.js' %}"></script>
+    <script src="{% static 'js/tagrun.js' %}"></script>
+
 {% endblock %}

@@ -20,8 +20,8 @@
       <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal" id="upload-form">
         {% csrf_token %}
         <div class="form-group row">
-            <label class="control-label col-sm-2">Course Code</label>
-            <input class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
+            <label class="control-label col-sm-2" >Course Code</label>
+            <input id="code-input" class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
         </div>
         
         <div class="form-group row">
@@ -40,7 +40,7 @@
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Professor</label>
-            <select class="form-control col-sm-6" name = "professor" style="display: inline" required>
+            <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required>
                 <option value=""> </option>
                 {% for value,name in profs.items %}
                     <option value= "{{ value }}">{{value}} - {{ name }}</option>
@@ -105,16 +105,22 @@
         </div>
        
         <div class="form-group row">
-            <input type="file" name="documents" required class="btn" multiple>
+            <input id="file-dump" type="file" name="documents" required class="btn" multiple>
         </div>
-
+        </form>
         <div class="form-group row" style="justify-content: space-around; align-items: center">
-            <button type="submit" id="upload-btn" class="btn btn-primary">Upload</button>            
+            <button id="upload-btn" class="btn btn-primary">Next</button>            
         </div>
+        <div id="tags-section"></div>
             
-      </form>
+      
   </div>
 </div>
 
     <script src="{% static 'js/formValidator.js' %}"></script>
+    <script src="{% static 'js/tagtest.js' %}"></script>
+    <script src="{% static 'js/upload.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
+
+
 {% endblock %}
