@@ -97,6 +97,8 @@ def upload(request):
         prof = request.POST.get('professor', "None")
         documents = request.FILES.getlist('documents')
         other_text = request.POST.get('customFilename', "None")
+
+        ## Ignoring the alternate filename filed when number of files uploaded is more than 1
         if len(documents) > 1:
             other_text = 'None'
         for document in documents:
@@ -105,20 +107,23 @@ def upload(request):
             if not os.path.exists(directory):
                 os.makedirs(directory)
             file_path = os.path.join(UNAPPROVED_DIR, filename)
+
+            ## Make sure that two files in unapproved directory don't have same name
             if os.path.exists(file_path) and os.path.isfile(file_path):
-                i = 1
-                temp_path = '.'.join(file_path.split('.')[:-1])
+                i=1
+                file_root = '.'.join(file_path.split('.')[:-1]) 
                 ext = file_path.split('.')[-1]
-                while os.path.exists(temp_path+'.'+ext) and os.path.isfile(temp_path+'.'+ext):
-                    temp_path = temp_path + '(' + str(i) + ')'
+                while os.path.exists(file_path) and os.path.isfile(file_path):
+                    file_path = file_root + '(' + str(i) + ')' + ext
                     i += 1
-                file_path = temp_path + '.' + ext
-            destination_meta = file_path + '.meta'
+
             destination = open(file_path, "wb+")
             for chunk in document.chunks():
                 destination.write(chunk)
             destination.close()
+            
             keys = []
+            destination_meta = file_path + '.meta'
             if os.path.exists(destination_meta) and os.path.isfile(destination_meta):
                 keys = [line.rstrip('\n') for line in open(destination_meta)]
             metafile = open(destination_meta, "a+")
@@ -127,6 +132,7 @@ def upload(request):
                     metafile.write(tags[k] + '\n')
             metafile.close()
         return render(request, 'books/thanks.html')
+
     else:
         profs = json.loads(open("profs.json", "r").read(), object_pairs_hook=OrderedDict)
         return render(request, 'books/upload.html', {"profs": profs})
@@ -134,27 +140,31 @@ def upload(request):
 
 def download_course(request):
     """
-        function to serve the zip files of entire courses
+        Function to serve the zip files of entire courses. The function updates the course_downloaded database appropriately.
     """
     course = request.GET.get('course', 'none')
     if course == 'none':
         return redirect('/books/')
     parent_dir = course[0:2]
     zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
-    if not (os.path.exists(zip_location) and os.path.isfile(zip_location)):
-        zip_course(course)
-    """
-        records the downloaded zip file in the stats file
-    """
-    with open(STATS_FILE, "r") as file:
-        stats = json.load(file)
-    stats[course]["downloads"] = stats[course]["downloads"] + 1
-    stats[course]["last"] = datetime.now().strftime("%Y%m%d")
-    with open(STATS_FILE, "w") as file:
-        json.dump(stats, file)
-    loc = DATABASE_DIR.split(os.sep)
-    path = '/'.join(loc)
-    return redirect('/' + path + '/' + parent_dir + '/' + course + '.zip')
+    try:
+        if not (os.path.exists(zip_location) and os.path.isfile(zip_location)):
+            zip_course(course)
+
+        with open(STATS_FILE, "r") as file:
+            stats = json.load(file)
+        stats[course]["downloads"] = stats[course]["downloads"] + 1
+        stats[course]["last"] = datetime.now().strftime("%Y%m%d")
+        with open(STATS_FILE, "w") as file:
+            json.dump(stats, file)
+        
+        loc = DATABASE_DIR.split(os.sep)
+        path = '/'.join(loc)
+        return redirect('/' + path + '/' + parent_dir + '/' + course + '.zip')
+    
+    except OSError as e:
+        return redirect('/books/')
+    
 
 
 @login_required
@@ -186,11 +196,11 @@ def remove_unapproved_document(request):
     path_to_file = os.path.join(UNAPPROVED_DIR, request.GET.get('name', 'none'))
     path_to_meta = path_to_file + '.meta'
     flag = 0
-    if os.path.exists(path_to_file) and os.path.isfile(path_to_file):
+    if os.path.isfile(path_to_file):
         os.remove(path_to_file)
     else:
         flag = flag + 1
-    if os.path.exists(path_to_meta) and os.path.isfile(path_to_meta):
+    if os.path.isfile(path_to_meta):
         os.remove(path_to_meta)
     else:
         flag = flag + 2
@@ -343,7 +353,6 @@ def userlogout(request):
     return redirect("/books/")
 
 
-# api
 @api_view()
 def APIstructure(request):
     f = jsc.path_to_dict(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
@@ -376,12 +385,6 @@ def APIsearch(request):
     else:
         result = search.search_dic(db, path_prefix, keyword_list)
         return Response({"result": result})
-
-
-# testAPI
-@api_view()
-def heartbeat(request):
-    return Response({"message": "Server is up!"})
 
 
 def export_files():
@@ -510,6 +513,8 @@ def zip_course(course):
     parent_dir = course[0:2]
     zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
     course_path = os.path.join(DATABASE_DIR, parent_dir, course)
+    if not os.path.isdir(course_path):
+        raise OSError
     zf = zipfile.ZipFile(zip_location, "w")
     for dirname, sudirs, files in os.walk(course_path):
         for filename in files:
