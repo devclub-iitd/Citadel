@@ -27,7 +27,7 @@ def get_size():
 
 """
     CODE TO DELETE ACCORDING TO LAST DOWNLOAD TIME STAMP
-    if os.path.exists(zip_location) and os.path.isfile(zip_location):
+    if os.path.isfile(zip_location):
         last_download = stats[course]["last"]
         if last_download == '' or datetime.now() > datetime.strptime(last_download, '%d/%m/%Y') + ZIP_TIME_LIMIT:
             os.remove(zip_location)
@@ -42,6 +42,6 @@ if not (get_size() < ZIP_SIZE_LIMIT):
         course = sorted_list[cntr]
         parent_dir = course[0:2]
         zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
-        if os.path.exists(zip_location) and os.path.isfile(zip_location):
+        if os.path.isfile(zip_location):
             os.remove(zip_location)
         cntr = cntr + 1

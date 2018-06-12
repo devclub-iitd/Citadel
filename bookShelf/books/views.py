@@ -109,11 +109,11 @@ def upload(request):
             file_path = os.path.join(UNAPPROVED_DIR, filename)
 
             ## Make sure that two files in unapproved directory don't have same name
-            if os.path.exists(file_path) and os.path.isfile(file_path):
+            if os.path.isfile(file_path):
                 i=1
                 file_root = '.'.join(file_path.split('.')[:-1]) 
                 ext = file_path.split('.')[-1]
-                while os.path.exists(file_path) and os.path.isfile(file_path):
+                while os.path.isfile(file_path):
                     file_path = file_root + '(' + str(i) + ')' + ext
                     i += 1
 
@@ -124,7 +124,7 @@ def upload(request):
             
             keys = []
             destination_meta = file_path + '.meta'
-            if os.path.exists(destination_meta) and os.path.isfile(destination_meta):
+            if os.path.isfile(destination_meta):
                 keys = [line.rstrip('\n') for line in open(destination_meta)]
             metafile = open(destination_meta, "a+")
             for k in range(len(tags)):
@@ -148,7 +148,7 @@ def download_course(request):
     parent_dir = course[0:2]
     zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
     try:
-        if not (os.path.exists(zip_location) and os.path.isfile(zip_location)):
+        if not (os.path.isfile(zip_location)):
             zip_course(course)
 
         with open(STATS_FILE, "r") as file:
@@ -180,7 +180,7 @@ def approve(request):
                 f = os.path.join(path, filename)
                 name = f.split(SEPARATOR)[-1]
                 check = os.path.join(BULK_UP_DIR, name)
-                if os.path.exists(check) and os.path.isfile(check):
+                if os.path.isfile(check):
                     arg = True
                 unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]] = arg
 
@@ -319,12 +319,12 @@ def force_integrity(request):
                 if not filename.endswith('.zip'):
                     if filename.endswith('.meta'):
                         pathname = os.path.join(root, '.'.join(filename.split('.')[:-1]))
-                        if not (os.path.exists(pathname) and os.path.isfile(pathname)):
+                        if not (os.path.isfile(pathname)):
                             os.remove(os.path.join(root, filename))
                     else:
                         metafilename = filename + '.meta'
                         metafile = os.path.join(root, metafilename)
-                        if not (os.path.exists(metafile) and os.path.isfile(metafile)):
+                        if not (os.path.isfile(metafile)):
                             tags = generate_path_meta_tags(os.path.relpath(metafile, DATABASE_DIR))
                             with open(metafile,"w") as f:
                                 f.write('\n'.join(tags))
@@ -464,7 +464,7 @@ def finalize_function():
         task = sorted_tasks[0]
         previous_course = task[COURSE]
         zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
-        if os.path.exists(zip_location) and os.path.isfile(zip_location):
+        if os.path.isfile(zip_location):
             zip_present = 1
             os.remove(zip_location)
         else:
@@ -478,7 +478,7 @@ def finalize_function():
                 zip_course(previous_course)
             previous_course = task[COURSE]
             zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
-            if os.path.exists(zip_location) and os.path.isfile(zip_location):
+            if os.path.isfile(zip_location):
                 os.remove(zip_location)
                 zip_present = 1
             else:
@@ -506,9 +506,9 @@ def startup_function():
     """
         Function called on each server start
     """
-    if not (os.path.exists(STATS_FILE) and os.path.isfile(STATS_FILE)):
+    if not (os.path.isfile(STATS_FILE)):
         shutil.copy(stats_loc, STATS_FILE)
-    if not (os.path.exists(JOURNAL) and os.path.isfile(JOURNAL)):
+    if not (os.path.isfile(JOURNAL)):
         tasks = []
         with open(JOURNAL, "w") as file:
             json.dump(tasks, file)
