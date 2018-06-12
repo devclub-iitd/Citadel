@@ -19,10 +19,10 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from collections import OrderedDict
-from books import search as search
 
-# Custom JSON Database Creator
+# Custom Modules
 from books import JSONcreator as jsc
+from books import search as search
 
 DATABASE_DIR = os.path.join('..', 'media', 'database')
 DATABASE_URL = "/media/database"
@@ -163,7 +163,7 @@ def download_course(request):
         return redirect('/' + path + '/' + parent_dir + '/' + course + '.zip')
     
     except OSError as e:
-        return redirect('/books/')
+        return HttpResponse(status=400,content="Bad Request")
     
 
 
@@ -173,7 +173,7 @@ def approve(request):
         Controller to Handle approval of requests
     """
     unapproved_documents = {}
-    for path, subdirs, files in os.walk(UNAPPROVED_DIR):
+    for path, _, files in os.walk(UNAPPROVED_DIR):
         for filename in files:
             if not filename.endswith('.meta'):
                 arg = False
@@ -224,25 +224,25 @@ def approve_unapproved_document(request):
         controller to approve the files and create the meta file of those files alongside in the database_dir
     """
     fileName = request.GET.get('name', 'none')
+    if fileName =="none":
+        return HttpResponse(content="Bad Request, name parameter missing",status=400)
+
     fileMeta = fileName + '.meta'
+    
     seperatedlist = fileName.split(SEPARATOR)
     destination = DATABASE_DIR
     for directory in seperatedlist:
         destination = os.path.join(destination, directory)
     destination_meta = destination + '.meta'
 
-    try:
-        shutil.copy(os.path.join(UNAPPROVED_DIR, fileName), destination)
-        shutil.copy(os.path.join(UNAPPROVED_DIR, fileMeta), destination_meta)
-    except IOError as e:
-        if e.errno != errno.ENOENT:
-            raise
+    if os.path.isfile(os.path.join(UNAPPROVED_DIR, fileName)) and os.path.isfile(os.path.join(UNAPPROVED_DIR, fileMeta)) :
         os.makedirs(os.path.dirname(destination), exist_ok=True)
         shutil.copy(os.path.join(UNAPPROVED_DIR, fileName), destination)
         shutil.copy(os.path.join(UNAPPROVED_DIR, fileMeta), destination_meta)
-
-    add_tasks(add, [os.path.relpath(destination, DATABASE_DIR)])
-    return redirect('/books/remove_unapproved_document?name=' + fileName)
+        add_tasks(add, [os.path.relpath(destination, DATABASE_DIR)])
+        return redirect('/books/remove_unapproved_document?name=' + fileName)
+    else:
+        return HttpResponse(content="The file has missing metafile, rename it to generate a meta file and then approve it<br> Or the name passed as argument does not exist.",status=400)
 
 
 @login_required
@@ -250,7 +250,7 @@ def rename(request):
     #use try blocks
     if request.method == "GET":
         if request.GET.get('name', '')=='':
-            return HttpResponse('<h1> Invalid use of Rename API</h1>')
+            return HttpResponse('<h1> Invalid use of Rename API</h1>',status=400)
         with open(os.path.join(UNAPPROVED_DIR, request.GET.get('name') + '.meta'), "r") as file:
             taglist=[]
             for line in file:
@@ -295,6 +295,18 @@ def bulk_approve(request):
         return redirect('/books/approve')
 
 
+def generate_path_meta_tags(inner_path):
+    tags = []
+    inner_path = os.path.split(inner_path)[0]
+    while os.path.split(inner_path)[0] is not '':
+        tag = os.path.split(inner_path)[1] 
+        if tag not in EXCLUDED_TAGS:
+            tags.append(tag)
+        inner_path = os.path.split(inner_path)[0]
+    return tags
+
+
+
 @login_required
 def force_integrity(request):
     """
@@ -313,28 +325,23 @@ def force_integrity(request):
                         metafilename = filename + '.meta'
                         metafile = os.path.join(root, metafilename)
                         if not (os.path.exists(metafile) and os.path.isfile(metafile)):
-                            f = open(metafile, 'w')
-                            inner_path = os.path.relpath(metafile, DATABASE_DIR)
-                            inner_path = os.path.split(inner_path)[0]
-                            while os.path.split(inner_path)[0] is not '':
-                                if os.path.split(inner_path)[1] not in EXCLUDED_TAGS:
-                                    f.write(os.path.split(inner_path)[1] + '\n')
-                                inner_path = os.path.split(inner_path)[0]
-                            f.close()
+                            tags = generate_path_meta_tags(os.path.relpath(metafile, DATABASE_DIR))
+                            with open(metafile,"w") as f:
+                                f.write('\n'.join(tags))
 
         jsc.recreate_path(DATABASE_DIR, DATABASE_DICT_FILE_NAME)
-        return redirect('/books/approve')
+        return redirect('/books/')
     else:
-        return redirect('/books/approve')
+        return redirect('/books/')
 
 
 @login_required
 def finalize_approvals(request):
     if request.method == "GET":
         finalize_function()
-        return redirect('/books/approve')
+        return redirect('/books/')
     else:
-        return redirect('/books/approve')
+        return redirect('/books/')
 
 
 def userlogin(request):
@@ -361,7 +368,6 @@ def APIstructure(request):
     try:
         db = jsc.navigate_path(f, path, False)
     except Exception as e:
-        print("invalid path")
         return Response({})
     else:
         truncated_db = jsc.truncate_db(db, depth)
@@ -389,10 +395,10 @@ def APIsearch(request):
 
 def export_files():
     """
-        function to export the pasted files from bulk_up_dir to database_dir
+        Function to export the pasted files from bulk_up_dir to database_dir
     """
     paths = []
-    for root, dirs, files in os.walk(BULK_UP_DIR):
+    for root, _, files in os.walk(BULK_UP_DIR):
         for filename in files:
             from_link = os.path.join(root, filename)
             to_link = os.path.join(DATABASE_DIR, os.path.relpath(from_link, BULK_UP_DIR))
@@ -408,27 +414,30 @@ def export_files():
 
 def build_meta_files():
     """
-        function to build meta files for all the files which are manually pasted (uses the location)
+        Function to build meta files for all the files which are manually pasted (uses the location) and appends tags to original meta file if present
     """
-    for root, dirs, files in os.walk(BULK_UP_DIR, topdown=True):
+    for root, _, files in os.walk(BULK_UP_DIR, topdown=True):
         for filename in files:
             if not filename.lower().endswith('.meta'):
                 file_loc = os.path.join(root, filename)
                 metafile_loc = file_loc + '.meta'
-                if not (os.path.exists(metafile_loc) and os.path.isfile(metafile_loc)):
-                    f = open(metafile_loc, 'w')
-                    inner_path = os.path.relpath(metafile_loc, BULK_UP_DIR)
-                    inner_path = os.path.split(inner_path)[0]
-                    while os.path.split(inner_path)[0] is not '':
-                        if os.path.split(inner_path)[1] not in EXCLUDED_TAGS:
-                            f.write(os.path.split(inner_path)[1] + '\n')
-                        inner_path = os.path.split(inner_path)[0]
-                    f.close()
 
+                ## Read tags already added by the user                 
+                old_tags = []
+                if os.path.isfile(metafile_loc):
+                    with open(metafile_loc,"r") as f: 
+                        old_tags = f.readlines()
+                    old_tags = [tag.strip() for tag in old_tags]
+            
+                new_tags = generate_path_meta_tags(os.path.relpath(metafile_loc, BULK_UP_DIR))
+                final_tags = old_tags + list( set(new_tags) - set(old_tags))
+                with open(metafile_loc,"w") as f:
+                    f.write('\n'.join(final_tags))
+                    
 
 def add_tasks(type_of_change, paths):
     """
-     function to add tasks to task_file.json, either in bulk or on each approval
+     Function to add tasks to task_file.json, either in bulk or on each approval
     """
     with open(JOURNAL, "r") as file:
         tasks = json.load(file)
@@ -446,7 +455,7 @@ def add_tasks(type_of_change, paths):
 
 def finalize_function():
     """
-        function to execute task_file.json course wise, task wise and modify zips and database.json
+        Function to execute task_file.json course wise, task wise and modify zips and database.json
     """
     with open(JOURNAL, "r") as file:
         tasks = json.load(file)
@@ -480,7 +489,7 @@ def finalize_function():
 
 def tasks_handler(tasks):
     """
-        controller to modify database.json according to task
+        Controller to modify database.json according to task
     """
     with open(DATABASE_DICT_FILE_NAME, "r") as file:
         data = json.load(file)
@@ -495,7 +504,7 @@ def tasks_handler(tasks):
 
 def startup_function():
     """
-        function called on each server start
+        Function called on each server start
     """
     if not (os.path.exists(STATS_FILE) and os.path.isfile(STATS_FILE)):
         shutil.copy(stats_loc, STATS_FILE)
@@ -508,7 +517,7 @@ def startup_function():
 
 def zip_course(course):
     """
-     function to zip courses given a course code
+     Function to zip courses given a course code
     """
     parent_dir = course[0:2]
     zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
@@ -516,7 +525,7 @@ def zip_course(course):
     if not os.path.isdir(course_path):
         raise OSError
     zf = zipfile.ZipFile(zip_location, "w")
-    for dirname, sudirs, files in os.walk(course_path):
+    for dirname, _, files in os.walk(course_path):
         for filename in files:
             if not filename.lower().endswith('.meta'):
                 path = os.path.join(dirname, filename)
@@ -527,12 +536,12 @@ def zip_course(course):
 
 def restore_structure():
     """
-    function to restore the folder tree structure of BULK_DIR after exporting files
+    Function to restore the folder tree structure of BULK_DIR after exporting files
     """
     if not os.listdir(TREE_DIR):
         dir = os.path.dirname(MAKE_FOLDER_SCRIPT)
         os.system("cd " + dir + " && " + "python " + MAKE_FOLDER_SCRIPT)
-    for dirpath, dirnames, filenames in os.walk(BULK_UP_DIR, topdown=False):
+    for dirpath, _, _ in os.walk(BULK_UP_DIR, topdown=False):
         structure = os.path.join(TREE_DIR, os.path.relpath(dirpath, BULK_UP_DIR))
         if not os.path.isdir(structure):
             shutil.rmtree(dirpath)

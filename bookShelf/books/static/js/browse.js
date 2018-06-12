@@ -121,7 +121,7 @@ function create_elem_col(path_prefix,name,is_file)
     btn.onclick = handler;
     if (path_prefix.length == 2){
         //to add the download course button
-        html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap""><div class="col-item" title="jkj">'+"Download Course Zip"+'</div></a>';
+        html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap""><div class="col-item">'+"Download Course Zip"+'</div></a>';
         var bt=$.parseHTML(html)[0];
 
         handler = function(){
