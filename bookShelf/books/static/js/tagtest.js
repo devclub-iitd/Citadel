@@ -30,6 +30,7 @@ function tagInput(box){
 		var tag = document.createElement("span")
 		tag.setAttribute("class", "tag");
 		var close = document.createElement("span")
+		close.setAttribute("style", "cursor: pointer;");
 		close.addEventListener("click", function(){
 			removeTag(tags.indexOf(tag))
 		})

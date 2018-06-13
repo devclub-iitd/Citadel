@@ -1,6 +1,5 @@
 import os
 
-TAG = "=="
 META_EXTENSION = ".meta"
 DATABASE_DIR = os.path.join("..","media","database")
 EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others','Professors']

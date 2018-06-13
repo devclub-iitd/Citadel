@@ -26,6 +26,7 @@ $(document).ready(function() {
 				addTagBox(fileDump.files[i].name,default_tags)
 			}
 			var submit_button = document.createElement('button')
+			submit_button.className = "btn btn-primary";
 			submit_button.innerHTML="Submit"
 			submit_button.addEventListener("click", function(){
 				submit_data()

@@ -32,11 +32,10 @@ TREE_DIR = os.path.join('..', 'make_folder', 'DATA')
 MAKE_FOLDER_SCRIPT = os.path.join('..', 'make_folder', 'make_folder.py')
 DATABASE_DICT_FILE_NAME = "database.json"
 SEPARATOR = "$"
-TAG = "=="
 META_SPLIT_COMPONENTS = 3
 META_EXTENSION = ".meta"
-TAG_SEPARATOR=','
-TAG_LIST_SEPARATOR=',,'
+TAG_SEPARATOR = ','
+TAG_LIST_SEPARATOR = ',,'
 # time limit to store download stats of zip files
 ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
 # file to record download stats of zips
