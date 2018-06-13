@@ -68,6 +68,7 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
         origFileName = other
     else:
         origFileName = '.'.join(filename.split('.')[:-1])
+    origFileName = origFileName.replace("+", "-")
     fileExtension = "." + filename.split('.')[-1]
     dirPath = course_code[0:2] + SEPARATOR + course_code
 
@@ -181,6 +182,11 @@ def approve(request):
     """
         Controller to Handle approval of requests
     """
+    pending_approvals = False
+    with open(JOURNAL, "r") as file:
+        tasks = json.load(file)
+    if len(tasks) > 0:
+        pending_approvals = True
     unapproved_documents = {}
     for path, _, files in os.walk(UNAPPROVED_DIR):
         for filename in files:
@@ -197,7 +203,8 @@ def approve(request):
         error = "No Unapproved documents present, please ask people to upload material and contribute to the Citadel"
     else:
         error = ''
-    return render(request, 'books/approve.html', {'unapproved_documents': unapproved_documents, 'error': error})
+    return render(request, 'books/approve.html', {'unapproved_documents': unapproved_documents,
+                                                  'pending_approvals': pending_approvals, 'error': error})
 
 
 @login_required
