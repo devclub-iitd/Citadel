@@ -4,9 +4,20 @@
 
 {%block body%}
 <div class="container">
-<input class = "form-control" style="width: 35%; display: inline" type="search" />
-<button class="btn btn-default">Search</button>
-<button class="btn btn-default">Reset</button>
+<div class="input-group">
+    <input type="search" class="form-control" >
+    <div class="input-group-btn">
+      <button class="btn btn-outline-default">
+        Search
+      </button>
+    </div>
+     <div class="input-group-btn">
+      <button class="btn btn-outline-default">
+        Reset
+      </button>
+    </div>
+  </div>
+
 </div>
 <div id="output"></div>
 <hr/>

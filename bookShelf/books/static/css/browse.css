@@ -115,6 +115,15 @@ body {
     margin-top: 0;
 }
 
-.search{
-    width: 25%;
+.input-group{
+    width: 45%;
+    border-radius: 6px;
+
+}
+
+.btn{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #cccccc;
 }
