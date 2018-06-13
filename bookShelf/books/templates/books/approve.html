@@ -16,6 +16,13 @@
 
 {% block body %}
 
+<hr>
+
+<input type="search" class = "form-control" style="width: 35%; display: inline">
+<button class="btn btn-default" style="display: inline">File Search</button>
+<div id="output"></div>
+<hr/>
+
 <center><p>Please review the documents carefully before approving them.</p></center>
 
 <div class="panel panel-default">
@@ -37,12 +44,7 @@
 </div>
 
 
-    <hr>
-
-<input type="search">
-<button>Search</button>
-<div id="output"></div>
-<hr/>
+    
 <script src="{% static 'js/browse.js' %}"></script>
 <script src="{% static 'js/filesearch.js' %}"></script>
 
