@@ -31,10 +31,11 @@
     <span class='tagbox'>
     </span>
         <br>
-    <input class="fake-input" placeholder="Enter tags here, eg. Major, Practical, Tutorial" value="{{tags}}">
+    <input type="hidden" id="current-tags" value="{{tags}},">
+    <input class="fake-input" placeholder="Enter tags here, eg. Major, Practical, Tutorial">
         <br>
     <button type="button" class="submit">Submit</button>
-    <button type="reset">Reset</button>
+    <button type="button" class="reset">Reset</button>
 
     </form>
     <script src="{% static 'js/tagtest.js' %}"></script>
