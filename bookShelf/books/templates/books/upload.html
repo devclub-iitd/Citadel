@@ -3,19 +3,23 @@
 {% load extra_tags %}
 
             {% block nav %}
-            <div class="d-flex flex-row justify-content-center" id="path">
-                <nav aria-label="breadcrumb" role="navigation">
+            
                     <ol class="breadcrumb" id="path-bar">
                         <li class="breadcrumb-item"><a href="../">Home</a></li>
                         <li class="breadcrumb-item"><a href="#">Upload</a></li>
                     </ol>
-                </nav>
-            </div>
             {% endblock %}
 {% block body %}
-<p>Important Instruction: Please take care to upload the files with an appropriate name so that it is easy for others to understand.</p>
-<p>NOTE: You can upload multiple files of the same type, like multiple lectures, notes, assignments, tutorials or books for the same course.</p>
+
 <div class="panel panel-default">
+    <div class="card">
+    <div class="card-body">
+    Important Instruction: Please take care to upload the files with an appropriate name so that it is easy for others to understand.
+    <p></p>
+NOTE: You can upload multiple files of the same type, like multiple lectures, notes, assignments, tutorials or books for the same course.
+</div>
+</div>
+<br>
     <div class="panel-body">
       <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal" id="upload-form">
         {% csrf_token %}
@@ -120,7 +124,7 @@
     <script src="{% static 'js/formValidator.js' %}"></script>
     <script src="{% static 'js/tagtest.js' %}"></script>
     <script src="{% static 'js/upload.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
+        <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
 
 
 {% endblock %}

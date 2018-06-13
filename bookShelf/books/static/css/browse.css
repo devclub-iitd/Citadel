@@ -7,30 +7,36 @@ body {
 body {
     padding-top: 0.5rem;
     padding-bottom: 0.15rem;
-    /*overflow: hidden;*/
 }
 
 #body-container {
-    height: 100%;
-    min-height: 100%;
     min-width: 100%;
 }
 
 
 #content {
-    height: 87%;
-    padding-top: 0.5rem;
+    min-height: 30em;  /*adjust for min size of column*/
+    height: 100%;
+    padding-top: 0rem;
     padding-bottom: 0.5rem;
     border-left: 1px solid #e9ecef;
     border-right: 1px solid #e9ecef;
 }
 
 #path {
-    height: 8%;
+    padding: auto;
+}
+
+#path-bar{
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0.36em 0 0.34em 0;
+}
+.path-box{
+    height: 100%;
 }
 
 #file-browser {
-    height: 85%;
     overflow-x: auto;
     white-space: nowrap;
     overflow-y: hidden;
@@ -38,6 +44,7 @@ body {
 
 .file-column {
     height: 94%;
+    max-height: 25em; /*adjust for max size of column*/
     overflow-y: auto;
     margin-top: 1%;
     margin-bottom: 1%;
@@ -58,6 +65,7 @@ body {
 .header {
     padding-bottom: 0.25rem;
     border-bottom: .05rem solid #e5e5e5;
+    margin: auto;
 }
 
 
@@ -72,11 +80,12 @@ body {
 
 /* Custom page footer */
 
-.footer {
+#footer {
     padding-top: 0.4rem;
     padding-bottom: 0.4rem;
     color: #777;
     border-top: .05rem solid #e5e5e5;
+    width: 100%;
 }
 .search_bar {
     margin-bottom: 10px;
@@ -97,4 +106,12 @@ body {
     border-radius: 5px;
     padding: 20px;
     overflow: auto;
+}
+
+.card{
+    background-color: #f1f1f1;
+}
+
+.topless-rule{
+    margin-top: 0;
 }

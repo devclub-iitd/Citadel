@@ -33,7 +33,7 @@ function search_column()
 function create_base_div_col()
 {
     var html = '<div class="file-column border rounded"> \
-                    <input onkeyup="search_column.call(this);" type="text" class="form-control search_bar" placeholder="Search.." aria-label="search bar"> \
+                    <input onkeyup="search_column.call(this);" type="text" class="form-control search_bar" placeholder="Search Column.." aria-label="search bar"> \
                     <div class="list-group">\
                     </div> \
                 </div>';
