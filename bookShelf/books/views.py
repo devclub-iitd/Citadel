@@ -98,9 +98,9 @@ def upload(request):
         tagstring = request.POST.get('tag-string', "")
         taglist=tagstring.split(TAG_LIST_SEPARATOR)
         for i in range(len(taglist)):
-        	taglist[i]=taglist[i].split(TAG_SEPARATOR)
+            taglist[i]=taglist[i].split(TAG_SEPARATOR)
         if len(taglist)!=len(documents):
-        	return HttpResponse(content="Bad Request, incorrectly formatted tags",status=400)
+            return HttpResponse(content="Bad Request, incorrectly formatted tags",status=400)
 
         ## Ignoring the alternate filename filed when number of files uploaded is more than 1
         if len(documents) > 1:

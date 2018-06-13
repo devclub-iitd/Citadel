@@ -1,4 +1,3 @@
-//TODO: Fix tags not showing on reload
 
 function tagInput(box){
 	var input= box.getElementsByClassName("fake-input")[0]
@@ -22,7 +21,7 @@ function tagInput(box){
 					}
 				}
 			}
-			input.value='' //reload works on removing. Why?
+			input.value=''
 		}
 	}
 
