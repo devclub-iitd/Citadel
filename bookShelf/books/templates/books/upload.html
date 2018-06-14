@@ -24,12 +24,12 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
       <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal" id="upload-form">
         {% csrf_token %}
         <div class="form-group row">
-            <label class="control-label col-sm-2" >Course Code</label>
+            <label class="control-label col-sm-2" >Course Code:</label>
             <input id="code-input" class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
         </div>
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Semester</label>
+            <label class="control-label col-sm-2">Semester:</label>
             <select class="form-control col-sm-6" name = "sem" style="display: inline">
                 <option value=""> </option>
                 <option value="Fall">Fall (Sem 1)</option>
@@ -38,12 +38,12 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
         </div>
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Academic Year</label>
+            <label class="control-label col-sm-2">Academic Year:</label>
             <select class="form-control col-sm-6" name="year" id="year"></select>
         </div>
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Professor</label>
+            <label class="control-label col-sm-2">Professor:</label>
             <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required>
                 <option value=""> </option>
                 {% for value,name in profs.items %}
@@ -51,8 +51,23 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
                 {% endfor %}
             </select>
         </div>
-        
+
         <div class="form-group row">
+            <label class="control-label col-sm-2">Document Type:</label>
+            <select class="form-control col-sm-6" name = "type_file" style="display: inline">
+                <option value="Minor1">Minor 1 </option>
+                <option value="Minor2">Minor 2</option>
+                <option value="Major">Major</option>
+                <option value="Books">Books</option>
+                <option value="Lectures">Lectures/Slides</option>
+                <option value="Assignments">Assignments</option>
+                <option value="Tutorials">Tutorials</option>
+                <option value="Others">Others</option>
+
+            </select>
+        </div>
+        
+       <!--  <div class="form-group row">
             <label class="control-label col-sm-2">Type of paper</label>     
             <div class="form-check form-check-inline">    
                 <label class="form-check-label">
@@ -99,13 +114,16 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
                     <input id="other" type="radio" name="type_file" value="Others"  class="form-check-input"><span>Others</span>
                 </label>
             </div> 
-        </div>
+        </div> -->
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Optional (FileName):</label>                    
-            <label class="control-label col-sm-2">
-                <input style="width:400px" id="customFilename" type="text" name="customFilename" placeholder="Change File name (Without extension)"  class="form-check-input" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
-            </label>
+            <label class="control-label col-sm-2">FileName:</label>                    
+                <input  id="customFilename" type="text" name="customFilename" placeholder="Optionally change File name (Without extension)"  class="col-sm-6 form-control" style="margin:0" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
+            
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-sm-2" >Course Code:</label>
+            <input id="code-input" class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
         </div>
        
         <div class="form-group row">
@@ -121,7 +139,7 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
   </div>
 </div>
 
-    <script src="{% static 'js/formValidator.js' %}"></script>
+    <script src="{% static 'js/formValidator.js' %}"></script>  <!--  Broken By form changes TODO: fix -->
     <script src="{% static 'js/tagtest.js' %}"></script>
     <script src="{% static 'js/upload.js' %}"></script>
         <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">

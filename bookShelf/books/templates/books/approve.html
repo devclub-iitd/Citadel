@@ -38,7 +38,7 @@
     </div>
 </div>
     <center><h6>{{ error }}</h6></center>
-    {% for doc in unapproved_documents %}
+    {% for doc,repeat in unapproved_documents.items %}
         <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
         <br/>
         <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
