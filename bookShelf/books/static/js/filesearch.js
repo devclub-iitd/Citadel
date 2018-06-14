@@ -1,6 +1,12 @@
 //
 
 $(document).ready(function(){
+
+	$("button")[1].addEventListener("click", function(){
+		reset_results();
+		$("input")[0].value=''
+	})
+
 	$("button")[0].addEventListener("click", function(){
 		DB={};;                        
 		$.getJSON( '/books/api/search',{"path":"/","query":$("input")[0].value}, function( data ){
@@ -9,9 +15,7 @@ $(document).ready(function(){
 		    $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data ){
 		        DB=data;	    
 		        // reset output
-		        var box = $.parseHTML("<div id='output'></div>")
-		        $("#output").remove()
-		        $(".input-group").after(box)
+		        reset_results()
 
 				for (var i=0; i< DBZ["result"].length;i++){
 
@@ -28,7 +32,7 @@ $(document).ready(function(){
 					    	display_path+= path_prefixer[j][0]+'/'
 					    }
 					    display_path+=name
-					    var html = "<div><a href="+MEDIA_PREFIX+display_path+" target = '_blank'>"+display_path+"</a></div>"
+					    var html = "<div class='file-name file-box'><a href="+MEDIA_PREFIX+display_path+" target = '_blank'>"+display_path+"</a></div>"
 					    var link = $.parseHTML(html)
 					    
 				        $("#output").append(link)
@@ -39,3 +43,9 @@ $(document).ready(function(){
 		});
 	})
 })
+
+function reset_results(){
+	var box = $.parseHTML("<div id='output' class='results-box'></div>")
+    $("#output").remove()
+    $(".input-group").after(box)
+}

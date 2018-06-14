@@ -43,7 +43,7 @@ function addTagBox(name,tags){
 	var fileBox = document.createElement('div')
 	tagsSection.appendChild(fileBox)
 	fileBox.setAttribute("class","file-box")
-	fileBox.innerHTML+="<div class='file-name'><strong>Filename: </strong>"+name+"</div><div class='tagbox'></div><input class='fake-input form-control col-md-8' placeholder='Enter tags here, eg. Major, Practical, Tutorial' value="+tagString+">"
+	fileBox.innerHTML+="<div class='file-name'><strong>New Filename: </strong>"+name+"</div><div class='tagbox'></div><input class='fake-input form-control col-md-8' placeholder='Enter tags here, eg. Major, Practical, Tutorial' value="+tagString+">"
 	tagInput(fileBox)
 }
 

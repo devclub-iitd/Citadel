@@ -139,3 +139,59 @@ body {
 .file-name{
     font-family: monospace;
 }
+
+.file-box{
+/*    border: 1px solid #cccccc;
+*/    padding: 0.5em;
+}
+
+.approve-box{
+    padding: 0.5em;
+    background-color: #f1f1f1;
+    color: black;
+    overflow: auto;
+    border-right: 1px solid #dedede; 
+    border-bottom: 1px solid #dedede; 
+    margin: 2px; 
+    border-left: 3px solid #aaaaaa; 
+
+}
+
+.results-box{
+    max-height: 15rem;
+    overflow: auto;
+}
+.tags-section{
+    max-height: 40rem;
+    overflow: auto;
+}
+.review-button{
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    padding: 2px;
+    color: black;
+    background-color: #fdfdfd;
+}
+
+.review-button:visited, .review-button:link,.review-button:active{
+    text-decoration: none;
+    color: black;
+}
+
+.file-link:visited, .file-link:link,.file-link:active{
+    text-decoration: none;
+    color: #333377;
+}
+.review-button:hover{
+    background-color:  #cccccc;
+    text-decoration:none;
+    color: black;
+}
+
+.inset-box{
+    border: 1px solid #dedede; 
+    border-radius: 3px;
+    background-color: #f7f7f7;
+    padding: 1px 2px; 
+    overflow: auto;
+}

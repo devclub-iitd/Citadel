@@ -121,7 +121,7 @@ def upload(request):
                 file_root = '.'.join(file_path.split('.')[:-1]) 
                 ext = file_path.split('.')[-1]
                 while os.path.isfile(file_path):
-                    file_path = file_root + '(' + str(i) + ')' + ext
+                    file_path = file_root + '(' + str(i) + ')' + '.'+ext
                     i += 1
 
             destination = open(file_path, "wb+")
@@ -272,7 +272,8 @@ def rename(request):
     elif request.method == "POST":
         with open(os.path.join(UNAPPROVED_DIR, request.POST.get('org') + '.meta'), "w") as file:
             for tag in request.POST.get("tags",'').split(','):
-                file.write(tag + '\n')
+                if tag.rstrip()!='':
+                    file.write(tag.rstrip() + '\n')
         if request.POST.get('final') != '' and request.POST.get('final') != request.POST.get('org'):
             directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
 

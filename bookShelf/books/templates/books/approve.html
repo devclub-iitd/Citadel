@@ -5,7 +5,7 @@
 {% block nav %}
         <ol class="breadcrumb" id="path-bar">
             <li class="breadcrumb-item"><a href="/books/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/books/userlogout">Logout</a></li>
+            <li class="breadcrumb-item"><a href="/books/approve">Approve</a></li>
         </ol>
 
 {% endblock %}
@@ -20,8 +20,13 @@
         File Search
       </button>
     </div>
+    <div class="input-group-btn">
+      <button class="btn btn-outline-default" type="reset">
+        Reset
+      </button>
+    </div>
   </div>
-<div id="output"></div>
+<div id="output" class="results-box"></div>
 <hr/>
 
 {% if pending_approvals %}
@@ -30,26 +35,32 @@
 </div>
 {% endif %}
 
-<div class="panel panel-default">
+<div class="panel panel-default" style="max-height: 50rem; overflow: auto;" >
     <div class="panel-body">
         <div class="card">
     <div class="card-body">
         <center>Please review the documents carefully before approving them.</center>
     </div>
 </div>
-<hr>
+    <hr>
     <center><h6>{{ error }}</h6></center>
     {% for doc in unapproved_documents %}
-        <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
-        <br/>
-        <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc|urlencode}}">Approve</a>
-        <a style="position: absolute;right: 27%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc|urlencode}}">Remove</a>
-        <a style="position: absolute;right: 21%" id="unapproved_document" href="/books/rename?name={{doc|urlencode}}">Rename</a>
-        <br/>
-        <br/><br/>
+
+    <div class="file-box approve-box">
+        <div class="inset-box">
+        <a class="file-name file-link" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
+        </div>
+        <div>
+        <a class="review-button"  href="/books/approve_unapproved_document?name={{doc|urlencode}}">Approve</a>
+        <a class="review-button" href="/books/remove_unapproved_document?name={{doc|urlencode}}">Remove</a>
+        <a class="review-button" href="/books/rename?name={{doc|urlencode}}">Rename</a></div>
+    </div>
+
+    
     {% endfor %}
     </div>
-</div>
+    </div>
+
 
 
     
