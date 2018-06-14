@@ -33,15 +33,17 @@ def get_size():
             os.remove(zip_location)
 """
 
-if not (get_size() < ZIP_SIZE_LIMIT):
-    with open(STATS_FILE, "r") as file:
-        stats = json.load(file)
-    sorted_list = sorted(stats.keys(), key=lambda x: (stats[x]["downloads"], stats[x]["last"]))
-    cntr = 0
-    while get_size() > ZIP_SIZE_LIMIT:
-        course = sorted_list[cntr]
-        parent_dir = course[0:2]
-        zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
-        if os.path.isfile(zip_location):
-            os.remove(zip_location)
-        cntr = cntr + 1
+
+def delete_zips():
+    if not (get_size() < ZIP_SIZE_LIMIT):
+        with open(STATS_FILE, "r") as file:
+            stats = json.load(file)
+        sorted_list = sorted(stats.keys(), key=lambda x: (stats[x]["downloads"], stats[x]["last"]))
+        cntr = 0
+        while get_size() > ZIP_SIZE_LIMIT:
+            course = sorted_list[cntr]
+            parent_dir = course[0:2]
+            zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
+            if os.path.isfile(zip_location):
+                os.remove(zip_location)
+            cntr = cntr + 1

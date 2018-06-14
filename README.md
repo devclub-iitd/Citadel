@@ -49,6 +49,7 @@ cp DATA/* ../media/bulk/
 cd bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)
+python manage.py crontab add
 deactivate
 ```
 ### Running the Web-App
