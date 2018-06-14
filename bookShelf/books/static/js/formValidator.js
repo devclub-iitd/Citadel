@@ -1,5 +1,3 @@
-//TODO: Extend to include all cases, next button no longer triggers request,
-// and auto validation can no longer be relied upon
 
 var start = 2005;
 var end = new Date().getFullYear();
@@ -16,30 +14,69 @@ document.getElementById("customFilename").addEventListener("input", function() {
         document.getElementById("customFilename").setCustomValidity("");
     }
 });
-// document.getElementById("upload-btn").addEventListener("click", function() {
-
-//     var radios = document.getElementsByName("type_exam");
-//     var course_code = document.getElementById("upload-form").elements[1].value;
-//     var sem = document.getElementById("upload-form").elements[2].value;
-//     var year = document.getElementById("upload-form").elements[3].value;
-//     var prof = document.getElementById("upload-form").elements[4].value;
-//     var exam = "none";
-//     var other_text = document.getElementById("upload-form").elements[11].value;
-//     for(var i=0,length=radios.length;i<length;i++) {
-//         if (radios[i].checked) {
-//             exam = radios[i].value;
-//             break;
-//         }
-//     }
-//     if(sem=="" && year=="" && exam!= "other") {
-//         document.getElementById("other").setCustomValidity("Other must be selected if Semester and Year are left blank.");
-//     } else {
-//         document.getElementById("other").setCustomValidity("");
-//     }
-//     if (exam=="other" && other_text=="") {
-//         document.getElementById("customFilename").setCustomValidity("Please enter the file name as well");
-//     } else {
-//         document.getElementById("customFilename").setCustomValidity("");            
-//     }
+// document.getElementById("next-btn").addEventListener("mouseover", function() {
+// 	console.log(isValid())
+    
 // });
 
+function isValid(){
+	var course_code = document.getElementsByClassName("form-control")[0];
+    var sem = document.getElementsByClassName("form-control")[1];
+    var year = document.getElementsByClassName("form-control")[2];
+    var prof = document.getElementsByClassName("form-control")[3];
+    var type = document.getElementsByClassName("form-control")[4];
+    var other_text = document.getElementsByClassName("form-control")[5];
+    var file_dump = document.getElementById("file-dump");
+
+
+    var valid=true;
+
+	if(!(/^[a-zA-Z]{3}[0-9]{3}$/).test(course_code.value)){
+		course_code.setCustomValidity("Please enter a valid course code");
+		valid=false;
+	}
+	else{
+		course_code.setCustomValidity("");
+	}
+
+	if(type.value==''){
+		type.setCustomValidity("Please choose a valid document type")
+		valid=false
+	}
+	else{
+		type.setCustomValidity("")
+	}
+
+	if(type.value=="Minor1" || type.value=="Minor2" || type =="Major"){
+		var required=[sem,year]
+	}
+
+	else if(type.value=="Books" || type.value=="Others"){
+		var required=[]
+	}
+
+	else{
+		var required=[sem,year,prof]
+	}
+
+
+	for (var i = 0; i < required.length; i++) {
+		if(required[i].value==''){
+			required[i].setCustomValidity("Please enter a valid value");
+			valid=false
+		}
+		else{
+			required[i].setCustomValidity("")
+		}
+	}
+
+	if(file_dump.files.length==0){
+		file_dump.setCustomValidity("Please select one or more files to upload");
+		valid=false
+	}
+	else{
+		file_dump.setCustomValidity("");
+	}
+
+  	return valid
+}

@@ -46,6 +46,7 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
             <label class="control-label col-sm-2">Professor:</label>
             <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required>
                 <option value=""> </option>
+                    <option value= "Unlisted">Unlisted</option>
                 {% for value,name in profs.items %}
                     <option value= "{{ value }}">{{value}} - {{ name }}</option>
                 {% endfor %}

@@ -17,22 +17,24 @@ $(document).ready(function() {
 	})
 
 	next_button.addEventListener("click", function(){
-		var default_tags=[]
-		default_tags.push(document.getElementById('code-input').value)
-		default_tags.push(document.getElementById('prof').value)
-		if (fileDump.files.length != 0) {
-			document.getElementById('tags-section').innerHTML="<div class='tag-section-heading'><strong>Edit Tags (Optional)</strong></div>" 
-			for (var i = 0; i < fileDump.files.length; i++) {
-				addTagBox(fileDump.files[i].name,default_tags)
+		if(isValid()){
+			var default_tags=[]
+			default_tags.push(document.getElementById('code-input').value)
+			default_tags.push(document.getElementById('prof').value)
+			if (fileDump.files.length != 0) {
+				document.getElementById('tags-section').innerHTML="<div class='tag-section-heading'><strong>Edit Tags (Optional)</strong></div>" 
+				for (var i = 0; i < fileDump.files.length; i++) {
+					addTagBox(fileDump.files[i].name,default_tags)
+				}
+				var submit_button = document.createElement('button')
+				submit_button.setAttribute("class","btn btn-secondary col-sm-8")
+				submit_button.setAttribute("style","color: white; margin: 7px 0; background-color:#aaaaaa;")
+				submit_button.innerHTML="Submit"
+				submit_button.addEventListener("click", function(){
+					submit_data()
+				});
+				document.getElementById('tags-section').appendChild(submit_button)
 			}
-			var submit_button = document.createElement('button')
-			submit_button.setAttribute("class","btn btn-secondary col-sm-8")
-			submit_button.setAttribute("style","color: white; margin: 7px 0; background-color:#aaaaaa;")
-			submit_button.innerHTML="Submit"
-			submit_button.addEventListener("click", function(){
-				submit_data()
-			});
-			document.getElementById('tags-section').appendChild(submit_button)
 		}
 	})
 });
@@ -48,24 +50,25 @@ function addTagBox(name,tags){
 }
 
 function submit_data(){
-	
-	var tagBoxes = document.getElementsByClassName('tagbox')
-	var tagList=[]
-	for (var i = 0; i < tagBoxes.length; i++) {
-		var tagSubList=[]
-		for (var j = 0; j < tagBoxes[i].getElementsByClassName('tag-text').length; j++) {
-			tagSubList.push(tagBoxes[i].getElementsByClassName('tag-text')[j].innerHTML)
+	if(isValid()){
+		var tagBoxes = document.getElementsByClassName('tagbox')
+		var tagList=[]
+		for (var i = 0; i < tagBoxes.length; i++) {
+			var tagSubList=[]
+			for (var j = 0; j < tagBoxes[i].getElementsByClassName('tag-text').length; j++) {
+				tagSubList.push(tagBoxes[i].getElementsByClassName('tag-text')[j].innerHTML)
+			}
+			var tagSubString=tagSubList.join(TAG_SUB_LIST_SEPARATOR)
+			tagList.push(tagSubString)
 		}
-		var tagSubString=tagSubList.join(TAG_SUB_LIST_SEPARATOR)
-		tagList.push(tagSubString)
+
+		var tagString=tagList.join(TAG_LIST_SEPARATOR)
+		var hiddenInput=document.createElement("input")
+		hiddenInput.value=tagString
+
+		hiddenInput.setAttribute("type", "hidden")
+		hiddenInput.setAttribute("name", "tag-string")
+		document.getElementById("upload-form").appendChild(hiddenInput)
+		document.getElementById("upload-form").submit()
 	}
-
-	var tagString=tagList.join(TAG_LIST_SEPARATOR)
-	var hiddenInput=document.createElement("input")
-	hiddenInput.value=tagString
-
-	hiddenInput.setAttribute("type", "hidden")
-	hiddenInput.setAttribute("name", "tag-string")
-	document.getElementById("upload-form").appendChild(hiddenInput)
-	document.getElementById("upload-form").submit()
 }
