@@ -187,17 +187,12 @@ def approve(request):
         tasks = json.load(file)
     if len(tasks) > 0:
         pending_approvals = True
-    unapproved_documents = {}
-    for path, _, files in os.walk(UNAPPROVED_DIR):
+    unapproved_documents = []
+    for path, dirs, files in os.walk(UNAPPROVED_DIR):
         for filename in files:
             if not filename.endswith('.meta'):
-                arg = False
                 f = os.path.join(path, filename)
-                name = f.split(SEPARATOR)[-1]
-                check = os.path.join(BULK_UP_DIR, name)
-                if os.path.isfile(check):
-                    arg = True
-                unapproved_documents[str(f)[str(f).rindex(os.sep) + 1:]] = arg
+                unapproved_documents.append(str(f)[str(f).rindex(os.sep) + 1:])
 
     if len(unapproved_documents) == 0:
         error = "No Unapproved documents present, please ask people to upload material and contribute to the Citadel"

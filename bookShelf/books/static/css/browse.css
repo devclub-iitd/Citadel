@@ -15,7 +15,7 @@ body {
 
 
 #content {
-    min-height: 30em;  /*adjust for min size of page for all*/
+    min-height: 35em;  /*adjust for min size of page for all*/
     padding-top: 0rem;
     padding-bottom: 0.5rem;
     border-left: 1px solid #e9ecef;
