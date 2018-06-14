@@ -141,8 +141,8 @@ body {
 }
 
 .file-box{
-/*    border: 1px solid #cccccc;
-*/    padding: 0.5em;
+    border: 1px solid #cccccc;
+    padding: 0.5em;
 }
 
 .approve-box{
@@ -194,4 +194,29 @@ body {
     background-color: #f7f7f7;
     padding: 1px 2px; 
     overflow: auto;
+}
+
+
+@media (max-width: 480px) {
+.input-group-addon, .input-group .form-control {
+    display: block !important; 
+    margin-bottom: 10px !important;
+    clear: both !important;
+    border-radius: 2px !important;
+    }
+.input-group .btn{
+    border-radius: 2px !important;
+    width: 100% !important;
+
+    }
+
+input.form-control{
+    width:100% !important;
+    display: block !important; 
+    }
+
+.input-group.search-group {
+    display: block !important;
+    width: 100% !important;
+    }
 }
