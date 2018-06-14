@@ -11,7 +11,7 @@ $(document).ready(function() {
 	$('#form').slideDown('slow');
 
 	var fileDump=document.getElementById('file-dump')
-	var next_button=document.getElementsByClassName('btn-primary')[0]
+	var next_button=document.getElementById('next-btn')
 	fileDump.addEventListener("change",function(){
 		document.getElementById('tags-section').innerHTML=''
 	})
@@ -43,7 +43,7 @@ function addTagBox(name,tags){
 	var fileBox = document.createElement('div')
 	tagsSection.appendChild(fileBox)
 	fileBox.setAttribute("class","file-box")
-	fileBox.innerHTML+="<div>"+name+"</div><span class='tagbox'></span><br><input class='fake-input' placeholder='Enter tags here, eg. Major, Practical, Tutorial' value="+tagString+">"
+	fileBox.innerHTML+="<div class='file-name'><strong>Filename: </strong>"+name+"</div><div class='tagbox'></div><input class='fake-input form-control col-md-8' placeholder='Enter tags here, eg. Major, Practical, Tutorial' value="+tagString+">"
 	tagInput(fileBox)
 }
 

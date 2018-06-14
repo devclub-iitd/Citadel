@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
         <ol class="breadcrumb" id="path-bar">
             <li class="breadcrumb-item"><a href="/books/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/books/userlogout">Logout</a></li>
+            <li class="breadcrumb-item"><a href="/books/approve">Approve</a></li>
         </ol>
 {% endblock %}
 
@@ -27,7 +27,7 @@
     </span>
         <br>
     <input type="hidden" id="current-tags" value="{{tags}}," >
-    <input class="fake-input form-control" style="display: inline"placeholder="Enter tags here, eg. Major, Practical, Tutorial">
+    <input class="fake-input form-control" placeholder="Enter tags here, eg. Major, Practical, Tutorial">
         <br>
     <button type="button" class="submit btn btn-default">Submit</button>
     <button type="button" class="reset btn btn-default">Reset</button>

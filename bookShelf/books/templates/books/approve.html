@@ -25,8 +25,8 @@
 <hr/>
 
 {% if pending_approvals %}
-<div class="panel panel-default">
-    <center><strong> THERE ARE APPROVALS PENDING TO BE FINALIZED</strong></center>
+<div class="approval-warning">
+    There are approved files waiting to be finalized
 </div>
 {% endif %}
 
@@ -37,8 +37,9 @@
         <center>Please review the documents carefully before approving them.</center>
     </div>
 </div>
+<hr>
     <center><h6>{{ error }}</h6></center>
-    {% for doc,repeat in unapproved_documents.items %}
+    {% for doc in unapproved_documents %}
         <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
         <br/>
         <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc|urlencode}}">Approve</a>

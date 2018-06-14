@@ -67,72 +67,22 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
             </select>
         </div>
         
-       <!--  <div class="form-group row">
-            <label class="control-label col-sm-2">Type of paper</label>     
-            <div class="form-check form-check-inline">    
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Minor1" class="form-check-input"><span>Minor1</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Minor2" class="form-check-input"><span>Minor2</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Major" class="form-check-input"><span>Major</span>      
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Books" class="form-check-input"><span>Book</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Lectures"  class="form-check-input"><span>Lectures/Slides</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Notes"  class="form-check-input"><span>Notes</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Assignments"  class="form-check-input"><span>Assignments</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Tutorials"  class="form-check-input"><span>Tutorials</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input id="other" type="radio" name="type_file" value="Others"  class="form-check-input"><span>Others</span>
-                </label>
-            </div> 
-        </div> -->
-        
         <div class="form-group row">
             <label class="control-label col-sm-2">FileName:</label>                    
-                <input  id="customFilename" type="text" name="customFilename" placeholder="Optionally change File name (Without extension)"  class="col-sm-6 form-control" style="margin:0" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
+                <input  id="customFilename" type="text" name="customFilename" placeholder="Optionally change File name (Without extension)"  class="col-sm-6 form-control" style="margin:0" pattern="[a-zA-Z0-9 ]+" />
             
-        </div>
-        <div class="form-group row">
-            <label class="control-label col-sm-2" >Course Code:</label>
-            <input id="code-input" class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
         </div>
        
         <div class="form-group row">
             <input id="file-dump" type="file" name="documents" required class="btn" multiple>
+            
+
         </div>
         </form>
-        <div class="form-group row" style="justify-content: space-around; align-items: center">
-            <button id="upload-btn" class="btn btn-primary">Next</button>            
+        <div class="form-group row" >
+            <button id="next-btn" class="btn btn-outline-secondary col-sm-8" style="color: black" >Next</button>            
         </div>
+
         <div id="tags-section"></div>
             
       

@@ -2,7 +2,8 @@
 	margin: 1pt;
 	padding: 0pt 2pt;
 	display: inline-block;
-	border: 2pt solid black;
+	background-color: #ddd;
+	border: 3px solid grey;
 }
 .close-button{
 	margin: 0pt 0pt 0pt 3pt;
@@ -11,10 +12,12 @@
     display: inline-block;
 }
 .tagbox{
-	background-color: white;
 }
-span{
+.file-box{
+	border: 1px solid #cccccc;
+	padding: 0.5em;
+}
 
-    display: inline-block;
-    background-color: #ddd;
+.fake-input{
+	display: inline-block;
 }

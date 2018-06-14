@@ -11,7 +11,7 @@ $(document).ready(function(){
 		        // reset output
 		        var box = $.parseHTML("<div id='output'></div>")
 		        $("#output").remove()
-		        $("button").after(box)
+		        $(".input-group").after(box)
 
 				for (var i=0; i< DBZ["result"].length;i++){
 
@@ -32,6 +32,7 @@ $(document).ready(function(){
 					    var link = $.parseHTML(html)
 					    
 				        $("#output").append(link)
+				        console.log(link)
 					}
 			    }
 			});

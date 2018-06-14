@@ -127,3 +127,19 @@ body {
     -webkit-box-sizing: border-box;
     border: 1px solid #cccccc;
 }
+
+.approval-warning{
+    border-left: 4px solid #FCEB5F;
+    background-color: #ffffcc;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+    
+}
+
+#upload-btn:hover{
+    background-color: #cccccc;
+}
+
+.file-name{
+    font-family: monospace;
+}
