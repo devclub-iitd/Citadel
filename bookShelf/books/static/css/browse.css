@@ -136,10 +136,6 @@ body {
     
 }
 
-#upload-btn:hover{
-    background-color: #cccccc;
-}
-
 .file-name{
     font-family: monospace;
 }

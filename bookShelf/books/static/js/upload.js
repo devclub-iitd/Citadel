@@ -21,13 +21,13 @@ $(document).ready(function() {
 		default_tags.push(document.getElementById('code-input').value)
 		default_tags.push(document.getElementById('prof').value)
 		if (fileDump.files.length != 0) {
-			document.getElementById('tags-section').innerHTML="<div class='tag-section-heading'><strong>Add Tags</strong></div>" 
+			document.getElementById('tags-section').innerHTML="<div class='tag-section-heading'><strong>Edit Tags (Optional)</strong></div>" 
 			for (var i = 0; i < fileDump.files.length; i++) {
 				addTagBox(fileDump.files[i].name,default_tags)
 			}
 			var submit_button = document.createElement('button')
-			submit_button.setAttribute("class","btn btn-default")
-			submit_button.className = "btn btn-primary";
+			submit_button.setAttribute("class","btn btn-secondary col-sm-8")
+			submit_button.setAttribute("style","color: white; margin: 7px 0; background-color:#aaaaaa;")
 			submit_button.innerHTML="Submit"
 			submit_button.addEventListener("click", function(){
 				submit_data()

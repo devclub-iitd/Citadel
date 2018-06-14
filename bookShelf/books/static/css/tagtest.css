@@ -1,9 +1,11 @@
 .tag{
 	margin: 1pt;
-	padding: 0pt 2pt;
+	padding: 0pt 4pt;
 	display: inline-block;
-	background-color: #ddd;
-	border: 3px solid grey;
+	background-color: #aaaaaa;
+	border-radius: 4px; 
+	color: white;
+	font-family: monospace;
 }
 .close-button{
 	margin: 0pt 0pt 0pt 3pt;
@@ -20,4 +22,5 @@
 
 .fake-input{
 	display: inline-block;
+	margin-top: 3px;
 }
