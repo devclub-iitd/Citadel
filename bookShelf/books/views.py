@@ -5,7 +5,7 @@ import json
 import operator
 import shutil
 import errno
-
+import urllib.parse
 import zipfile
 
 # Django Imports
@@ -68,7 +68,6 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
         origFileName = other
     else:
         origFileName = '.'.join(filename.split('.')[:-1])
-    origFileName = origFileName.replace("+", "-")
     fileExtension = "." + filename.split('.')[-1]
     dirPath = course_code[0:2] + SEPARATOR + course_code
 
@@ -236,7 +235,7 @@ def approve_unapproved_document(request):
     """
     fileName = request.GET.get('name', 'none')
     if fileName =="none":
-        return HttpResponse(content="Bad Request, name parameter missing",status=400)
+        return HttpResponse(content="Bad Request, name parameter missing", status=400)
 
     fileMeta = fileName + '.meta'
     
@@ -246,11 +245,12 @@ def approve_unapproved_document(request):
         destination = os.path.join(destination, directory)
     destination_meta = destination + '.meta'
 
-    if os.path.isfile(os.path.join(UNAPPROVED_DIR, fileName)) and os.path.isfile(os.path.join(UNAPPROVED_DIR, fileMeta)) :
+    if os.path.isfile(os.path.join(UNAPPROVED_DIR, fileName)) and os.path.isfile(os.path.join(UNAPPROVED_DIR, fileMeta)):
         os.makedirs(os.path.dirname(destination), exist_ok=True)
         shutil.copy(os.path.join(UNAPPROVED_DIR, fileName), destination)
         shutil.copy(os.path.join(UNAPPROVED_DIR, fileMeta), destination_meta)
         add_tasks(add, [os.path.relpath(destination, DATABASE_DIR)])
+        fileName = urllib.parse.quote(fileName.encode('utf-8'))
         return redirect('/books/remove_unapproved_document?name=' + fileName)
     else:
         return HttpResponse(content="The file has missing metafile, rename it to generate a meta file and then approve it<br> Or the name passed as argument does not exist.",status=400)
@@ -284,7 +284,8 @@ def rename(request):
                         os.path.join(UNAPPROVED_DIR, request.POST.get('final')))
             shutil.copy(os.path.join(UNAPPROVED_DIR, meta_org),
                         os.path.join(UNAPPROVED_DIR, meta_final))
-            return redirect('/books/remove_unapproved_document?name=' + request.POST.get('org'))
+            filename = urllib.parse.quote(request.POST.get('org').encode('utf-8'))
+            return redirect('/books/remove_unapproved_document?name=' + filename)
         return redirect('/books/approve')
     else:
         return HttpResponse('<h1> Invalid use of Rename API</h1>')
