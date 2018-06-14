@@ -24,6 +24,12 @@
 <div id="output"></div>
 <hr/>
 
+{% if pending_approvals %}
+<div class="panel panel-default">
+    <center><strong> THERE ARE APPROVALS PENDING TO BE FINALIZED</strong></center>
+</div>
+{% endif %}
+
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="card">
@@ -32,16 +38,13 @@
     </div>
 </div>
     <center><h6>{{ error }}</h6></center>
-    {% for doc, repeat in unapproved_documents.items %}
+    {% for doc in unapproved_documents.items %}
         <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
         <br/>
         <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
         <a style="position: absolute;right: 27%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>
         <a style="position: absolute;right: 21%" id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a>
         <br/>
-        {%if repeat%}
-        <strong> File with same name exists !</strong> <br/>
-        {%endif%}
         <br/><br/>
     {% endfor %}
     </div>
