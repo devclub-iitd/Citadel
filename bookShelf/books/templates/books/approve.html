@@ -41,9 +41,9 @@
     {% for doc in unapproved_documents %}
         <a id="unapproved_document" href="/../media/unapproved/{{ doc }}" target="blank">{{ doc }}</a>
         <br/>
-        <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc}}">Approve</a>
-        <a style="position: absolute;right: 27%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc}}">Remove</a>
-        <a style="position: absolute;right: 21%" id="unapproved_document" href="/books/rename?name={{doc}}">Rename</a>
+        <a style="position: absolute;right: 33%" id="unapproved_document" href="/books/approve_unapproved_document?name={{doc|urlencode}}">Approve</a>
+        <a style="position: absolute;right: 27%" id="unapproved_document" href="/books/remove_unapproved_document?name={{doc|urlencode}}">Remove</a>
+        <a style="position: absolute;right: 21%" id="unapproved_document" href="/books/rename?name={{doc|urlencode}}">Rename</a>
         <br/>
         <br/><br/>
     {% endfor %}
