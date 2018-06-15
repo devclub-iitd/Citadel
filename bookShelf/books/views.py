@@ -63,6 +63,8 @@ def index(request):
 
 
 def getFileName(course_code, sem, year, type_file, prof, filename, other):
+    if not validator(course_code, sem, year, type_file, prof, filename, other):
+        return "None"
     fileNamePrefix = "[" + sem + year[2:] + "]"
     if other != 'None' and any(x.isalpha() for x in other):
         origFileName = other
@@ -104,12 +106,13 @@ def upload(request):
 
         ## Ignoring the alternate filename filed when number of files uploaded is more than 1
         if len(documents) > 1:
-
             other_text = 'None'
 
         j=0
         for document in documents:
             filename = getFileName(course_code, sem, year, type_file, prof, document.name, other_text)
+            if filename == "None":
+                return HttpResponse(content="Bad Request, incorrectly form data", status=400)
             directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, filename))
             if not os.path.exists(directory):
                 os.makedirs(directory)
@@ -558,3 +561,16 @@ def restore_structure():
         structure = os.path.join(TREE_DIR, os.path.relpath(dirpath, BULK_UP_DIR))
         if not os.path.isdir(structure):
             shutil.rmtree(dirpath)
+
+
+def validator(course_code, sem, year, type_file, prof, filename, other):
+    """
+    function to validate the form parameters, only shadows the JS form validator for consistency
+    """
+    if course_code == "None":
+        return False
+    if sem == "None" and year == "None" and type_file != "Others":
+        return False
+    if type_file == "Others" and other == "None":
+        return False
+
