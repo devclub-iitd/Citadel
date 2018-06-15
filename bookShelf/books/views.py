@@ -112,7 +112,7 @@ def upload(request):
         for document in documents:
             filename = getFileName(course_code, sem, year, type_file, prof, document.name, other_text)
             if filename == "None":
-                return HttpResponse(content="Bad Request, incorrectly form data", status=400)
+                return HttpResponse(content="Bad Request, incorrect form data", status=400)
             directory = os.path.dirname(os.path.join(UNAPPROVED_DIR, filename))
             if not os.path.exists(directory):
                 os.makedirs(directory)
@@ -567,10 +567,13 @@ def validator(course_code, sem, year, type_file, prof, filename, other):
     """
     function to validate the form parameters, only shadows the JS form validator for consistency
     """
+    result = True
     if course_code == "None":
-        return False
+        result = False
     if sem == "None" and year == "None" and type_file != "Others":
-        return False
+        result = False
     if type_file == "Others" and other == "None":
-        return False
+        result = False
+    return result
+
 
