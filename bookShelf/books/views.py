@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import os
+import re
 import json
 import operator
 import shutil
@@ -568,16 +569,21 @@ def validator(course_code, sem, year, type_file, prof, filename, other):
     function to validate the form parameters, only shadows the JS form validator for consistency
     """
     result = True
-    if course_code == "None":
-        result = False
-
     if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major') and (sem == "None" or year == "None"):
         result = False
     elif type_file == 'Books' or type_file == 'Others':
         result = True
     elif sem == "None" or year == "None" or prof == "None":
         result = False
-        
+
+    if course_code == "None":
+        result = False
+
+    try:
+        re.compile(course_code)
+    except re.error:
+        result = False
+
     return result
 
 
