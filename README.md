@@ -42,11 +42,11 @@ mkdir media
 mkdir media/database
 mkdir media/unapproved
 mkdir media/bulk
-cd ../make_folder
+cd make_folder
 python make_folder.py
 cp DATA/* ../media/database/
 cp DATA/* ../media/bulk/
-cd bookShelf
+cd ../bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)
 python manage.py crontab add
