@@ -568,6 +568,7 @@ def validator(course_code, sem, year, type_file, prof, filename, other):
     """
     function to validate the form parameters, only shadows the JS form validator for consistency
     """
+    pattern = r'\b[a-zA-Z]{3}[0-9]{3}\b'
     result = True
     if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major') and (sem == "None" or year == "None"):
         result = False
@@ -579,9 +580,7 @@ def validator(course_code, sem, year, type_file, prof, filename, other):
     if course_code == "None":
         result = False
 
-    try:
-        re.compile(course_code)
-    except re.error:
+    if not re.match(pattern, course_code):
         result = False
 
     return result
