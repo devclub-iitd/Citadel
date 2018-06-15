@@ -27,13 +27,12 @@ $(document).ready(function() {
 					addTagBox(fileDump.files[i].name,default_tags)
 				}
 				var submit_button = document.createElement('button')
-				submit_button.setAttribute("class","btn btn-secondary col-sm-8")
-				submit_button.setAttribute("style","color: white; margin: 7px 0; background-color:#aaaaaa;")
+				submit_button.setAttribute("class","btn btn-outline-primary col-sm-6 upload-btn")
 				submit_button.innerHTML="Submit"
 				submit_button.addEventListener("click", function(){
 					submit_data()
 				});
-				document.getElementById('tags-section').appendChild(submit_button)
+				document.getElementById('submit-row').appendChild(submit_button)
 			}
 		}
 	})
