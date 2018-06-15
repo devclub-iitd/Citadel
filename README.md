@@ -76,11 +76,6 @@ For admin page go to `localhost:8000/admin/`
 * [Django 1.11.1](https://www.djangoproject.com/) - The web framework for perfectionists with deadlines.
 
 
-## IMPORTANT NOTE
-Before making ANY CHANGE in the REPO:  
-**Make sure to commit changes from the VM and then make any changes. And after making any changes on your local machine, please commit the changes and pull them in the VM.**
-
-
 ## How to approve and disapprove requests?
 Go to ``/books/approve`` and accept or reject or rename each request
 
@@ -90,8 +85,8 @@ PS: You must be logged in to do that ;)
 
 Tracking and Page hits are currently implemented in two ways:
 
-1. Google Analytics - Currently, Google analytics is operational for **study.devclub.cse.iitd.ac.in/**
-2. Admin Panel - Course Page hits can also be found from the admin panel. Go to the requisite course code and check the pagehits field
+1. Google Analytics - Currently, Google analytics is operational for **study.devclub.iitd.ac.in/**
+
 
 ## API
 
