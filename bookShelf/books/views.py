@@ -72,6 +72,7 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
     else:
         origFileName = '.'.join(filename.split('.')[:-1])
     fileExtension = "." + filename.split('.')[-1]
+    course_code = course_code.upper()
     dirPath = course_code[0:2] + SEPARATOR + course_code
 
     if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
@@ -91,7 +92,7 @@ def upload(request):
         Controller to Handle Upload of Documents
     """
     if request.method == 'POST':
-        course_code = request.POST.get('course_code', "None").upper()
+        course_code = request.POST.get('course_code', "None")
         sem = request.POST.get('sem', "None")
         year = request.POST.get('year', "None")
         type_file = request.POST.get('type_file', "None")
@@ -125,7 +126,7 @@ def upload(request):
                 file_root = '.'.join(file_path.split('.')[:-1]) 
                 ext = file_path.split('.')[-1]
                 while os.path.isfile(file_path):
-                    file_path = file_root + '(' + str(i) + ')' + '.'+ext
+                    file_path = file_root + '(' + str(i) + ')' + '.' + ext
                     i += 1
 
             destination = open(file_path, "wb+")
@@ -155,8 +156,8 @@ def download_course(request):
     """
         Function to serve the zip files of entire courses. The function updates the course_downloaded database appropriately.
     """
-    course = request.GET.get('course', 'none')
-    if course == 'none':
+    course = request.GET.get('course', 'None')
+    if course == 'None':
         return redirect('/books/')
     parent_dir = course[0:2]
     zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
@@ -207,7 +208,7 @@ def approve(request):
 
 @login_required
 def remove_unapproved_document(request):
-    path_to_file = os.path.join(UNAPPROVED_DIR, request.GET.get('name', 'none'))
+    path_to_file = os.path.join(UNAPPROVED_DIR, request.GET.get('name', 'None'))
     path_to_meta = path_to_file + '.meta'
     flag = 0
     if os.path.isfile(path_to_file):
@@ -237,8 +238,8 @@ def approve_unapproved_document(request):
     """
         controller to approve the files and create the meta file of those files alongside in the database_dir
     """
-    fileName = request.GET.get('name', 'none')
-    if fileName =="none":
+    fileName = request.GET.get('name', 'None')
+    if fileName =="None":
         return HttpResponse(content="Bad Request, name parameter missing", status=400)
 
     fileMeta = fileName + '.meta'
