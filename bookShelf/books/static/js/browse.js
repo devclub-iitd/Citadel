@@ -121,7 +121,7 @@ function create_elem_col(path_prefix,name,is_file)
     btn.onclick = handler;
     if (path_prefix.length == 2){
         //to add the download course button
-        html = '<a href="#" class="list-group-item list-group-item-action col-item-wrap""><div class="col-item">'+"Download Course Zip"+'</div></a>';
+        html = "<i class='material-icons'>get_app</i>";
         var bt=$.parseHTML(html)[0];
 
         handler = function(){
@@ -129,7 +129,7 @@ function create_elem_col(path_prefix,name,is_file)
             win.focus();
         };
         bt.onclick = handler;
-        btn.append(bt)
+        btn.getElementsByClassName('col-item')[0].append(bt)
     }
     return btn;
 

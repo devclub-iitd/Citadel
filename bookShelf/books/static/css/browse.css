@@ -22,6 +22,7 @@ body {
     border-right: 1px solid #e9ecef;
 }
 
+
 #path {
     padding: auto;
 }
@@ -57,6 +58,7 @@ body {
     width: 100%;
     overflow-x: hidden;
     text-overflow: ellipsis;
+    position: relative;
 }
 
 /* Custom page header */
@@ -136,6 +138,14 @@ body {
     
 }
 
+.material-icons{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.material-icons:hover{
+    color: #0A7EF3;
+}
 .file-name{
     font-family: monospace;
 }
@@ -235,5 +245,11 @@ input.form-control{
 @media(min-width: 1400px){
     #content{
         min-width: calc(100% - 220px) !important;
+    }
+}
+
+@media(min-height: 1000px){
+    #content{
+        min-height: 90vh !important;
     }
 }
