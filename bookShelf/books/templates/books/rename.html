@@ -11,6 +11,8 @@
 {% endblock %}
 
 {% block body %}
+<div class="page-size-scalar">
+
     <form style="color: black;" method="post" enctype="multipart/form-data" class="uploadform">
     {% csrf_token %}
     <label>Original file name</label>
@@ -35,5 +37,6 @@
     </form>
     <script src="{% static 'js/tagtest.js' %}"></script>
     <script src="{% static 'js/tagrun.js' %}"></script>
+</div>
 
 {% endblock %}

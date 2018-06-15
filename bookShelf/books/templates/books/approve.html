@@ -12,6 +12,7 @@
 
 {% block body %}
 
+<div class="page-size-scalar">
 
 <div class="input-group search-group" style="width: 70%">
     <input type="search" class="form-control" >
@@ -35,7 +36,9 @@
 </div>
 {% endif %}
 
-<div class="panel panel-default" style="max-height: 50rem; overflow: auto;" >
+<!--< Replace below for scrolling div, does not scale for large displays> -->
+<!-- <div class="panel panel-default" style="max-height: 50rem; overflow: auto;" > -->
+<div class="panel panel-default" >
     <div class="panel-body">
         <div class="card">
     <div class="card-body">
@@ -61,7 +64,7 @@
     </div>
     </div>
 
-
+</div>
 
     
 <script src="{% static 'js/browse.js' %}"></script>
