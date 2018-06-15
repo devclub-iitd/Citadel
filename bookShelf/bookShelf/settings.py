@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'books.apps.BooksConfig',
     'rest_framework',
-    'django_cron',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
