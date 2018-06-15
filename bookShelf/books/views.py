@@ -570,9 +570,7 @@ def validator(course_code, sem, year, type_file, prof, filename, other):
     result = True
     if course_code == "None":
         result = False
-    if sem == "None" and year == "None" and type_file != "Others":
-        result = False
-    if type_file == "Others" and other == "None":
+    if sem == "None" and year == "None":
         result = False
     return result
 
