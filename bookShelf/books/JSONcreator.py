@@ -1,7 +1,7 @@
 import os
 import json
 import collections
-from . import views
+# from . import views
 
 
 class FilePath(Exception):
