@@ -31,6 +31,7 @@ profs.json --> File that maps uids of Profs to their Names
 ### Installing
 
 Deploying bookShelf is fairly simple. Just issue the following commands on a linux machine
+You need crontab installed at your system for the required cronjobs to work
 
 ```
 git clone https://github.com/devclub-iitd/bookShelf.git
@@ -44,8 +45,8 @@ mkdir media/unapproved
 mkdir media/bulk
 cd make_folder
 python make_folder.py
-cp DATA/* ../media/database/
-cp DATA/* ../media/bulk/
+cp -r DATA/* ../media/database/
+cp -r DATA/* ../media/bulk/
 cd ../bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)
