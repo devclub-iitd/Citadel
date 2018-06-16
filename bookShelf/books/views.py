@@ -167,6 +167,11 @@ def download_course(request):
 
         with open(STATS_FILE, "r") as file:
             stats = json.load(file)
+        if course not in stats:
+            stats[course] = {
+                "downloads": 0,
+                "last": "",
+            }
         stats[course]["downloads"] = stats[course]["downloads"] + 1
         stats[course]["last"] = datetime.now().strftime("%Y%m%d")
         with open(STATS_FILE, "w") as file:
