@@ -3,24 +3,40 @@
 {% load extra_tags %}
 
 {% block nav %}
-<div class="d-flex flex-row justify-content-center" id="path">
-    <nav aria-label="breadcrumb" role="navigation">
+    <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
         <ol class="breadcrumb" id="path-bar">
             <li class="breadcrumb-item"><a href="/books/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/books/userlogout">Logout</a></li>
+            <li class="breadcrumb-item"><a href="/books/approve">Approve</a></li>
         </ol>
-    </nav>
-</div>
 {% endblock %}
 
 {% block body %}
-    <form style="color: black; font-size:150%;" method="post" enctype="multipart/form-data" class="uploadform">
+<div class="page-size-scalar">
+
+    <form style="color: black;" method="post" enctype="multipart/form-data" class="uploadform">
     {% csrf_token %}
     <label>Original file name</label>
-    <input style="width:60%" type="text" name="org" value="{{org}}">
+    <br>
+    <input class = "form-control" " type="text" name="org" value="{{org}}">
     <br>
     <label>New file name</label>
-    <input style="width:60%" type="text" name="final">
-    <button type="submit">Rename</button>
+    <br>
+    <input class = "form-control" " type="text" name="final">
+    <br>
+    <label>Tags</label>
+        <br>
+    <span class='tagbox'>
+    </span>
+        <br>
+    <input type="hidden" id="current-tags" value="{{tags}}," >
+    <input class="fake-input form-control" placeholder="Enter tags here, eg. Major, Practical, Tutorial">
+        <br>
+    <button type="button" class="submit btn btn-default">Submit</button>
+    <button type="button" class="reset btn btn-default">Reset</button>
+
     </form>
+    <script src="{% static 'js/tagtest.js' %}"></script>
+    <script src="{% static 'js/tagrun.js' %}"></script>
+</div>
+
 {% endblock %}

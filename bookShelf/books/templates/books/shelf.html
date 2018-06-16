@@ -12,9 +12,14 @@
 
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/browse.css' %}">
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-81476513-4"></script>
+
+
+
+    
 	<script>
 		window.dataLayer = window.dataLayer || [];
 
@@ -27,7 +32,6 @@
 	<title>{% block title %}Citadel{% endblock %}</title>
 </head>
 <body>
-
     <div class="container-fluid" id="body-container">
         <header class="header">
             <nav>
@@ -43,6 +47,15 @@
                      <li class="nav-item">
                     <a class="nav-link" href="/books/approve">Approve</a>
                     </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/books/bulk_approve">Bulk Approve</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/books/finalize_approvals">Finalize Approvals</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/books/force_integrity">Force Integrity</a>
+                    </li>
                      <li class="nav-item">
                     <a class="nav-link" href="/books/userlogout">Logout</a>
                     </li>
@@ -51,7 +64,7 @@
 <li class="nav-item">
                     <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLScPwizIa6I62uZWx5IX3VxKFJKm8x-IH2j17eGkPl_woJMTeA/viewform" target="_blank">Suggestions</a>
                     </li>
-                </ul>
+               
 <li class="nav-item">
                     <a class="nav-link" href="http://www.cse.iitd.ac.in/devclub/" target="_blank">About Us</a>
                     </li>
@@ -60,27 +73,30 @@
             </nav>
         </header>
         <div class="container" id="content">
-            {% block nav %}
+            
             <div class="d-flex flex-row justify-content-center" id="path">
-                <nav aria-label="breadcrumb" role="navigation">
+                <nav class="path-box" aria-label="breadcrumb" role="navigation">
+                    {% block nav %}
                     <ol class="breadcrumb" id="path-bar">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                     </ol>
+                    {% endblock %}
                 </nav>
             </div>
-            {% endblock %}
+             <hr class="topless-rule" />
+
             {% block body %}
-            <hr/>
             <div class="d-flex flex-row" id="file-browser">
             </div>
+            
+
             {% endblock %}
+            </div>
+              </div>  
+            
+        <div id="footer">
+            <div class="text-muted text-center container footer-text">&copy;<a href="http://www.cse.iitd.ac.in/devclub/" target="_blank">Dev Club IIT Delhi</a></div>
         </div>
-        <footer class="footer" id="footer">
-            <div class="text-muted text-center container">&copy;<a href="http://www.cse.iitd.ac.in/devclub/" target="_blank">Dev Club IIT Delhi</a></div>
-        </footer>
-
-    </div>
-
     <script src="{% static 'js/browse.js' %}"></script>
 </body>
 </html>

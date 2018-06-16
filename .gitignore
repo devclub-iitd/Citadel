@@ -106,3 +106,8 @@ media/
 database.txt
 database.json
 .vscode/
+.idea/
+bookShelf/course_downloads.json
+bookShelf/task_file.json
+Citadel.md
+things_left.txt

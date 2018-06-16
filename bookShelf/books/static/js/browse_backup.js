@@ -6,10 +6,7 @@ var PATH_ELEM = $("#path-bar")[0];
 var COLS_ELEM = $("#file-browser")[0];
 var MEDIA_PREFIX = "/media/database/";
 var API_URL = "/books/api/structure";
-//var DEPTH =3;
-var DEPTH = -1;  //hacky fix, must fix "db==null" in get_prefix_dict, insert_prefix_dict for search terms
-var ZIP_URL = "/books/download_course/?course="
-
+var DEPTH = 3;
 
 // creates single pathbar navigation element
 function create_elem_path(name,url)
@@ -33,7 +30,7 @@ function search_column()
 function create_base_div_col()
 {
     var html = '<div class="file-column border rounded"> \
-                    <input onkeyup="search_column.call(this);" type="text" class="form-control search_bar" placeholder="Filter Column.." aria-label="search bar"> \
+                    <input onkeyup="search_column.call(this);" type="text" class="form-control search_bar" placeholder="Search.." aria-label="search bar"> \
                     <div class="list-group">\
                     </div> \
                 </div>';
@@ -55,11 +52,6 @@ function update_view(path_prefix)
 {
     // number of columns to retain
     var num_cols = path_prefix.length;
-    if (path_prefix.length>=1){
-        if(path_prefix[0].length==3){
-            num_cols=num_cols-path_prefix[0][2]+1
-        }
-    }
     
     // removing the un-needed columns
     remove_cols(num_cols);
@@ -108,8 +100,7 @@ function create_elem_col(path_prefix,name,is_file)
     {
         new_id += path_prefix[i][0]+"/";
     }
-
-    new_id += name;
+    new_id += name+"/";
 
     path_prefix.push([name,"#"+new_id]);
 
@@ -119,20 +110,8 @@ function create_elem_col(path_prefix,name,is_file)
     var handler = get_event_handler_col(is_file,path_prefix.slice(),MEDIA_PREFIX+new_id);
     
     btn.onclick = handler;
-    if (path_prefix.length == 2){
-        //to add the download course button
-        html = "<i class='material-icons'>get_app</i>";
-        var bt=$.parseHTML(html)[0];
 
-        handler = function(){
-            var win = window.open(ZIP_URL+name,'_blank');
-            win.focus();
-        };
-        bt.onclick = handler;
-        btn.getElementsByClassName('col-item')[0].append(bt)
-    }
     return btn;
-
 }
 
 // redraws the path bar according to the value in PATH array
@@ -152,7 +131,6 @@ function redraw_path_bar(path)
 function get_prefix_dict(path_prefix)
 {
     var db = DB;
-
     for(var i=0;i<path_prefix.length;i++)
     {
         db = db[path_prefix[i][0]];
@@ -192,12 +170,12 @@ function create_column(path_prefix)
     }
     else
     {
-
         var base_div = create_base_div_col();
         var search_bar = base_div.children[0];
         var list_group = base_div.children[1];
         var folders = []
         var files = []
+
 
         for (var key in dic)
         {
@@ -205,6 +183,7 @@ function create_column(path_prefix)
             {
                 if(typeof(dic[key])==='string')
                 {
+                    // if file then put in files
                     files.push([key,create_elem_col(path_prefix.slice(),key,true)]);
                 }
                 else
@@ -242,3 +221,15 @@ function create_column(path_prefix)
     }
 }
 
+$(document).ready(function()
+{
+    if(COLS_ELEM) // checking if the current page has filebrowser div
+    {
+        $.getJSON( API_URL,{"path":"/",depth:DEPTH}, function( data )
+        {
+            DB=data;
+            update_view([]);
+            redraw_path_bar([["Home","#"]]);
+        });
+    }
+});

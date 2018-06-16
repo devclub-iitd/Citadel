@@ -3,29 +3,33 @@
 {% load extra_tags %}
 
             {% block nav %}
-            <div class="d-flex flex-row justify-content-center" id="path">
-                <nav aria-label="breadcrumb" role="navigation">
+            
                     <ol class="breadcrumb" id="path-bar">
                         <li class="breadcrumb-item"><a href="../">Home</a></li>
                         <li class="breadcrumb-item"><a href="#">Upload</a></li>
                     </ol>
-                </nav>
-            </div>
             {% endblock %}
 {% block body %}
-<p>Important Instruction: Please take care to upload the files with an appropriate name so that it is easy for others to understand.</p>
-<p>NOTE: You can upload multiple files of the same type, like multiple lectures, notes, assignments, tutorials or books for the same course.</p>
+<div class="page-size-scalar">
 <div class="panel panel-default">
+    <div class="card">
+    <div class="card-body">
+    Important Instruction: Please take care to upload the files with an appropriate name so that it is easy for others to understand.
+    <p></p>
+NOTE: You can upload multiple files of the same type, like multiple lectures, notes, assignments, tutorials or books for the same course.
+</div>
+</div>
+<br>
     <div class="panel-body">
       <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal" id="upload-form">
         {% csrf_token %}
         <div class="form-group row">
-            <label class="control-label col-sm-2">Course Code</label>
-            <input class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
+            <label class="control-label col-sm-2" >Course Code:</label>
+            <input id="code-input" class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
         </div>
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Semester</label>
+            <label class="control-label col-sm-2">Semester:</label>
             <select class="form-control col-sm-6" name = "sem" style="display: inline">
                 <option value=""> </option>
                 <option value="Fall">Fall (Sem 1)</option>
@@ -34,87 +38,63 @@
         </div>
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Academic Year</label>
+            <label class="control-label col-sm-2">Academic Year:</label>
             <select class="form-control col-sm-6" name="year" id="year"></select>
         </div>
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Professor</label>
-            <select class="form-control col-sm-6" name = "professor" style="display: inline" required>
+            <label class="control-label col-sm-2">Professor:</label>
+            <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required>
                 <option value=""> </option>
+                    <option value= "Unlisted">Unlisted</option>
                 {% for value,name in profs.items %}
                     <option value= "{{ value }}">{{value}} - {{ name }}</option>
                 {% endfor %}
             </select>
         </div>
-        
+
         <div class="form-group row">
-            <label class="control-label col-sm-2">Type of paper</label>     
-            <div class="form-check form-check-inline">    
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Minor1" class="form-check-input"><span>Minor1</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Minor2" class="form-check-input"><span>Minor2</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Major" class="form-check-input"><span>Major</span>      
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Books" class="form-check-input"><span>Book</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Lectures"  class="form-check-input"><span>Lectures/Slides</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Notes"  class="form-check-input"><span>Notes</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Assignments"  class="form-check-input"><span>Assignments</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input type="radio" name="type_file" value="Tutorials"  class="form-check-input"><span>Tutorials</span>
-                </label>
-            </div>
-            <div class="form-check form-check-inline">   
-                <label class="form-check-label">
-                    <input id="other" type="radio" name="type_file" value="Others"  class="form-check-input"><span>Others</span>
-                </label>
-            </div> 
+            <label class="control-label col-sm-2">Document Type:</label>
+            <select class="form-control col-sm-6" name = "type_file" style="display: inline">
+                <option value="Minor1">Minor 1 </option>
+                <option value="Minor2">Minor 2</option>
+                <option value="Major">Major</option>
+                <option value="Books">Books</option>
+                <option value="Lectures">Lectures/Slides</option>
+                <option value="Assignments">Assignments</option>
+                <option value="Tutorials">Tutorials</option>
+                <option value="Others">Others</option>
+
+            </select>
         </div>
         
         <div class="form-group row">
-            <label class="control-label col-sm-2">Optional (FileName):</label>                    
-            <label class="control-label col-sm-2">
-                <input style="width:400px" id="customFilename" type="text" name="customFilename" placeholder="Change File name (Without extension)"  class="form-check-input" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​                        
-            </label>
+            <label class="control-label col-sm-2">New Filename:</label>                    
+                <input  id="customFilename" type="text" name="customFilename" placeholder="Optionally change File name (Without extension)"  class="col-sm-6 form-control" style="margin:0" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+            
         </div>
        
         <div class="form-group row">
-            <input type="file" name="documents" required class="btn" multiple>
+            <input id="file-dump" type="file" name="documents" required class="btn" multiple>
+            
+
+        </div>
+        </form>
+        <div class="form-group row" >
+            <button id="next-btn" class="btn btn-outline-primary col-sm-6 upload-btn" >Next</button>            
         </div>
 
-        <div class="form-group row" style="justify-content: space-around; align-items: center">
-            <button type="submit" id="upload-btn" class="btn btn-primary">Upload</button>            
-        </div>
-            
-      </form>
+        <div id="tags-section"></div>
+        <div class="form-group row" id="submit-row"></div>
+      
   </div>
 </div>
+</div>
 
-    <script src="{% static 'js/formValidator.js' %}"></script>
+    <script src="{% static 'js/formValidator.js' %}"></script>  <!--  Broken By form changes TODO: fix -->
+    <script src="{% static 'js/tagtest.js' %}"></script>
+    <script src="{% static 'js/upload.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
+
+
 {% endblock %}

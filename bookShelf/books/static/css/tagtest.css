@@ -1,0 +1,22 @@
+.tag{
+	margin: 1pt;
+	padding: 0pt 4pt;
+	display: inline-block;
+	background-color: #aaaaaa;
+	border-radius: 4px; 
+	color: white;
+	font-family: monospace;
+}
+.close-button{
+	margin: 0pt 0pt 0pt 3pt;
+    font-weight: bold;
+    border: 0px;
+    display: inline-block;
+}
+.tagbox{
+}
+
+.fake-input{
+	display: inline-block;
+	margin-top: 3px;
+}

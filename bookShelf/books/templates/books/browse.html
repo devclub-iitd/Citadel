@@ -1,0 +1,31 @@
+{% extends 'books/shelf.html' %}
+{% load static %}
+{% load extra_tags %}
+
+{%block body%}
+
+
+<div class="container">
+<div class="input-group search-group" style="width: 60%">
+    <input type="search" class="form-control" placeholder="Search..">
+    <div class="input-group-btn" style="">
+      <button class="btn btn-outline-default">
+        Search
+      </button>
+    </div>
+     <div class="input-group-btn">
+      <button class="btn btn-outline-default">
+        Reset
+      </button>
+    </div>
+  </div>
+
+</div>
+<div id="output"></div>
+<hr/>
+<div class="d-flex flex-row" id="file-browser"></div>
+<script src="{% static 'js/browse.js' %}"></script>
+<script src="{% static 'js/display.js' %}"></script>
+<script src="{% static 'js/searchtest.js' %}"></script>
+
+{%endblock%}

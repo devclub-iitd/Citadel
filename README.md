@@ -31,6 +31,7 @@ profs.json --> File that maps uids of Profs to their Names
 ### Installing
 
 Deploying bookShelf is fairly simple. Just issue the following commands on a linux machine
+You need crontab installed at your system for the required cronjobs to work
 
 ```
 git clone https://github.com/devclub-iitd/bookShelf.git
@@ -41,12 +42,15 @@ pip3 install -r requirements.txt
 mkdir media
 mkdir media/database
 mkdir media/unapproved
+mkdir media/bulk
 cd make_folder
 python make_folder.py
-mv DATA/* ../media/database/
-cd bookShelf
+cp -r DATA/* ../media/database/
+cp -r DATA/* ../media/bulk/
+cd ../bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)
+python manage.py crontab add
 deactivate
 ```
 ### Running the Web-App
@@ -72,11 +76,6 @@ For admin page go to `localhost:8000/admin/`
 * [Django 1.11.1](https://www.djangoproject.com/) - The web framework for perfectionists with deadlines.
 
 
-## IMPORTANT NOTE
-Before making ANY CHANGE in the REPO:  
-**Make sure to commit changes from the VM and then make any changes. And after making any changes on your local machine, please commit the changes and pull them in the VM.**
-
-
 ## How to approve and disapprove requests?
 Go to ``/books/approve`` and accept or reject or rename each request
 
@@ -86,8 +85,8 @@ PS: You must be logged in to do that ;)
 
 Tracking and Page hits are currently implemented in two ways:
 
-1. Google Analytics - Currently, Google analytics is operational for **study.devclub.cse.iitd.ac.in/**
-2. Admin Panel - Course Page hits can also be found from the admin panel. Go to the requisite course code and check the pagehits field
+1. Google Analytics - Currently, Google analytics is operational for **study.devclub.iitd.ac.in/**
+
 
 ## API
 
