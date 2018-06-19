@@ -1,5 +1,6 @@
 # Bookshelf
 
+[Data Model](https://gist.github.com/aman71197/b99aff417a8faeb949f8722d37d3509b) for the webapp and implementation details
 
 ## What is it all about?
 We bring to you one of its kind crowd contributed portal. 
@@ -70,16 +71,16 @@ Thereafter, go to the home page at `localhost:8000`
 For admin page go to `localhost:8000/admin/`
 
 
+## How to approve and disapprove requests?
+Go to ``/books/approve`` and accept or reject or rename each request
+
+PS: You must be logged in to do that ;) 
+
 ## Built With
 
 * [Python 3.6](http://www.python.org/) - Python is a programming language that lets you work quickly and integrate systems more effectively.
 * [Django 1.11.1](https://www.djangoproject.com/) - The web framework for perfectionists with deadlines.
 
-
-## How to approve and disapprove requests?
-Go to ``/books/approve`` and accept or reject or rename each request
-
-PS: You must be logged in to do that ;)  
 
 ## Tracking: 
 
