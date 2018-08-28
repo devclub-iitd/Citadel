@@ -36,9 +36,6 @@
         <header class="header">
             <nav>
                 <ul class="nav nav-pills float-right">
-                    <li class="nav-item">
-                    <a class="nav-link" href="/books/">Home</a>
-                    </li>
 
                     <li class="nav-item">
                     <a class="nav-link" href="/books/upload/">Upload</a>
@@ -74,7 +71,7 @@
         </header>
         <div class="container" id="content">
             
-            <div class="d-flex flex-row justify-content-center" id="path">
+           <!--  <div class="d-flex flex-row justify-content-center" id="path">
                 <nav class="path-box" aria-label="breadcrumb" role="navigation">
                     {% block nav %}
                     <ol class="breadcrumb" id="path-bar">
@@ -82,8 +79,7 @@
                     </ol>
                     {% endblock %}
                 </nav>
-            </div>
-             <hr class="topless-rule" />
+            </div> -->
 
             {% block body %}
             <div class="d-flex flex-row" id="file-browser">
@@ -95,6 +91,17 @@
               </div>  
             
         <div id="footer">
+            <div style="/*! margin: auto; */margin: 0,auto;" class="container mb-2">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <a class="disabled" href="/books/upload" style="">
+                        <button type="button" data-toggle="tooltip" data-placement="top" title="Upload and share your study material"
+                            class="btn btn-light btn-block md-6">Contribute</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <hr>
             <div class="text-muted text-center container footer-text">&copy;<a href="http://www.cse.iitd.ac.in/devclub/" target="_blank">Dev Club IIT Delhi</a></div>
         </div>
     <script src="{% static 'js/browse.js' %}"></script>
