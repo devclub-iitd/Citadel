@@ -32,6 +32,7 @@ $(document).ready(function() {
 				submit_button.addEventListener("click", function(){
 					submit_data()
 				});
+				// var buttons = document.getElementsByClassName("upload-btn");
 				document.getElementById('submit-row').appendChild(submit_button)
 			}
 		}

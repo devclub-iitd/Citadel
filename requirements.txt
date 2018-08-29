@@ -2,6 +2,7 @@ Django==1.11.7
 django-crontab==0.7.1
 djangorestframework==3.7.3
 gunicorn==19.9.0
+psycopg2==2.7.5
 pytz==2017.3
 whitenoise==4.0
 zipfile36==0.1.3
