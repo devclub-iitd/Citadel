@@ -35,6 +35,7 @@ body {
     box-sizing: border-box;
     margin-bottom: 0;
     margin-left: auto;
+    padding: 6px 8px;
 }
 
 #file-browser {
