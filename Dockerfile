@@ -30,3 +30,9 @@ RUN pip install -Ur requirements.txt
 
 
 WORKDIR /code/bookShelf
+
+# Used in wait-for-postgres.sh to connect to PostgreSQL
+# Needs to be updated, repeats in docker-compose
+ENV POSTGRES_USER postgres
+ENV POSTGRES_PASSWORD postgres
+ENV POSTGRES_DB postgres

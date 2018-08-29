@@ -9,11 +9,9 @@ services:
     build: .
     working_dir: /code/bookShelf
     # command: bash -c "while ! nc -w 1 -z db 5432; do sleep 0.1; done; ./manage.py migrate; while :;sleep 1; done"
-    command: python manage.py makemigrations books
-    command: python manage.py migrate
-    command: python manage.py crontab add
-    command: python manage.py collectstatic --noinput
-    command: gunicorn bookShelf.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    # command: ["./wait-for-postgres.sh", "db", "./docker_entry_point.sh"]
+    # command: sleep 15
+    command: ./docker_entry_point.sh
     volumes:
       - .:/code
     ports:
