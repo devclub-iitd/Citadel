@@ -1,6 +1,8 @@
 # Start with a Python image.
 FROM python:3.6
 
+RUN apt-get update && apt-get install -y postgresql-client cron
+
 # Some stuff that everyone has been copy-pasting
 # since the dawn of time.
 ENV PYTHONUNBUFFERED 1
@@ -27,7 +29,6 @@ WORKDIR /code
 
 RUN pip install -U pip
 RUN pip install -Ur requirements.txt
-
 
 WORKDIR /code/bookShelf
 

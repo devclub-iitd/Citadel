@@ -1,4 +1,4 @@
-version: '2'
+version: '3.4'
 
 services:
   db:
@@ -8,13 +8,23 @@ services:
   web:
     build: .
     working_dir: /code/bookShelf
+    image: "devclubiitd/bookshelf:0.1"
     command: ./docker_entry_point.sh
     volumes:
       - citadel_media:/code/media
     ports:
-      - 8000:8000
+      - 7000:7000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7000"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped 
     environment:
+      - PORT=7000
       - SECRET_KEY=changemeinprod
+      - DATABASE_URL=postgres://postgres:postgres@db/postgres
     depends_on:
       - db
 
