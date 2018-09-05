@@ -22,6 +22,7 @@ if not os.path.exists('DATA'):
 for course in courses:
     course_start = course[:2]
 
+    dept = course_start
     if not os.path.exists('DATA/'+dept):
         os.makedirs('DATA/'+dept)
     if not os.path.exists('DATA/'+dept+'/'+course):
