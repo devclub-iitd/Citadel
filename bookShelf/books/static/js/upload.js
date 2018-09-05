@@ -22,17 +22,22 @@ $(document).ready(function() {
 			default_tags.push(document.getElementById('code-input').value)
 			default_tags.push(document.getElementById('prof').value)
 			if (fileDump.files.length != 0) {
+
 				document.getElementById('tags-section').innerHTML="<div class='tag-section-heading'><strong>Edit Tags (Optional)</strong></div>" 
 				for (var i = 0; i < fileDump.files.length; i++) {
 					addTagBox(fileDump.files[i].name,default_tags)
 				}
+				var buttons = document.getElementsByClassName("submit-btn");
+				for(var j=0;j<buttons.length;j++){
+					buttons[j].parentNode.removeChild(buttons[j]);	
+				}
 				var submit_button = document.createElement('button')
-				submit_button.setAttribute("class","btn btn-outline-primary col-sm-6 upload-btn")
+				submit_button.setAttribute("class","btn btn-outline-primary col-sm-6 upload-btn submit-btn")
 				submit_button.innerHTML="Submit"
 				submit_button.addEventListener("click", function(){
 					submit_data()
 				});
-				// var buttons = document.getElementsByClassName("upload-btn");
+
 				document.getElementById('submit-row').appendChild(submit_button)
 			}
 		}
