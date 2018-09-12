@@ -29,7 +29,8 @@ WORKDIR /code
 
 RUN pip install -U pip
 RUN pip install -Ur requirements.txt
-
+WORKDIR ./django-rednoise-master/
+RUN python setup.py install
 WORKDIR /code/bookShelf
 
 # Used in wait-for-postgres.sh to connect to PostgreSQL
