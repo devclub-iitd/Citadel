@@ -13,4 +13,7 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookShelf.settings")
 
+from rednoise import DjangoRedNoise
+
 application = get_wsgi_application()
+application = DjangoRedNoise(application)

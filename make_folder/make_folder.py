@@ -23,7 +23,6 @@ for course in courses:
     course_start = course[:2]
 
     dept = course_start
-    print(course, dept)
     if not os.path.exists('DATA/'+dept):
         os.makedirs('DATA/'+dept)
     if not os.path.exists('DATA/'+dept+'/'+course):
@@ -42,4 +41,4 @@ for course in courses:
         os.makedirs('DATA/'+dept+'/'+course+'/Others')
     if not os.path.exists('DATA/'+dept+'/'+course+'/Professors'):
         os.makedirs('DATA/'+dept+'/'+course+'/Professors')  
-
+print("Course folders created")

@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres:10.1-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - "internal"
+  web:
+    build: .
+    working_dir: /code/bookShelf
+    image: "devclubiitd/bookshelf:0.1"
+    command: ./docker_entry_point.sh
+    volumes:
+      - citadel_media:/code/media
+    ports:
+      - 7000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7000"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped 
+    networks:
+      - "reverseproxy"
+      - "internal"
+    environment:
+      - PORT=7000
+      - SECRET_KEY=changemeinprod
+      - DATABASE_URL=postgres://postgres:postgres@db/postgres
+      - VIRTUAL_HOST
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  citadel_media:
+
+networks:
+  reverseproxy:
+    external:
+      name: "reverseproxy"
+  internal:

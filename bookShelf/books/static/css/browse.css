@@ -26,13 +26,16 @@ body {
     padding: auto;
 }
 
+/*#path-box{
+   padding-left: auto;
+}*/
+
 #path-bar{
+    margin-top:16px; 
     box-sizing: border-box;
-    height: 100%;
-    margin: 0.36em 0 0.34em 0;
-}
-.path-box{
-    height: 100%;
+    margin-bottom: 0;
+    margin-left: auto;
+    padding: 6px 8px;
 }
 
 #file-browser {
@@ -105,6 +108,7 @@ body {
 }
 
 .input-group{
+    margin-top:16px; 
     width: 45%;
     border-radius: 6px;
 
@@ -225,7 +229,7 @@ body {
     margin: 0;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .input-group-addon, .input-group .form-control {
         display: block !important; 
         margin-bottom: 10px !important;
@@ -247,6 +251,9 @@ body {
         display: block !important;
         width: 100% !important;
     }
+    #path-bar{
+        width: 100%;
+    }
 }
 
 @media(min-width: 1400px){
@@ -262,14 +269,14 @@ body {
     }
 }
 
-@media(min-width: 480px) and (min-height: calc(30em + 200px)){  /*absolute min + offset = size of screen for fluid transition*/
+@media(min-width: 768px) and (min-height: calc(30em + 200px)){  /*absolute min + offset = size of screen for fluid transition*/
     .page-size-scalar{
         min-height: calc(100vh - 200px); /*adjust to screen, offset depends on header height*/
     }
 }
 
-@media(min-width: 480px)/*Search becomes one row*/{
+@media(min-width: 768px)/*Search becomes one row*/{
     .file-column { 
-        height: calc(100vh - 350px); /*adjust to screen, offset depends on header height*/
+        height: calc(100vh - 300px); /*adjust to screen, offset depends on header height*/
     }
 }

@@ -52,6 +52,7 @@ cd ../bookShelf
 python manage.py migrate
 python manage.py createsuperuser (Create a super user by following the instructions)
 python manage.py crontab add
+python manage.py collectstatic --noinput
 deactivate
 ```
 ### Running the Web-App
