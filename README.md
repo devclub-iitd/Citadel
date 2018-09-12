@@ -1,4 +1,4 @@
-# Bookshelf
+# Citadel
 
 [Data Model](https://gist.github.com/aman71197/b99aff417a8faeb949f8722d37d3509b) for the webapp and implementation details
 
