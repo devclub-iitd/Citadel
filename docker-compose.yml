@@ -2,15 +2,18 @@ version: '3.4'
 
 services:
   db:
-    image: ${REGISTRY_NAME}postgres:10.1-alpine
+    image: "${REGISTRY_NAME}postgres:10.1-alpine"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     networks:
       - "internal"
+    env_file:
+      - ./.env
+    restart: always
   web:
     build: .
     working_dir: /code/bookShelf
-    image: "devclubiitd/bookshelf:0.1"
+    image: "${REGISTRY_NAME}devclubiitd/bookshelf:0.1"
     command: ./docker_entry_point.sh
     volumes:
       - citadel_media:/code/media
@@ -22,14 +25,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    restart: unless-stopped 
+    restart: always 
     networks:
       - "reverseproxy"
       - "internal"
+    env_file:
+      - ./.env
     environment:
       - PORT=7000
-      - SECRET_KEY=changemeinprod
-      - DATABASE_URL=postgres://postgres:postgres@db/postgres
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
       - VIRTUAL_HOST=${VIRTUAL_HOST}
     depends_on:
       - db

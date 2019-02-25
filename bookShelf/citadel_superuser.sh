@@ -9,7 +9,7 @@ usernames=(
 )
 
 passwords=(
-  devclub
+  $CITADEL_ADMIN_PASS
 )
 
 for index in ${!usernames[*]}; do 
