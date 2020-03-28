@@ -1,6 +1,6 @@
 Django==1.11.7
 django-crontab==0.7.1
-djangorestframework==3.7.3
+djangorestframework==3.9.1
 gunicorn==19.9.0
 psycopg2-binary==2.7.5
 pytz==2017.3
