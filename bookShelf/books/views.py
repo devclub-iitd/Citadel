@@ -266,6 +266,11 @@ def approve_unapproved_document(request):
         return HttpResponse(content="The file has missing metafile, rename it to generate a meta file and then approve it<br> Or the name passed as argument does not exist.",status=400)
 
 
+def Healthz(request):
+    if request.method == "GET":
+        return HttpResponse('Ok Healthy!',status=200)
+
+
 @login_required
 def rename(request):
     #use try blocks
