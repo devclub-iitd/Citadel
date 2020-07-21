@@ -1,4 +1,4 @@
-Django==1.11.28
+Django==1.11.29
 django-crontab==0.7.1
 djangorestframework==3.9.1
 gunicorn==19.9.0
