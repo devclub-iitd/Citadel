@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  db:
+    image: "${REGISTRY_NAME}postgres:10.1-alpine"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /code/bookShelf
+    command: ./docker_entry_point.dev.sh
+    ports:
+      - "8000:7000"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db/postgres
+    depends_on:
+      - db
