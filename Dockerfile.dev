@@ -22,6 +22,10 @@ RUN mkdir media/bulk
 WORKDIR make_folder
 
 RUN python make_folder.py
+# Just creating a random file
+RUN touch DATA/CO/COL818/x.txt
+RUN echo xxxx > DATA/CO/COL818/x.txt
+
 RUN cp -r DATA/* ../media/database/
 RUN cp -r DATA/* ../media/bulk/
 

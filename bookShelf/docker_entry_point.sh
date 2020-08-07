@@ -7,7 +7,7 @@ until psql $DATABASE_URL -c '\l'; do
 	sleep 1
 done
 
-python manage.py makemigrations books
+python manage.py makemigrations
 python manage.py migrate
 python manage.py crontab add
 python manage.py collectstatic --noinput
