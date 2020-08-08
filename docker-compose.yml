@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   db:
@@ -11,36 +11,69 @@ services:
       - ./.env
     restart: always
   web:
-    build: .
+    build:
+      context: ./app
+      dockerfile: Dockerfile
     working_dir: /code/bookShelf
     image: "${REGISTRY_NAME}devclubiitd/bookshelf:0.1"
     command: ./docker_entry_point.sh
     volumes:
       - citadel_media:/code/media
+      - static_volume:/code/staticfiles
     ports:
-      - 7000
+      - 6000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7000"]
       interval: 1m30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    restart: always 
+    restart: always
     networks:
       - "reverseproxy"
       - "internal"
     env_file:
       - ./.env
     environment:
-      - PORT=7000
+      - PORT=6000
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
       - VIRTUAL_HOST=${VIRTUAL_HOST}
     depends_on:
       - db
+    links:
+      - db:db
+
+  nginx:
+    image: "${REGISTRY_NAME}devclubiitd/citadel-nginx:0.1"
+    build: ./nginx
+    volumes:
+      - citadel_media:/code/media
+      - static_volume:/code/staticfiles
+    ports:
+      - 7000:80
+    depends_on:
+        - web
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7000"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - "reverseproxy"
+      - "internal"
+    env_file:
+      - ./.env
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
+      - POSTGRES_HOST_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+    restart: always
 
 volumes:
   postgres_data:
   citadel_media:
+  static_volume:
 
 networks:
   reverseproxy:

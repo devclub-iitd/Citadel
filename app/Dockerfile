@@ -22,6 +22,7 @@ RUN mkdir media/bulk
 WORKDIR make_folder
 
 RUN python make_folder.py
+
 RUN cp -r DATA/* ../media/database/
 RUN cp -r DATA/* ../media/bulk/
 
@@ -29,7 +30,5 @@ WORKDIR /code
 
 RUN pip install -U pip
 RUN pip install -Ur requirements.txt
-WORKDIR ./django-rednoise-master/
-RUN python setup.py install
 WORKDIR /code/bookShelf
 
