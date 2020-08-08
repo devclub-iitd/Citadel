@@ -28,6 +28,9 @@ RUN cp -r DATA/* ../media/bulk/
 
 WORKDIR /code
 
+# RUN mkdir protected
+# RUN cp -r media/* protected/
+
 RUN pip install -U pip
 RUN pip install -Ur requirements.txt
 WORKDIR /code/bookShelf

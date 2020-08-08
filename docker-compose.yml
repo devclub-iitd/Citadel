@@ -19,6 +19,7 @@ services:
     command: ./docker_entry_point.sh
     volumes:
       - citadel_media:/code/media
+      - protected_media:/code/protected
       - static_volume:/code/staticfiles
     ports:
       - 6000
@@ -48,6 +49,7 @@ services:
     build: ./nginx
     volumes:
       - citadel_media:/code/media
+      - protected_media:/code/protected
       - static_volume:/code/staticfiles
     ports:
       - 7000:80
@@ -74,6 +76,7 @@ volumes:
   postgres_data:
   citadel_media:
   static_volume:
+  protected_media:
 
 networks:
   reverseproxy:

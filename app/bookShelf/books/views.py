@@ -15,7 +15,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.http import Http404
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -186,7 +186,7 @@ def download_course(request):
     
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def approve(request):
     """
         Controller to Handle approval of requests
@@ -211,7 +211,7 @@ def approve(request):
                                                   'pending_approvals': pending_approvals, 'error': error})
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def remove_unapproved_document(request):
     path_to_file = os.path.join(UNAPPROVED_DIR, request.GET.get('name', 'None'))
     path_to_meta = path_to_file + '.meta'
@@ -238,7 +238,7 @@ def remove_unapproved_document(request):
         return HttpResponse(switch(flag))
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def approve_unapproved_document(request):
     """
         controller to approve the files and create the meta file of those files alongside in the database_dir
@@ -271,7 +271,7 @@ def Healthz(request):
         return HttpResponse('Ok Healthy!',status=200)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def rename(request):
     #use try blocks
     if request.method == "GET":
@@ -307,7 +307,7 @@ def rename(request):
         return HttpResponse('<h1> Invalid use of Rename API</h1>')
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def bulk_approve(request):
     """
         controller to approve the bulk pasted files
@@ -335,7 +335,7 @@ def generate_path_meta_tags(inner_path):
 
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def force_integrity(request):
     """
         controller to force recreate the json heirarchy and also take care of
@@ -363,7 +363,7 @@ def force_integrity(request):
         return redirect('/books/')
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def finalize_approvals(request):
     if request.method == "GET":
         finalize_function()
@@ -596,4 +596,15 @@ def validator(course_code, sem, year, type_file, prof, filename, other):
 
     return result
 
-
+@login_required
+def protectedMedia(request):
+    try:
+        response = HttpResponse(status=200)
+        url = request.path.replace('media', 'protected')
+        response['Content-Type'] = ''
+        # response['X-Accel-Redirect'] = '/code/protected' + request.path
+        response['X-Accel-Redirect'] = url
+        print('Redirecting to ',response['X-Accel-Redirect'],flush=True)
+        return response
+    except:
+        return HttpResponse(status=400)

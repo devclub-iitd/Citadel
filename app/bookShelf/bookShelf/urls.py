@@ -22,6 +22,7 @@ from books import views
 views.startup_function()
 
 urlpatterns = [
+    url(r'^media/', views.protectedMedia, name="protect_media"),
     url(r'^accounts/login/$', RedirectView.as_view(url='/books/userlogin', permanent=True)),
     url(r'^books/', include('books.urls')),
     url(r'^admin/', admin.site.urls),
