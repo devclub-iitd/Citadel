@@ -58,7 +58,7 @@ PATH = 'path'
 TYPE = 'type'
 TIMESTAMP = 'timestamp'
 
-
+@login_required
 def index(request):
     return render(request, 'books/browse.html')
 
@@ -86,7 +86,7 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
         toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension
     return toWriteFileName
 
-
+@login_required
 def upload(request):
     """
         Controller to Handle Upload of Documents
@@ -151,7 +151,7 @@ def upload(request):
         profs = json.loads(open("profs.json", "r").read(), object_pairs_hook=OrderedDict)
         return render(request, 'books/upload.html', {"profs": profs})
 
-
+@login_required
 def download_course(request):
     """
         Function to serve the zip files of entire courses. The function updates the course_downloaded database appropriately.
