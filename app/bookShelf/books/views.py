@@ -377,7 +377,9 @@ def userlogin(request):
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             login(request, user)
-            return redirect('/books/approve')
+            return redirect('books/browse.html')
+
+            # return redirect('/books/approve')
         else:
             render(request, 'books/login.html')
     return render(request, 'books/login.html')

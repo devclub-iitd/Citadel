@@ -87,7 +87,8 @@ function get_event_handler_col(is_file,path_prefix,url)
 {
     if(is_file)
     {
-        return function(){var win = window.open(url,'_blank');win.focus();};
+        // return function(){var win = window.open(url,'_blank');win.focus();};
+        return function(){var win = window.open(url);win.focus();};
     }
     else
     {
