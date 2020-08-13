@@ -38,7 +38,6 @@ services:
     environment:
       - PORT=6000
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}
-      - VIRTUAL_HOST=${VIRTUAL_HOST}
     depends_on:
       - db
     links:
