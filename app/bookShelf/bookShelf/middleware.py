@@ -4,6 +4,7 @@ import jwt
 import requests
 import json
 import time
+import re
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout
@@ -17,22 +18,19 @@ REFRESH_URL = 'https://auth.devclub.in/auth/refresh-token'
 PUBLIC_KEY = 'bookShelf/public.pem'
 MAX_TTL_ALLOWED = 60 * 5
 QUERY_PARAM = 'serviceURL'
-LOGOUT_PATH = '/logout/'
+LOGOUT_PATH = '/books/userlogout/'
 
 USER_MODEL = User
 
-# An array of paths that will not be processed by the middleware
-# PUBLIC_PATHS = ['/public/','/'] 
-PUBLIC_PATHS = ['/static/','/'] 
+# An array of path regexes that will not be processed by the middleware
+PUBLIC_PATHS = ['^/$','^/static/.*'] 
 
-# A dictionary of roles for request paths, '*' denotes all other paths except the PUBLIC_PATHS
-# If a path is specified as key in the dictionary then its corresponding roles will be checked
-# If the key corresponding to request.path is not found then the roles specified in '*' are checked.
-# The user should have all the roles specified in the list to be given access.
+# A dictionary of path regexes mapping to the roles. A user needs to have all roles in order to be authorized
 ROLES = {
-    '*' : ['external_user'],
-    '/admin/': ['dc_core','admin']
+    '^/admin.*': ['admin']
 }
+
+DEFAULT_ROLES = ['iitd_user']
 UNAUTHORIZED_HANDLER = lambda request: HttpResponse("Alas You are out of scope! Go get some more permissions dude",status=401)
 
 class SSOMiddleware:
@@ -49,7 +47,7 @@ class SSOMiddleware:
 
         try:
             token = request.COOKIES[SSO_TOKEN]
-        except :
+        except:
             token = None
 
         try:
@@ -121,17 +119,18 @@ class SSOMiddleware:
         login(request, user)
     
     def authorize_roles(self,request,user_payload):
-        if(len(ROLES.keys()) == 0 or request.path in PUBLIC_PATHS):
+        if(len(ROLES.keys()) == 0 or match_regex_list(request.path, PUBLIC_PATHS)):
             return True
         try:
             user_roles = user_payload['roles']
         except:
             return False
             
-        if(request.path in ROLES.keys()):
-            reqd_roles = ROLES[request.path]
+        match = match_regex_list(request.path, ROLES.keys())
+        if(match is None):
+            reqd_roles = DEFAULT_ROLES
         else:
-            reqd_roles = ROLES['*']
+            reqd_roles = ROLES[match]
         
         for role in reqd_roles:
             if(role not in user_roles):
@@ -148,11 +147,19 @@ class SSOMiddleware:
     def logout(self,request):
         logout(request)
         response = self.get_response(request)
-        response.delete_cookie(SSO_TOKEN)
-        response.delete_cookie(REFRESH_TOKEN)
+        response.delete_cookie(SSO_TOKEN,domain='devclub.in')
+        response.delete_cookie(REFRESH_TOKEN,domain='devclub.in')
         return response
     
     def redirect(self,request):
-        if(request.path in PUBLIC_PATHS):
+        if(match_regex_list(request.path,PUBLIC_PATHS)):
             return self.get_response(request)
         return redirect(AUTH_URL+f"/?{QUERY_PARAM}={request.build_absolute_uri()}")
+
+
+def match_regex_list(key,regex_array):
+    """ Match every  regex element in an array against the key"""
+    for regex in regex_array:
+        if(re.search(regex,key) is not None):
+            return regex
+    return None
