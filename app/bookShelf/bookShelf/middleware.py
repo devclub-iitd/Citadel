@@ -64,12 +64,13 @@ class SSOMiddleware:
             self.log(request, 'access token found')
             try:
                 decoded = jwt.decode(token,self.public_key,algorithms='RS256')
-                
+                self.log(request, 'token decoded')
                 if(float(decoded['exp']) - time.time() < MAX_TTL_ALLOWED):
                     self.log(request, 'Refreshing token')
                     decoded['user'] = self.refresh(request=request,token={SSO_TOKEN:token})
 
                 if(not self.authorize_roles(request, decoded['user'])):
+                    self.log(request, 'unauthorised user')
                     return UNAUTHORIZED_HANDLER(request)
                 self.assign_user(request, decoded['user'])
 
@@ -90,6 +91,7 @@ class SSOMiddleware:
                 self.log(request, err)
                 return self.redirect(request)
 
+        self.log(request, 'getting response')
         response = self.get_response(request)
 
         if(self.cookies is not None):
@@ -110,6 +112,7 @@ class SSOMiddleware:
 
     def assign_user(self,request,user_payload):
         if(request.user.is_authenticated):
+            self.log(request, 'user already authenticated')
             return
         try:
             user = USER_MODEL.objects.get(email=user_payload['email'])
