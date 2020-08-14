@@ -23,7 +23,7 @@ LOGOUT_PATH = '/books/userlogout/'
 USER_MODEL = User
 
 # An array of path regexes that will not be processed by the middleware
-PUBLIC_PATHS = ['^/$','^/static/.*'] 
+PUBLIC_PATHS = ['^/$','^/static/.*','^.*/healthz/.*'] 
 
 # A dictionary of path regexes mapping to the roles. A user needs to have all roles in order to be authorized
 ROLES = {
@@ -95,6 +95,7 @@ class SSOMiddleware:
         if(self.cookies is not None):
             response._headers['set-cookie1'] = ('Set-Cookie',self.cookies.split('\n')[0])
             response._headers['set-cookie2'] = ('Set-Cookie',self.cookies.split('\n')[1])
+            self.cookies = None
         self.log(request, 'sending response')
         return response
 
