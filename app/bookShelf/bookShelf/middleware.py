@@ -23,7 +23,7 @@ LOGOUT_PATH = '/books/userlogout/'
 USER_MODEL = User
 
 # An array of path regexes that will not be processed by the middleware
-PUBLIC_PATHS = ['^/$','^/static/.*','^.*/healthz/.*'] 
+PUBLIC_PATHS = ['^/$','^/static/.*','^/healthz.*'] 
 
 # A dictionary of path regexes mapping to the roles. A user needs to have all roles in order to be authorized
 ROLES = {
