@@ -57,13 +57,16 @@ class SSOMiddleware:
             
 
         if(not token and not rememberme):
+            print('no tokens', flush=True)
             return self.redirect(request)
         
         if(token is not None):
+            print('access token found', flush=True)
             try:
                 decoded = jwt.decode(token,self.public_key,algorithms='RS256')
                 
                 if(float(decoded['exp']) - time.time() < MAX_TTL_ALLOWED):
+                    print('Refreshing token', flush=True)
                     decoded['user'] = self.refresh(request=request,token={SSO_TOKEN:token})
 
                 if(not self.authorize_roles(request, decoded['user'])):
@@ -71,9 +74,10 @@ class SSOMiddleware:
                 self.assign_user(request, decoded['user'])
 
             except Exception as err:
-                print(err)
+                print(err, flush=True)
                 return self.redirect(request)
         else:
+            print('no access token', flush=True)
             try:
                 decoded = jwt.decode(rememberme,self.public_key,algorithms='RS256')
                 user = self.refresh(request,{REFRESH_TOKEN:rememberme})
@@ -83,7 +87,7 @@ class SSOMiddleware:
                 self.assign_user(request,user_payload=user)
 
             except Exception as err:
-                print(err)
+                print(err, flush=True)
                 return self.redirect(request)
 
         response = self.get_response(request)
@@ -91,7 +95,7 @@ class SSOMiddleware:
         if(self.cookies is not None):
             response._headers['set-cookie1'] = ('Set-Cookie',self.cookies.split('\n')[0])
             response._headers['set-cookie2'] = ('Set-Cookie',self.cookies.split('\n')[1])
-
+        print('sending response', flush=True)
         return response
 
     def configure(self):
@@ -115,7 +119,7 @@ class SSOMiddleware:
         user.last_name = user_payload['lastname']
         user.username = user_payload['username']
         user.save()
-
+        print('logging in', flush=True)
         login(request, user)
     
     def authorize_roles(self,request,user_payload):
