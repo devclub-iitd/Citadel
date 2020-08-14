@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 import jwt
 import requests
@@ -31,7 +31,7 @@ ROLES = {
 }
 
 DEFAULT_ROLES = ['iitd_user']
-UNAUTHORIZED_HANDLER = lambda request: HttpResponse("Alas You are out of scope! Go get some more permissions dude",status=401)
+UNAUTHORIZED_HANDLER = lambda request: render(request, 'books/unauthorized.html')
 
 class SSOMiddleware:
     def __init__(self, get_response):
