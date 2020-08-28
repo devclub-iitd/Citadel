@@ -96,7 +96,11 @@ class SSOMiddleware:
 
         if(self.cookies is not None):
             response._headers['set-cookie1'] = ('Set-Cookie',self.cookies.split('\n')[0])
-            response._headers['set-cookie2'] = ('Set-Cookie',self.cookies.split('\n')[1])
+            try:
+                response._headers['set-cookie2'] = ('Set-Cookie', self.cookies.split('\n')[1])
+            except:
+                pass
+            
             self.cookies = None
         self.log(request, 'sending response')
         return response
