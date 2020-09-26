@@ -25,7 +25,7 @@ from collections import OrderedDict
 from books import JSONcreator as jsc
 from books import search as search
 
-DATABASE_DIR = os.path.join('..', 'media', 'database')
+DATABASE_DIR = os.path.join('..', 'protected', 'database')
 DATABASE_URL = "/media/database"
 BULK_UP_DIR = os.path.join('..', 'media', 'bulk')
 UNAPPROVED_DIR = os.path.join('..', 'media', 'unapproved')
@@ -178,6 +178,9 @@ def download_course(request):
             json.dump(stats, file)
         
         loc = DATABASE_DIR.split(os.sep)
+        for i, folder in enumerate(loc):
+            if folder == "protected":
+                loc[i] = "media"
         path = '/'.join(loc)
         return redirect('/' + path + '/' + parent_dir + '/' + course + '.zip')
     
