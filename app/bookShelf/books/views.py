@@ -177,12 +177,7 @@ def download_course(request):
         with open(STATS_FILE, "w") as file:
             json.dump(stats, file)
         
-        loc = DATABASE_DIR.split(os.sep)
-        for i, folder in enumerate(loc):
-            if folder == "protected":
-                loc[i] = "media"
-        path = '/'.join(loc)
-        return redirect('/' + path + '/' + parent_dir + '/' + course + '.zip')
+        return redirect(DATABASE_URL + '/' + parent_dir + '/' + course + '.zip')
     
     except OSError as e:
         return HttpResponse(status=400,content="Bad Request")
