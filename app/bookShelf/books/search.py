@@ -1,7 +1,7 @@
 import os
 
 META_EXTENSION = ".meta"
-DATABASE_DIR = os.path.join("..","media","database")
+DATABASE_DIR = os.path.join("..","protected","database")
 EXCLUDE_SET=['Assignments', 'Question-Papers','Minor1','Minor2','Major','Books','Others','Professors']
 
 def searchterm_match(term, string):
@@ -42,8 +42,13 @@ def get_meta(meta_path_prefix, check_list):
 	for node in meta_path_prefix:
 		path+= os.sep+ node[0]
 	path=DATABASE_DIR+path+'.meta'
-	#try block here
-	f = open(path, "r")
+
+	try:
+		f = open(path, "r")
+	except IOError:
+		print("Error: meta file does not exist")
+		return
+
 	for line in f:
 		strip_line=line.rstrip()
 		if strip_line != '':
