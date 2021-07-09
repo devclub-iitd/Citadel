@@ -88,7 +88,18 @@ function get_event_handler_col(is_file,path_prefix,url)
     if(is_file)
     {
         // return function(){var win = window.open(url,'_blank');win.focus();};
-        return function(){var win = window.open(url);win.focus();};
+        // return function(){var win = window.open(url);win.focus();};
+        return function(event)
+        {
+            // prevent opening of a new tab/window of Citadel when using Ctrl+Click or 
+            // Shift+Click to open the file in new tab/window
+            if(event.ctrlKey || event.shiftKey || event.metaKey) //might find a better way to implement this
+            {
+                event.preventDefault();
+            }
+            var win = window.open(url);
+            win.focus();
+        };
     }
     else
     {
