@@ -82,6 +82,9 @@ def generate_path(path):
                 continue
             d[x]=new_path
     else:
+        # Do not include meta files in the heirarchy when recreating it.
+        if path.split('.')[-1]=='meta':
+            return ''
         ## TODO: MORE ROBUST PATH CONFIGURATION
         return path[2:]
     return d

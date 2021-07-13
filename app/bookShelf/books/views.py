@@ -8,6 +8,7 @@ import shutil
 import errno
 import urllib.parse
 import zipfile
+from PIL import Image
 
 # Django Imports
 from datetime import datetime, timedelta
@@ -57,6 +58,9 @@ COURSE = 'course'
 PATH = 'path'
 TYPE = 'type'
 TIMESTAMP = 'timestamp'
+# image format extensions supported
+IMG_EXT = ['jpg', 'jpeg', 'png', 'gif']
+
 
 @login_required
 def index(request):
@@ -86,6 +90,17 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
         toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + origFileName + fileExtension
     return toWriteFileName
 
+def createMetaFile(file_path, tags):
+    keys = []
+    destination_meta = file_path + '.meta'
+    if os.path.isfile(destination_meta):
+        keys = [line.rstrip('\n') for line in open(destination_meta)]
+    metafile = open(destination_meta, "a+")
+    for k in range(len(tags)):
+        if tags[k] not in keys and tags[k].rstrip()!='':
+            metafile.write(tags[k] + '\n')
+    metafile.close()
+
 @login_required
 def upload(request):
     """
@@ -100,6 +115,11 @@ def upload(request):
         documents = request.FILES.getlist('documents')
         other_text = request.POST.get('customFilename', "None")
         tagstring = request.POST.get('tag-string', "")
+        image_order = request.POST.get('image-order', "")
+        image_order_list = []
+        if len(image_order)>0:
+            for order in image_order.split(TAG_SEPARATOR):
+                image_order_list.append(int(order))
         taglist=tagstring.split(TAG_LIST_SEPARATOR)
         for i in range(len(taglist)):
             taglist[i]=taglist[i].split(TAG_SEPARATOR)
@@ -111,6 +131,9 @@ def upload(request):
             other_text = 'None'
 
         j=0
+        # Treat image files differently: to concatenate them(if more than 1) and convert to PDF
+        img_files = []
+        img_tags = []
         for document in documents:
             filename = getFileName(course_code, sem, year, type_file, prof, document.name, other_text)
             if filename == "None":
@@ -134,17 +157,53 @@ def upload(request):
                 destination.write(chunk)
             destination.close()
             
-            tags=taglist[j]
-            keys = []
-            destination_meta = file_path + '.meta'
-            if os.path.isfile(destination_meta):
-                keys = [line.rstrip('\n') for line in open(destination_meta)]
-            metafile = open(destination_meta, "a+")
-            for k in range(len(tags)):
-                if tags[k] not in keys and tags[k].rstrip()!='':
-                    metafile.write(tags[k] + '\n')
-            metafile.close()
+            # Separate supported image files
+            ext = file_path.split('.')[-1]
+            if ext in IMG_EXT:
+                img_files.append(file_path)
+                img_tags.extend(taglist[j])
+            else:
+                tags=taglist[j]
+                createMetaFile(file_path, tags)
             j+=1
+
+        if len(img_files)>0:
+            imgs = []
+            for img_path in img_files:
+                im = Image.open(img_path)
+                if im.mode == 'RGBA':
+                    im = im.convert('RGB')
+                imgs.append(im)
+
+            minsize = min(im.size for im in imgs)
+
+            for i in range(len(imgs)):
+                imgs[i] = imgs[i].resize(minsize)
+
+            # Get the correct page order of images to be concatenated.    
+            reordered_imgs = []
+            if len(image_order_list)>0:
+                if len(imgs)==len(image_order_list):
+                    for i in range(len(image_order_list)):
+                        reordered_imgs.insert(image_order_list[i]-1, imgs[i])
+            else:
+                reordered_imgs = imgs
+
+
+            file_path = '.'.join(img_files[0].split('.')[:-1])
+            file_path += '.pdf'
+
+            if len(reordered_imgs) > 1:
+                reordered_imgs[0].save(file_path, save_all=True, append_images=reordered_imgs[1:])
+            else:
+                reordered_imgs[0].save(file_path, save_all=True)
+
+            createMetaFile(file_path, img_tags)
+            ##Remove Images after PDF creation from unapproved dir
+            for img_file in img_files:
+                if os.path.isfile(img_file):
+                    os.remove(img_file)
+
         return render(request, 'books/thanks.html')
 
     else:
