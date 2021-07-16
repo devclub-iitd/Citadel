@@ -10,6 +10,8 @@ $(document).ready(function() {
 	$('#form').hide();
 	$('#form').slideDown('slow');
 
+	//$('select').selectpicker();
+
 	var fileDump=document.getElementById('file-dump')
 	var next_button=document.getElementById('next-btn')
 	fileDump.addEventListener("change",function(){
@@ -89,7 +91,7 @@ function addImageReorderBox(files){
 		var input = document.createElement('select')
 		input.setAttribute('type', 'text');
 		input.setAttribute('name', i+1);
-		input.setAttribute('class', 'reorder-dropdown');
+		input.setAttribute('class', 'reorder-dropdown form-control');
 		input.setAttribute('style', 'display: flex; margin: 0 auto;')
 		for(var j=1; j<=files.length; j++){
 			var option = document.createElement('option');
@@ -115,38 +117,6 @@ function getImageOrder(){
 	return imageOrder;
 }
 
-//function to check the validity of the page number order of the images selected by the user 
-function isValidOrder(order){
-	var valid = true;
-	if(order.length==0){
-		return valid;
-	}
-	for(var i=0; i<order.length-1; i++){
-		if(order[i]<1 || order[i]>order.length){
-			valid = false;
-			break;
-		}
-		for(var j=i+1; j<order.length; j++){
-			if(order[i]==order[j]){
-				valid = false;
-				break;
-			}
-		}
-		if(!valid){
-			break;
-		}
-	}
-
-	var orderBox = document.getElementsByClassName('image-preview')[0].getElementsByTagName('select')[0];
-	if(valid){
-		orderBox.setCustomValidity("");
-	}
-	else{
-		orderBox.setCustomValidity("Page numbering not unique or out of bounds. Please enter valid page numbers");
-	}
-
-	return orderBox.checkValidity()
-}
 
 function submit_data(){
 	var imageOrder = getImageOrder();
@@ -171,17 +141,14 @@ function submit_data(){
 		hiddenInput.setAttribute("name", "tag-string")
 
 		
-		var imageOrderString = ''
+		var imageOrderString = '';
 		if(imageOrder.length>0)
 			imageOrderString = imageOrder.join(TAG_SUB_LIST_SEPARATOR); 
-		var imageOrderInput = document.createElement("input")
+		var imageOrderInput = document.getElementById("image-order");
 		imageOrderInput.value=imageOrderString;
-
-		imageOrderInput.setAttribute("type", "hidden");
-		imageOrderInput.setAttribute("name", "image-order")
 		
 
-		document.getElementById("upload-form").appendChild(imageOrderInput)
+		document.getElementById("upload-form").appendChild(imageOrderInput.parentNode)
 		document.getElementById("upload-form").appendChild(hiddenInput)
 		document.getElementById("upload-form").submit()
 	}
