@@ -42,12 +42,12 @@ document.getElementById('reorder-section').addEventListener("input", function(){
 // });
 
 function isValid(){
-	var course_code = document.getElementsByClassName("form-control")[0];
-    var sem = document.getElementsByClassName("form-control")[1];
-    var year = document.getElementsByClassName("form-control")[2];
-    var prof = document.getElementsByClassName("form-control")[3];
-    var type = document.getElementsByClassName("form-control")[4];
-    var other_text = document.getElementsByClassName("form-control")[5];
+	var course_code = document.getElementById("code-input");
+    var sem = document.getElementById("sem");
+    var year = document.getElementById("year");
+    var prof = document.getElementById("prof");
+    var type = document.getElementById("type_file");
+    var other_text = document.getElementById("customFilename");
     var file_dump = document.getElementById("file-dump");
 
 
