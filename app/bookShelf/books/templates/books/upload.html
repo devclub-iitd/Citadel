@@ -32,7 +32,7 @@ Multiple images uploaded will be merged to a single PDF document automatically.
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Semester:</label>
-            <select class="form-control col-sm-6" name = "sem" style="display: inline">
+            <select class="form-control col-sm-6" name = "sem" id="sem" style="display: inline">
                 <option value=""> </option>
                 <option value="Fall">Fall (Sem 1)</option>
                 <option value="Spring">Spring (Sem 2)</option>
@@ -48,7 +48,7 @@ Multiple images uploaded will be merged to a single PDF document automatically.
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Professor:</label>
-            <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required>
+            <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required data-live-search="true">
                 <option value=""> </option>
                     <option value= "Unlisted">Unlisted</option>
                 {% for value,name in profs.items %}
@@ -60,7 +60,7 @@ Multiple images uploaded will be merged to a single PDF document automatically.
 
         <div class="form-group row">
             <label class="control-label col-sm-2">Document Type:</label>
-            <select class="form-control col-sm-6" name = "type_file" style="display: inline">
+            <select class="form-control col-sm-6" name = "type_file" id="type_file" style="display: inline">
                 <option value="Minor1">Minor 1 </option>
                 <option value="Minor2">Minor 2</option>
                 <option value="Major">Major</option>
@@ -106,7 +106,11 @@ Multiple images uploaded will be merged to a single PDF document automatically.
     <script src="{% static 'js/formValidator.js' %}"></script>  <!--  Broken By form changes TODO: fix -->
     <script src="{% static 'js/tagtest.js' %}"></script>
     <script src="{% static 'js/upload.js' %}"></script>
-        <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
+    <script src="{% static 'js/select2.min.js' %}"></script>
+    
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2-bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
 
 
 {% endblock %}

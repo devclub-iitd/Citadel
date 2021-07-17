@@ -10,7 +10,11 @@ $(document).ready(function() {
 	$('#form').hide();
 	$('#form').slideDown('slow');
 
-	//$('select').selectpicker();
+	// Search functionality in prof list select element provided by select2 plugin along with bootstrap4 theme to match site theme
+	$(function() {
+		$('#prof').select2({theme: 'bootstrap4',});
+	});
+	
 
 	var fileDump=document.getElementById('file-dump')
 	var next_button=document.getElementById('next-btn')
