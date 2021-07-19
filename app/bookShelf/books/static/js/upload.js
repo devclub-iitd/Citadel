@@ -96,6 +96,7 @@ function addImageReorderBox(files){
 		input.setAttribute('type', 'text');
 		input.setAttribute('name', i+1);
 		input.setAttribute('class', 'reorder-dropdown form-control');
+
 		input.setAttribute('style', 'display: flex; margin: 0 auto;')
 		for(var j=1; j<=files.length; j++){
 			var option = document.createElement('option');
