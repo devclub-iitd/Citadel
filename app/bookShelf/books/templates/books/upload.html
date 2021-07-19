@@ -17,45 +17,50 @@
     Important Instruction: Please take care to upload the files with an appropriate name so that it is easy for others to understand.
     <p></p>
 NOTE: You can upload multiple files of the same type, like multiple lectures, notes, assignments, tutorials or books for the same course.
+Multiple images uploaded will be merged to a single PDF document automatically.
 </div>
 </div>
 <br>
     <div class="panel-body">
-      <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal" id="upload-form">
+      <form method="post" enctype="multipart/form-data" class="uploadform form-horizontal needs-validation" id="upload-form" novalidate>
         {% csrf_token %}
         <div class="form-group row">
             <label class="control-label col-sm-2" >Course Code:</label>
             <input id="code-input" class="form-control col-sm-6" style="margin:0" type="text" name="course_code" maxlength='6' placeholder="APL100" autocomplete="off" required pattern="[a-zA-Z]{3}[0-9]{3}">
+            <div class="invalid-feedback col-sm-4"></div>
         </div>
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Semester:</label>
-            <select class="form-control col-sm-6" name = "sem" style="display: inline">
+            <select class="form-control col-sm-6" name = "sem" id="sem" style="display: inline">
                 <option value=""> </option>
                 <option value="Fall">Fall (Sem 1)</option>
                 <option value="Spring">Spring (Sem 2)</option>
             </select>
+            <div class="invalid-feedback col-sm-4"></div>
         </div>
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Academic Year:</label>
             <select class="form-control col-sm-6" name="year" id="year"></select>
+            <div class="invalid-feedback col-sm-4"></div>
         </div>
         
         <div class="form-group row">
             <label class="control-label col-sm-2">Professor:</label>
-            <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required>
+            <select class="form-control col-sm-6" id="prof" name = "professor" style="display: inline" required data-live-search="true">
                 <option value=""> </option>
                     <option value= "Unlisted">Unlisted</option>
                 {% for value,name in profs.items %}
                     <option value= "{{ value }}">{{value}} - {{ name }}</option>
                 {% endfor %}
             </select>
+            <div class="invalid-feedback col-sm-4"></div>
         </div>
 
         <div class="form-group row">
             <label class="control-label col-sm-2">Document Type:</label>
-            <select class="form-control col-sm-6" name = "type_file" style="display: inline">
+            <select class="form-control col-sm-6" name = "type_file" id="type_file" style="display: inline">
                 <option value="Minor1">Minor 1 </option>
                 <option value="Minor2">Minor 2</option>
                 <option value="Major">Major</option>
@@ -66,17 +71,18 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
                 <option value="Others">Others</option>
 
             </select>
+            <div class="invalid-feedback col-sm-4"></div>
         </div>
         
         <div class="form-group row">
             <label class="control-label col-sm-2">New Filename:</label>                    
                 <input  id="customFilename" type="text" name="customFilename" placeholder="Optionally change File name (Without extension)"  class="col-sm-6 form-control" style="margin:0" pattern="[a-zA-Z0-9 ]+" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
-            
+                <div class="invalid-feedback col-sm-4"></div>
         </div>
        
         <div class="form-group row">
-            <input id="file-dump" type="file" name="documents" required class="btn" multiple>
-            
+            <input id="file-dump" type="file" name="documents" required class="btn form-control col-sm-5" multiple>
+            <div class="invalid-feedback col-sm-4"></div>
 
         </div>
         </form>
@@ -84,7 +90,11 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
             <button id="next-btn" class="btn btn-outline-primary col-sm-6 upload-btn" >Next</button>            
         </div>
         
-        <div id="reorder-section"></div>
+        <div id="reorder-section" class="needs-validation"></div>
+        <div class="form-group row needs-validation">
+            <input id="image-order" form="upload-form" type="hidden" name="image-order" class="col-sm-6 form-control">
+            <div class="invalid-feedback col">Page numbering not unique. Please enter valid page numbers</div>
+        </div>
 
         <div id="tags-section"></div>
         <div class="form-group row" id="submit-row"></div>
@@ -96,7 +106,11 @@ NOTE: You can upload multiple files of the same type, like multiple lectures, no
     <script src="{% static 'js/formValidator.js' %}"></script>  <!--  Broken By form changes TODO: fix -->
     <script src="{% static 'js/tagtest.js' %}"></script>
     <script src="{% static 'js/upload.js' %}"></script>
-        <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
+    <script src="{% static 'js/select2.min.js' %}"></script>
+    
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2-bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tagtest.css' %}">
 
 
 {% endblock %}

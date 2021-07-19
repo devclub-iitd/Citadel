@@ -180,15 +180,14 @@ def upload(request):
             for i in range(len(imgs)):
                 imgs[i] = imgs[i].resize(minsize)
 
-            # Get the correct page order of images to be concatenated.    
-            reordered_imgs = []
+            # Get the correct page order of images to be concatenated. 
+            reordered_imgs = list(imgs)
             if len(image_order_list)>0:
                 if len(imgs)==len(image_order_list):
-                    for i in range(len(image_order_list)):
-                        reordered_imgs.insert(image_order_list[i]-1, imgs[i])
-            else:
-                reordered_imgs = imgs
-
+                    i=0
+                    for order in image_order_list:
+                        reordered_imgs[order-1] = imgs[i]
+                        i+=1
 
             file_path = '.'.join(img_files[0].split('.')[:-1])
             file_path += '.pdf'
