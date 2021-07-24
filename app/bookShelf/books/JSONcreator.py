@@ -82,9 +82,6 @@ def generate_path(path):
                 continue
             d[x]=new_path
     else:
-        # Do not include meta files in the heirarchy when recreating it.
-        if path.split('.')[-1]=='meta':
-            return ''
         ## TODO: MORE ROBUST PATH CONFIGURATION
         return path[2:]
     return d
@@ -99,9 +96,7 @@ def path_to_dict(path,name_of_file):
         if heirarchy == "file":
             heirarchy = {}
     else:
-        heirarchy = generate_path(path)
-        f = open(name_of_file, "w+")
-        f.write(json.dumps(heirarchy))
+        heirarchy = recreate_path(path, name_of_file)
     return heirarchy
 
 
