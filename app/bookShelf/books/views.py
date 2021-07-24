@@ -25,6 +25,7 @@ from collections import OrderedDict
 # Custom Modules
 from books import JSONcreator as jsc
 from books import search as search
+from books import scraper as scraper
 
 DATABASE_DIR = os.path.join('..', 'protected', 'database')
 DATABASE_URL = "/media/database"
@@ -44,6 +45,10 @@ ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
 STATS_FILE = "course_downloads.json"
 # file to record all changes to database_dir
 JOURNAL = "task_file.json"
+# file to store profs list
+PROF_FILE = 'profs.json'
+# file to store course list
+COURSE_FILE = 'courses.json'
 # tags to exclude from appearing in meta files
 EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Minor1', 'Minor2', 'Major', 'Books', 'Others', 'Professors',
                  'Tutorials', 'Notes', 'Lectures/Slides', 'Lectures', 'Slides']
@@ -422,6 +427,31 @@ def force_integrity(request):
 def finalize_approvals(request):
     if request.method == "GET":
         finalize_function()
+        return redirect('/books/')
+    else:
+        return redirect('/books/')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def updateProfList(request):
+    """
+        scrape profs list and update profs.json 
+    """
+    if request.method == "GET":
+        #print(os.path.isfile(PROF_FILE))
+        scraper.getProfList(PROF_FILE)
+        return redirect('/books/')
+    else:
+        return redirect('/books/')
+
+@user_passes_test(lambda u: u.is_superuser)
+def updateCourseList(request):
+    """
+        scrape profs list and update profs.json 
+    """
+    if request.method == "GET":
+        #print(os.path.isfile(COURSE_FILE))
+        scraper.getCourseList(COURSE_FILE)
         return redirect('/books/')
     else:
         return redirect('/books/')
