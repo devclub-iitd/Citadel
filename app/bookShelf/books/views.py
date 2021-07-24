@@ -217,8 +217,7 @@ def download_course(request):
     course = request.GET.get('course', 'None')
     if course == 'None':
         return redirect('/books/')
-    parent_dir = course[0:2]
-    zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
+    zip_location = os.path.join(DATABASE_DIR, course + '.zip')
     try:
         if not (os.path.isfile(zip_location)):
             zip_course(course)
@@ -235,7 +234,7 @@ def download_course(request):
         with open(STATS_FILE, "w") as file:
             json.dump(stats, file)
         
-        return redirect(DATABASE_URL + '/' + parent_dir + '/' + course + '.zip')
+        return redirect(DATABASE_URL + '/' + course + '.zip')
     
     except OSError as e:
         return HttpResponse(status=400,content="Bad Request")
@@ -546,29 +545,35 @@ def finalize_function():
     with open(JOURNAL, "r") as file:
         tasks = json.load(file)
     sorted_tasks = sorted(tasks, key=lambda k: k[COURSE])
-    if len(sorted_tasks) > 0:
-        task = sorted_tasks[0]
-        previous_course = task[COURSE]
-        zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
-        if os.path.isfile(zip_location):
-            zip_present = 1
-            os.remove(zip_location)
-        else:
-            zip_present = 0
+    
+    zip_path = []
+    zip_present = {}
     while len(sorted_tasks) > 0:
-
         tasks_handler(sorted_tasks)
-        task = sorted_tasks.pop(0)
-        if task[COURSE] != previous_course:
-            if zip_present == 1:
-                zip_course(previous_course)
-            previous_course = task[COURSE]
-            zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
+        task = sorted_tasks.pop(0) 
+
+        zip_path.clear()
+        separated_file_path = task[PATH].split(os.sep)
+        # ex. path in task[PATH]: CO/COL100/Question-Papers/Major/<filename>.pdf
+        # store ['CO/COL100', 'CO/COL100/Question-Papers', 'CO/COL100/Question-Papers/Major'] in zip_path
+        for i in range(2, len(separated_file_path)):
+            zip_path.append((os.sep).join(separated_file_path[:i]))
+
+        # Append all nodes in a dict with value indicating if zip file already present or not
+        for path in zip_path:
+            zip_location = os.path.join(DATABASE_DIR, path + '.zip')
             if os.path.isfile(zip_location):
-                os.remove(zip_location)
-                zip_present = 1
+                zip_present[path] = 1
             else:
-                zip_present = 0
+                zip_present[path] = 0
+    
+    # Modify zips
+    for path in zip_present.keys():
+        if zip_present[path] == 1:
+            zip_location = os.path.join(DATABASE_DIR, path + '.zip')
+            os.remove(zip_location)
+            zip_course(path)
+
 
     with open(JOURNAL, "w") as file:
         json.dump(sorted_tasks, file)
@@ -603,17 +608,16 @@ def startup_function():
 
 def zip_course(course):
     """
-     Function to zip courses given a course code
+     Function to zip a directory given it's path
     """
-    parent_dir = course[0:2]
-    zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
-    course_path = os.path.join(DATABASE_DIR, parent_dir, course)
+    zip_location = os.path.join(DATABASE_DIR, course + '.zip')
+    course_path = os.path.join(DATABASE_DIR, course)
     if not os.path.isdir(course_path):
         raise OSError
     zf = zipfile.ZipFile(zip_location, "w")
     for dirname, _, files in os.walk(course_path):
         for filename in files:
-            if not filename.lower().endswith('.meta'):
+            if not filename.lower().endswith(('.meta', '.zip')):
                 path = os.path.join(dirname, filename)
                 to_write = os.path.relpath(path, course_path)
                 zf.write(path, arcname=to_write)

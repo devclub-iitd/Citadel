@@ -33,7 +33,7 @@ def get_size():
             os.remove(zip_location)
 """
 
-
+## TODO: Update function to reflect fresh zipping changes (zip at each node)
 def delete_zips():
     if not (get_size() < ZIP_SIZE_LIMIT):
         with open(STATS_FILE, "r") as file:
