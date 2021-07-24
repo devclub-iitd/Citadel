@@ -29,7 +29,7 @@ $(document).ready(function() {
 			default_tags.push(document.getElementById('prof').value)
 			if (fileDump.files.length != 0) {
 
-				document.getElementById('tags-section').innerHTML="<div class='tag-section-heading'><strong>Edit Tags (Optional)</strong></div>" 
+				document.getElementById('tags-section').innerHTML="<div class='tag-section-heading'><strong>Edit Tags (Optional)</strong><br>Use comma(,) or Enter key to create a tag.</div>" 
 				for (var i = 0; i < fileDump.files.length; i++) {
 					addTagBox(fileDump.files[i].name,default_tags)
 				}
