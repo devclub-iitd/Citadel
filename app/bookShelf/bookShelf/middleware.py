@@ -27,7 +27,16 @@ PUBLIC_PATHS = ['^/$','^/static/.*','^/healthz.*']
 
 # A dictionary of path regexes mapping to the roles. A user needs to have all roles in order to be authorized
 ROLES = {
-    '^/admin.*': ['admin']
+    '^/admin.*': ['admin'],
+    '^/books/approve/$': ['admin'],
+    '^/books/remove_unapproved_document/$' : ['admin'],
+    '^/books/approve_unapproved_document/$': ['admin'],
+    '^/books/rename/$': ['admin'],
+    '^/books/bulk_approve/$': ['admin'],
+    '^/books/force_integrity/$': ['admin'],
+    '^/books/finalize_approvals/$': ['admin'],
+    '^/books/update_prof_list/$': ['admin'],
+    '^/books/update_course_list/$': ['admin']
 }
 
 DEFAULT_ROLES = ['iitd_user']
@@ -136,6 +145,8 @@ class SSOMiddleware:
         user.first_name = user_payload['firstname']
         user.last_name = user_payload['lastname']
         user.username = user_payload['username']
+        if self.check_superuser(request, user_payload):
+            user.is_superuser = True
         user.save()
         self.log(request, 'logging in')
         login(request, user)
@@ -161,6 +172,18 @@ class SSOMiddleware:
         return True
         
     
+    def check_superuser(self, request, user_payload):
+        try:
+            user_roles = user_payload['roles']
+        except:
+            return False
+
+        superuser_role = 'admin'
+        for role in user_roles:
+            if role == superuser_role:
+                return True
+        return False
+
     def refresh(self,request,token):
         r=requests.post(REFRESH_URL,data=token)
         self.cookies = r.headers['Set-Cookie'].replace('Lax,','Lax\n')
