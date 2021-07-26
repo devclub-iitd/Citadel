@@ -46,4 +46,10 @@ def delete_zips():
             zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
             if os.path.isfile(zip_location):
                 os.remove(zip_location)
+            ## Temporary fix.
+            ## Suggested changes in STATS_FILE structure: course_code : {path: {downloads: x, last: y}}
+            else:
+                zip_location = os.path.join(DATABASE_DIR, course + '.zip')
+                if os.path.isfile(zip_location):
+                    os.remove(zip_location)
             cntr = cntr + 1
