@@ -7,7 +7,7 @@ import collections
 class FilePath(Exception):
     """
         Raised when the path given is pointing to a file
-        instead of a director
+        instead of a directory
     """
     pass
 
@@ -32,7 +32,7 @@ def navigate_path(db,path,forced):
             db = db[key]
         except Exception as e:
             raise InvalidPath
-    if type(db) is str:
+    if type(db) is not dict:
         raise FilePath
     return db
 
@@ -121,3 +121,34 @@ def recreate_path(path, name_of_file):
     f = open(name_of_file, "w+")
     f.write(json.dumps(heirarchy))
     return heirarchy
+
+def update_db(db, path, node):
+    """
+        Updates dict at the end of the db pointed by path in 
+        the db with the node passed and returns updated db.
+        NOTE: This updates the child of the second bottommost
+        node of the trie which is a dict.\n
+        Raises TypeError if node is not a dict.
+        In case of invalid path raise appropriate exceptions
+
+    """
+    keys = list(filter(None, path.split(os.sep)))
+    root = keys[0]
+
+    if type(node) is not dict:
+        raise TypeError(f'Expected {type(dict())} but received {type(node)} of argument node')
+
+    if len(keys) == 1:
+        db[path] = node
+        return db
+
+    try:
+        new_db = db[root]
+    except Exception as e:
+        raise InvalidPath
+    if type(new_db) is not dict:
+        raise FilePath
+    new_path = (os.sep).join(keys[1:])
+    new_db = update_db(new_db, new_path, node)
+    db[root] = new_db
+    return db

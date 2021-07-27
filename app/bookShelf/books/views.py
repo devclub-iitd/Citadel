@@ -227,15 +227,22 @@ def download_course(request):
         if not (os.path.isfile(zip_location)):
             zip_course(course)
 
+        if not os.path.isfile(STATS_FILE):
+            shutil.copy(stats_loc, STATS_FILE)
+
         with open(STATS_FILE, "r") as file:
             stats = json.load(file)
-        if course not in stats:
-            stats[course] = {
-                "downloads": 0,
-                "last": "",
-            }
-        stats[course]["downloads"] = stats[course]["downloads"] + 1
-        stats[course]["last"] = datetime.now().strftime("%Y%m%d")
+        course_stat = jsc.navigate_path(stats, course, True)
+
+        try:
+            course_stat['downloads'] += 1
+        except:
+            course_stat['downloads'] = 1
+            course_stat['last'] = ''
+        course_stat['last'] = datetime.now().strftime("%Y%m%d")
+
+        stats = jsc.update_db(stats, course, course_stat)
+        
         with open(STATS_FILE, "w") as file:
             json.dump(stats, file)
         
