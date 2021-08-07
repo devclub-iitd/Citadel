@@ -120,6 +120,7 @@ def recreate_path(path, name_of_file):
     heirarchy = remove_zips_and_metas(heirarchy)
     f = open(name_of_file, "w+")
     f.write(json.dumps(heirarchy))
+    f.close()
     return heirarchy
 
 def update_db(db, path, node):
