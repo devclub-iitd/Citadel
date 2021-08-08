@@ -22,21 +22,23 @@ LOGOUT_PATH = '/books/userlogout/'
 
 USER_MODEL = User
 
+SUPERUSER_ROLE = 'citadel_admin'
+
 # An array of path regexes that will not be processed by the middleware
 PUBLIC_PATHS = ['^/$','^/static/.*','^/healthz.*'] 
 
 # A dictionary of path regexes mapping to the roles. A user needs to have all roles in order to be authorized
 ROLES = {
-    '^/admin.*': ['admin'],
-    '^/books/approve/$': ['admin'],
-    '^/books/remove_unapproved_document/$' : ['admin'],
-    '^/books/approve_unapproved_document/$': ['admin'],
-    '^/books/rename/$': ['admin'],
-    '^/books/bulk_approve/$': ['admin'],
-    '^/books/force_integrity/$': ['admin'],
-    '^/books/finalize_approvals/$': ['admin'],
-    '^/books/update_prof_list/$': ['admin'],
-    '^/books/update_course_list/$': ['admin']
+    '^/admin.*': [SUPERUSER_ROLE],
+    '^/books/approve/$': [SUPERUSER_ROLE],
+    '^/books/remove_unapproved_document/$' : [SUPERUSER_ROLE],
+    '^/books/approve_unapproved_document/$': [SUPERUSER_ROLE],
+    '^/books/rename/$': [SUPERUSER_ROLE],
+    '^/books/bulk_approve/$': [SUPERUSER_ROLE],
+    '^/books/force_integrity/$': [SUPERUSER_ROLE],
+    '^/books/finalize_approvals/$': [SUPERUSER_ROLE],
+    '^/books/update_prof_list/$': [SUPERUSER_ROLE],
+    '^/books/update_course_list/$': [SUPERUSER_ROLE]
 }
 
 DEFAULT_ROLES = ['iitd_user']
