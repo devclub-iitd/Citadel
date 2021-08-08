@@ -1,0 +1,129 @@
+{% extends 'books/shelf.html' %}
+{% load static from staticfiles %}
+{% load extra_tags %}
+
+{% block nav %}
+<ol class="breadcrumb" id="path-bar">
+	<li class="breadcrumb-item"><a href="../">Home</a></li>
+	<li class="breadcrumb-item"><a href="#">Upload</a></li>
+</ol>
+{% endblock %}
+
+{% block body %}
+<div class="page-size-scalar">
+	<div class="panel panel-default">
+		<div class="card">
+			<div class="card-body">
+				Important Instruction: Please take care to check if the required
+				resource is already present or has been requested for already.
+			</div>
+		</div>
+		<br />
+		<div class="panel-body">
+			<form method="post" enctype="multipart/form-data" class="uploadform form-horizontal needs-validation" id="requests-form" novalidate>
+				{% csrf_token %}
+
+				<div class="form-group row">
+					<label class="control-label col-sm-2">Course Code:</label>
+					<input
+						id="code-input"
+						class="form-control col-sm-6"
+						style="margin: 0"
+						type="text"
+						name="course_code"
+						maxlength="6"
+						placeholder="APL100"
+						autocomplete="off"
+						required
+						pattern="[a-zA-Z]{3}[0-9]{3}"/>
+					<div class="invalid-feedback col-sm-4"></div>
+				</div>
+
+				<div class="form-group row">
+					<label class="control-label col-sm-2">Semester:</label>
+					<select class="form-control col-sm-6" name="sem" id="sem" style="display: inline">
+						<option value=""></option>
+						<option value="Fall">Fall (Sem 1)</option>
+						<option value="Spring">Spring (Sem 2)</option>
+					</select>
+					<div class="invalid-feedback col-sm-4"></div>
+				</div>
+
+				<div class="form-group row">
+					<label class="control-label col-sm-2">Academic Year:</label>
+					<select class="form-control col-sm-6" name="year" id="year"></select>
+					<div class="invalid-feedback col-sm-4"></div>
+				</div>
+
+				<div class="form-group row">
+					<label class="control-label col-sm-2">Professor:</label>
+					<select class="form-control col-sm-6" id="prof" name="professor" style="display: inline" required data-live-search="true">
+						<option value=""></option>
+						<option value="Unlisted">Unlisted</option>
+						{% for value,name in profs.items %}
+						<option value="{{ value }}">{{value}} - {{ name }}</option>
+						{% endfor %}
+					</select>
+					<div class="invalid-feedback col-sm-4"></div>
+				</div>
+
+				<div class="form-group row">
+					<label class="control-label col-sm-2">Document Type:</label>
+					<select class="form-control col-sm-6" name="type_file" id="type_file" style="display: inline">
+						<option value="Minor1">Minor 1</option>
+						<option value="Minor2">Minor 2</option>
+						<option value="Major">Major</option>
+						<option value="Books">Books</option>
+						<option value="Lectures">Lectures/Slides</option>
+						<option value="Assignments">Assignments</option>
+						<option value="Tutorials">Tutorials</option>
+						<option value="Others">Others</option>
+					</select>
+					<div class="invalid-feedback col-sm-4"></div>
+				</div>
+
+				<div class="form-group row">
+					<label class="control-label col-sm-2">Other information</label>
+					<textarea id="other_info" class="form-control col-sm-6" style="margin: 0" type="text" name="other_info" autocomplete="off" placeholder="Any other specifics others would require..."></textarea>
+					<div class="invalid-feedback col-sm-4"></div>
+				</div>
+			</form>
+			<div class="form-group row">
+				<button id="submit-btn" class="btn btn-outline-primary col-sm-6 upload-btn submit-btn">
+					Submit
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="filtered-requests-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLongTitle">These requests already made are very similar to your current request!</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				<div class="card-group-row" id="filtered-requests">
+					
+				</div>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Dismiss</button>
+			</div>
+		  </div>
+	</div>
+</div>
+
+
+<script src="{% static 'js/requestsForm.js' %}"></script>
+<script src="{% static 'js/select2.min.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/select2-bootstrap4.min.css' %}">
+
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'books/shelf.html' %}
+{% load static from staticfiles %}
+{% load extra_tags %}
+
+{% block nav %}
+<ol class="breadcrumb" id="path-bar">
+	<li class="breadcrumb-item"><a href="../">Home</a></li>
+	<li class="breadcrumb-item"><a href="../books/upload.html">Upload</a></li>
+</ol>
+{% endblock %}
+
+{% block body %}
+
+<div class="request-btn-section">
+	<div style="/*! margin: auto; */margin: 0,auto;" class="container mb-2">
+		<div class="row">
+			<div class="col-md-6 mx-auto">
+				<a href="/books/request_material" class="disabled">
+				<!-- <button type="button" data-toggle="modal" data-target="#requests-form-modal" data-placement="top" title="Didn't find something you want? Request for it!"
+					class="btn btn-primary btn-block md-6">Request</button> -->
+					<button type="button" data-placement="top" title="Didn't find something you want? Request for it!"
+					class="btn btn-primary btn-block md-6">Request</button>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<hr/>
+
+<div class="modal fade" id="requests-form-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="form">
+		<div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLongTitle">Post a request for a resource unavailable currently</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				<div class="card">
+					<div class="card-body">
+						Important Instruction: Please take care to check if the required
+						resource is already present or has been requested for already.
+					</div>
+				</div>
+				<br />
+				<div class="panel-body">
+					<form method="post" enctype="multipart/form-data" class="uploadform form-horizontal needs-validation" id="requests-form" novalidate>
+						{% csrf_token %}
+		
+						<div class="form-group row">
+							<label class="control-label col-sm-2">Course Code:</label>
+							<input
+								id="code-input"
+								class="form-control col-sm-6"
+								style="margin: 0"
+								type="text"
+								name="course_code"
+								maxlength="6"
+								placeholder="APL100"
+								autocomplete="off"
+								required
+								pattern="[a-zA-Z]{3}[0-9]{3}"/>
+							<div class="invalid-feedback col-sm-4"></div>
+						</div>
+		
+						<div class="form-group row">
+							<label class="control-label col-sm-2">Semester:</label>
+							<select class="form-control col-sm-6" name="sem" id="sem" style="display: inline">
+								<option value=""></option>
+								<option value="Fall">Fall (Sem 1)</option>
+								<option value="Spring">Spring (Sem 2)</option>
+							</select>
+							<div class="invalid-feedback col-sm-4"></div>
+						</div>
+		
+						<div class="form-group row">
+							<label class="control-label col-sm-2">Academic Year:</label>
+							<select class="form-control col-sm-6" name="year" id="year"></select>
+							<div class="invalid-feedback col-sm-4"></div>
+						</div>
+		
+						<div class="form-group row">
+							<label class="control-label col-sm-2">Professor:</label>
+							<select class="form-control col-sm-6" id="prof" name="professor" style="display: inline" required data-live-search="true">
+								<option value=""></option>
+								<option value="Unlisted">Unlisted</option>
+								{% for value,name in profs.items %}
+								<option value="{{ value }}">{{value}} - {{ name }}</option>
+								{% endfor %}
+							</select>
+							<div class="invalid-feedback col-sm-4"></div>
+						</div>
+		
+						<div class="form-group row">
+							<label class="control-label col-sm-2">Document Type:</label>
+							<select class="form-control col-sm-6" name="type_file" id="type_file" style="display: inline">
+								<option value="Minor1">Minor 1</option>
+								<option value="Minor2">Minor 2</option>
+								<option value="Major">Major</option>
+								<option value="Books">Books</option>
+								<option value="Lectures">Lectures/Slides</option>
+								<option value="Assignments">Assignments</option>
+								<option value="Tutorials">Tutorials</option>
+								<option value="Others">Others</option>
+							</select>
+							<div class="invalid-feedback col-sm-4"></div>
+						</div>
+		
+						<div class="form-group row">
+							<label class="control-label col-sm-2">Other information</label>
+							<textarea id="other_info" class="form-control col-sm-6" style="margin: 0" type="text" name="other_info" autocomplete="off" placeholder="Any other specifics others would require..."></textarea>
+							<div class="invalid-feedback col-sm-4"></div>
+						</div>
+		
+						<!-- <div class="form-group row">
+							<button id="submit-btn" class="btn btn-outline-primary col-sm-6 upload-btn">
+								Submit
+							</button>
+						</div> -->
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Dismiss</button>
+			  <button id="submit-btn" class="btn btn-outline-primary" type="submit">Submit</button>
+			</div>
+		  </div>
+	</div>
+</div>
+
+<div class="container row filter-bar">
+	<div class="col-sm-1 align-self-end">
+		<p class="btn btn-dark disabled">Filter</p>
+	</div>
+	<div class="col-sm-2">
+		<label class="control-label row">Course Code:</label>
+		<input
+			id="code-filter"
+			class="form-control row"
+			onkeyup="filter_col.call(this);"
+			style="margin: 0"
+			type="text"
+			name="course_code"
+			maxlength="6"
+			placeholder="APL100"
+			autocomplete="off"
+			pattern="[a-zA-Z]{3}[0-9]{3}"/>
+	</div>
+	<div class="col-sm-2">
+		<label class="control-label row">Semester:</label>
+		<select class="form-control row" name="sem" id="sem-filter" onchange="filter_col.call(this);" style="display: inline">
+			<option value=""></option>
+			<option value="Fall">Fall (Sem 1)</option>
+			<option value="Spring">Spring (Sem 2)</option>
+		</select>
+	</div>
+	<div class="col-sm-2">
+		<label class="control-label row">Academic Year:</label>
+		<select class="form-control row" name="year" id="year-filter" onchange="filter_col.call(this)"></select>
+	</div>
+	<div class="col-sm-2">
+		<label class="control-label row">Document Type:</label>
+		<select class="form-control row" name="type_file" id="type_file-filter" onchange="filter_col.call(this)" style="display: inline">
+			<option value="Minor1">Minor 1</option>
+			<option value="Minor2">Minor 2</option>
+			<option value="Major">Major</option>
+			<option value="Books">Books</option>
+			<option value="Lectures">Lectures/Slides</option>
+			<option value="Assignments">Assignments</option>
+			<option value="Tutorials">Tutorials</option>
+			<option value="Others">Others</option>
+		</select>
+	</div>
+	<div class="col-sm-3">
+		<label class="control-label row">Professor:</label>
+		<select class="form-control row" id="prof-filter" name="professor" onchange="filter_col.call(this)" style="display: inline" required data-live-search="true">
+			<option value=""></option>
+			<option value="Unlisted">Unlisted</option>
+			{% for value,name in profs.items %}
+			<option value="{{ value }}">{{value}} - {{ name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+</div>
+<hr/>
+<div class="card-group-row" id="requests-browser"></div>
+
+<script src="{% static 'js/requests.js' %}"></script>
+<!-- <script src="{% static 'js/requestsForm.js' %}"></script> -->
+{% if user.is_superuser %}
+<script src="{% static 'js/deleteRequests.js' %}"></script>
+{% else %}
+<script>
+function add_close_btn(){
+	return;
+}
+</script>
+{% endif %}
+<script src="{% static 'js/select2.min.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/select2-bootstrap4.min.css' %}">
+{% endblock %}

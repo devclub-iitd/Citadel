@@ -13,7 +13,8 @@ from PIL import Image
 # Django Imports
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, HttpResponse
-from django.http import Http404
+from django.http import Http404, response
+from django.urls import reverse
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required,user_passes_test
@@ -49,6 +50,8 @@ JOURNAL = "task_file.json"
 PROF_FILE = 'profs.json'
 # file to store course list
 COURSE_FILE = 'courses.json'
+# file to store requested material details
+REQUESTS_FILE = 'requests.json'
 # tags to exclude from appearing in meta files
 EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Minor1', 'Minor2', 'Major', 'Books', 'Others', 'Professors',
                  'Tutorials', 'Notes', 'Lectures/Slides', 'Lectures', 'Slides']
@@ -134,6 +137,9 @@ def upload(request):
         ## Ignoring the alternate filename filed when number of files uploaded is more than 1
         if len(documents) > 1:
             other_text = 'None'
+
+        # Remove material request if present
+        removeRequest(course_code, sem, year, prof, type_file)
 
         j=0
         # Treat image files differently: to concatenate them(if more than 1) and convert to PDF
@@ -464,6 +470,82 @@ def updateCourseList(request):
         return redirect('/books/')
 
 
+@login_required
+def request_material(request):
+    """
+        Controller for handling request_material form
+    """
+    if request.method == 'POST':
+        course_code = request.POST.get('course_code', "None")
+        sem = request.POST.get('sem', "None")
+        year = request.POST.get('year', "None")
+        type_file = request.POST.get('type_file', "None")
+        prof = request.POST.get('professor', "None")
+        other = request.POST.get('other_info', '')
+
+        with open(REQUESTS_FILE, 'r') as file:
+            data = json.load(file)
+        
+        new_request = {
+            "course_code": course_code.upper(),
+            "sem": sem,
+            "year": year,
+            "type_file": type_file,
+            "prof": prof,
+            "other_info": other
+        }
+        if len(data) == 0:
+            data = []
+        data.append(new_request)
+
+        with open(REQUESTS_FILE, 'w') as file:
+            json.dump(data, file)
+        
+        return response.HttpResponseRedirect(reverse('requests'))
+
+    else:
+        profs = json.loads(open("profs.json", "r").read(), object_pairs_hook=OrderedDict)
+        return render(request, 'books/requestsForm.html', {"profs": profs})
+
+@login_required
+def requests_page(request):
+    """
+        Controller for handling requested_materials page
+    """
+    if request.method == 'GET':
+        profs = json.loads(open("profs.json", "r").read(), object_pairs_hook=OrderedDict)
+        return render(request, 'books/requests.html', {"profs": profs})
+
+
+
+def removeRequest(course_code, sem, year, prof, type_file):
+    requested_material = {
+        'course_code': course_code.upper(),
+        'sem': sem,
+        'year': year,
+        'prof': prof,
+        'type_file': type_file,
+        'other_info': r'*'
+    }
+
+    with open(REQUESTS_FILE, 'r') as file:
+        requests_data = json.load(file)
+
+    for data in requests_data:
+        matched = True
+        for key in list(data.keys())[:-1]:
+            if data[key]!='None' and requested_material[key]!='None' and data[key]!=requested_material[key]:
+                matched = False
+                break
+        if matched:
+            index = requests_data.index(data)
+            requests_data.pop(index)
+            break
+
+    with open(REQUESTS_FILE, 'w') as file:
+        json.dump(requests_data, file)
+    
+
 def userlogin(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
@@ -513,6 +595,40 @@ def APIsearch(request):
     else:
         result = search.search_dic(db, path_prefix, keyword_list)
         return Response({"result": result})
+
+@api_view(['GET', 'POST'])
+def APIrequests(request):
+    """
+        returns a list of all requests raised for unavailable material for a GET request
+        or receives an index to be deleted from requests raised for a POST request 
+    """
+    err = False
+    try:
+        with open(REQUESTS_FILE, 'r') as file:
+            data = json.load(file)
+    except Exception as e:
+        err = True
+        data = []
+
+    
+    if request.method == 'GET':
+        if err:
+            return Response({})
+        else:
+            return Response({"requests_data": data})
+
+    else:
+        course_code = request.POST.get('course_code', "None")
+        sem = request.POST.get('sem', "None")
+        year = request.POST.get('year', "None")
+        type_file = request.POST.get('type_file', "None")
+        prof = request.POST.get('professor', "None")
+        
+        if err or course_code=="None" or type_file=="None":
+            return HttpResponse(content='Bad Response', status=400)
+        else:
+            removeRequest(course_code, sem, year, prof, type_file)
+            return Response(status=200)
 
 
 def export_files():
@@ -640,6 +756,10 @@ def startup_function():
         tasks = []
         with open(JOURNAL, "w") as file:
             json.dump(tasks, file)
+    if not (os.path.isfile(REQUESTS_FILE)):
+        requests_data = []
+        with open(REQUESTS_FILE, "w") as file:
+            json.dump(requests_data, file)
     finalize_function()
 
 
