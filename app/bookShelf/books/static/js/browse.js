@@ -96,6 +96,7 @@ function get_event_handler_col(is_file,path_prefix,url)
             if(event.ctrlKey || event.shiftKey || event.metaKey) //might find a better way to implement this
             {
                 event.preventDefault();
+                event.stopPropagation();
             }
             var win = window.open(url);
             win.focus();
@@ -131,13 +132,13 @@ function create_elem_col(path_prefix,name,is_file)
     var handler = get_event_handler_col(is_file,path_prefix.slice(),MEDIA_PREFIX+new_id);
     
     btn.onclick = handler;
-    if (path_prefix.length == 2){
-        //to add the download course button
+    if (path_prefix.length >= 2 && !is_file){
+        //to add the download zip button (except at last node)
         html = "<i class='material-icons'>get_app</i>";
         var bt=$.parseHTML(html)[0];
 
         handler = function(){
-            var win = window.open(ZIP_URL+name,'_blank');
+            var win = window.open(ZIP_URL+new_id,'_blank');
             win.focus();
         };
         bt.onclick = handler;

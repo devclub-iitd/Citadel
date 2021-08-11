@@ -38,15 +38,15 @@
 
 <!--< Replace below for scrolling div, does not scale for large displays> -->
 <!-- <div class="panel panel-default" style="max-height: 50rem; overflow: auto;" > -->
-<div class="panel panel-default" >
+  <div class="panel panel-default" >
     <div class="panel-body">
         <div class="card">
-    <div class="card-body">
-        <center>Please review the documents carefully before approving them.</center>
-    </div>
-</div>
-    <hr>
-    <center><h6>{{ error }}</h6></center>
+          <div class="card-body">
+              <center>Please review the documents carefully before approving them.</center>
+          </div>
+        </div>
+      <hr>
+      <center><h6>{{ error }}</h6></center>
     {% for doc in unapproved_documents %}
 
     <div class="file-box approve-box">
@@ -62,7 +62,7 @@
     
     {% endfor %}
     </div>
-    </div>
+  </div>
 
 </div>
 

@@ -13,7 +13,8 @@ from PIL import Image
 # Django Imports
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, HttpResponse
-from django.http import Http404
+from django.http import Http404, response
+from django.urls import reverse
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required,user_passes_test
@@ -25,6 +26,7 @@ from collections import OrderedDict
 # Custom Modules
 from books import JSONcreator as jsc
 from books import search as search
+from books import scraper as scraper
 
 DATABASE_DIR = os.path.join('..', 'protected', 'database')
 DATABASE_URL = "/media/database"
@@ -44,6 +46,12 @@ ZIP_TIME_LIMIT = timedelta(days=92, hours=0, minutes=0)
 STATS_FILE = "course_downloads.json"
 # file to record all changes to database_dir
 JOURNAL = "task_file.json"
+# file to store profs list
+PROF_FILE = 'profs.json'
+# file to store course list
+COURSE_FILE = 'courses.json'
+# file to store requested material details
+REQUESTS_FILE = 'requests.json'
 # tags to exclude from appearing in meta files
 EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Minor1', 'Minor2', 'Major', 'Books', 'Others', 'Professors',
                  'Tutorials', 'Notes', 'Lectures/Slides', 'Lectures', 'Slides']
@@ -129,6 +137,9 @@ def upload(request):
         ## Ignoring the alternate filename filed when number of files uploaded is more than 1
         if len(documents) > 1:
             other_text = 'None'
+
+        # Remove material request if present
+        removeRequest(course_code, sem, year, prof, type_file)
 
         j=0
         # Treat image files differently: to concatenate them(if more than 1) and convert to PDF
@@ -217,25 +228,31 @@ def download_course(request):
     course = request.GET.get('course', 'None')
     if course == 'None':
         return redirect('/books/')
-    parent_dir = course[0:2]
-    zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
+    zip_location = os.path.join(DATABASE_DIR, course + '.zip')
     try:
         if not (os.path.isfile(zip_location)):
             zip_course(course)
 
+        if not os.path.isfile(STATS_FILE):
+            shutil.copy(stats_loc, STATS_FILE)
+
         with open(STATS_FILE, "r") as file:
             stats = json.load(file)
-        if course not in stats:
-            stats[course] = {
-                "downloads": 0,
-                "last": "",
-            }
-        stats[course]["downloads"] = stats[course]["downloads"] + 1
-        stats[course]["last"] = datetime.now().strftime("%Y%m%d")
+        course_stat = jsc.navigate_path(stats, course, True)
+
+        try:
+            course_stat['downloads'] += 1
+        except:
+            course_stat['downloads'] = 1
+            course_stat['last'] = ''
+        course_stat['last'] = datetime.now().strftime("%Y%m%d")
+
+        stats = jsc.update_db(stats, course, course_stat)
+        
         with open(STATS_FILE, "w") as file:
             json.dump(stats, file)
         
-        return redirect(DATABASE_URL + '/' + parent_dir + '/' + course + '.zip')
+        return redirect(DATABASE_URL + '/' + course + '.zip')
     
     except OSError as e:
         return HttpResponse(status=400,content="Bad Request")
@@ -428,6 +445,107 @@ def finalize_approvals(request):
         return redirect('/books/')
 
 
+@user_passes_test(lambda u: u.is_superuser)
+def updateProfList(request):
+    """
+        scrape profs list and update profs.json 
+    """
+    if request.method == "GET":
+        #print(os.path.isfile(PROF_FILE))
+        scraper.getProfList(PROF_FILE)
+        return redirect('/books/')
+    else:
+        return redirect('/books/')
+
+@user_passes_test(lambda u: u.is_superuser)
+def updateCourseList(request):
+    """
+        scrape profs list and update profs.json 
+    """
+    if request.method == "GET":
+        #print(os.path.isfile(COURSE_FILE))
+        scraper.getCourseList(COURSE_FILE)
+        return redirect('/books/')
+    else:
+        return redirect('/books/')
+
+
+@login_required
+def request_material(request):
+    """
+        Controller for handling request_material form
+    """
+    if request.method == 'POST':
+        course_code = request.POST.get('course_code', "None")
+        sem = request.POST.get('sem', "None")
+        year = request.POST.get('year', "None")
+        type_file = request.POST.get('type_file', "None")
+        prof = request.POST.get('professor', "None")
+        other = request.POST.get('other_info', '')
+
+        with open(REQUESTS_FILE, 'r') as file:
+            data = json.load(file)
+        
+        new_request = {
+            "course_code": course_code.upper(),
+            "sem": sem,
+            "year": year,
+            "type_file": type_file,
+            "prof": prof,
+            "other_info": other
+        }
+        if len(data) == 0:
+            data = []
+        data.append(new_request)
+
+        with open(REQUESTS_FILE, 'w') as file:
+            json.dump(data, file)
+        
+        return response.HttpResponseRedirect(reverse('requests'))
+
+    else:
+        profs = json.loads(open("profs.json", "r").read(), object_pairs_hook=OrderedDict)
+        return render(request, 'books/requestsForm.html', {"profs": profs})
+
+@login_required
+def requests_page(request):
+    """
+        Controller for handling requested_materials page
+    """
+    if request.method == 'GET':
+        profs = json.loads(open("profs.json", "r").read(), object_pairs_hook=OrderedDict)
+        return render(request, 'books/requests.html', {"profs": profs})
+
+
+
+def removeRequest(course_code, sem, year, prof, type_file):
+    requested_material = {
+        'course_code': course_code.upper(),
+        'sem': sem,
+        'year': year,
+        'prof': prof,
+        'type_file': type_file,
+        'other_info': r'*'
+    }
+
+    with open(REQUESTS_FILE, 'r') as file:
+        requests_data = json.load(file)
+
+    for data in requests_data:
+        matched = True
+        for key in list(data.keys())[:-1]:
+            if data[key]!='None' and requested_material[key]!='None' and data[key]!=requested_material[key]:
+                matched = False
+                break
+        if matched:
+            index = requests_data.index(data)
+            requests_data.pop(index)
+            break
+
+    with open(REQUESTS_FILE, 'w') as file:
+        json.dump(requests_data, file)
+    
+
 def userlogin(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
@@ -477,6 +595,40 @@ def APIsearch(request):
     else:
         result = search.search_dic(db, path_prefix, keyword_list)
         return Response({"result": result})
+
+@api_view(['GET', 'POST'])
+def APIrequests(request):
+    """
+        returns a list of all requests raised for unavailable material for a GET request
+        or receives an index to be deleted from requests raised for a POST request 
+    """
+    err = False
+    try:
+        with open(REQUESTS_FILE, 'r') as file:
+            data = json.load(file)
+    except Exception as e:
+        err = True
+        data = []
+
+    
+    if request.method == 'GET':
+        if err:
+            return Response({})
+        else:
+            return Response({"requests_data": data})
+
+    else:
+        course_code = request.POST.get('course_code', "None")
+        sem = request.POST.get('sem', "None")
+        year = request.POST.get('year', "None")
+        type_file = request.POST.get('type_file', "None")
+        prof = request.POST.get('professor', "None")
+        
+        if err or course_code=="None" or type_file=="None":
+            return HttpResponse(content='Bad Response', status=400)
+        else:
+            removeRequest(course_code, sem, year, prof, type_file)
+            return Response(status=200)
 
 
 def export_files():
@@ -546,29 +698,35 @@ def finalize_function():
     with open(JOURNAL, "r") as file:
         tasks = json.load(file)
     sorted_tasks = sorted(tasks, key=lambda k: k[COURSE])
-    if len(sorted_tasks) > 0:
-        task = sorted_tasks[0]
-        previous_course = task[COURSE]
-        zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
-        if os.path.isfile(zip_location):
-            zip_present = 1
-            os.remove(zip_location)
-        else:
-            zip_present = 0
+    
+    zip_path = []
+    zip_present = {}
     while len(sorted_tasks) > 0:
-
         tasks_handler(sorted_tasks)
-        task = sorted_tasks.pop(0)
-        if task[COURSE] != previous_course:
-            if zip_present == 1:
-                zip_course(previous_course)
-            previous_course = task[COURSE]
-            zip_location = os.path.join(DATABASE_DIR, previous_course[0:2], previous_course + '.zip')
+        task = sorted_tasks.pop(0) 
+
+        zip_path.clear()
+        separated_file_path = task[PATH].split(os.sep)
+        # ex. path in task[PATH]: CO/COL100/Question-Papers/Major/<filename>.pdf
+        # store ['CO/COL100', 'CO/COL100/Question-Papers', 'CO/COL100/Question-Papers/Major'] in zip_path
+        for i in range(2, len(separated_file_path)):
+            zip_path.append((os.sep).join(separated_file_path[:i]))
+
+        # Append all nodes in a dict with value indicating if zip file already present or not
+        for path in zip_path:
+            zip_location = os.path.join(DATABASE_DIR, path + '.zip')
             if os.path.isfile(zip_location):
-                os.remove(zip_location)
-                zip_present = 1
+                zip_present[path] = 1
             else:
-                zip_present = 0
+                zip_present[path] = 0
+    
+    # Modify zips
+    for path in zip_present.keys():
+        if zip_present[path] == 1:
+            zip_location = os.path.join(DATABASE_DIR, path + '.zip')
+            os.remove(zip_location)
+            zip_course(path)
+
 
     with open(JOURNAL, "w") as file:
         json.dump(sorted_tasks, file)
@@ -598,22 +756,25 @@ def startup_function():
         tasks = []
         with open(JOURNAL, "w") as file:
             json.dump(tasks, file)
+    if not (os.path.isfile(REQUESTS_FILE)):
+        requests_data = []
+        with open(REQUESTS_FILE, "w") as file:
+            json.dump(requests_data, file)
     finalize_function()
 
 
 def zip_course(course):
     """
-     Function to zip courses given a course code
+     Function to zip a directory given it's path
     """
-    parent_dir = course[0:2]
-    zip_location = os.path.join(DATABASE_DIR, parent_dir, course + '.zip')
-    course_path = os.path.join(DATABASE_DIR, parent_dir, course)
+    zip_location = os.path.join(DATABASE_DIR, course + '.zip')
+    course_path = os.path.join(DATABASE_DIR, course)
     if not os.path.isdir(course_path):
         raise OSError
     zf = zipfile.ZipFile(zip_location, "w")
     for dirname, _, files in os.walk(course_path):
         for filename in files:
-            if not filename.lower().endswith('.meta'):
+            if not filename.lower().endswith(('.meta', '.zip')):
                 path = os.path.join(dirname, filename)
                 to_write = os.path.relpath(path, course_path)
                 zf.write(path, arcname=to_write)
