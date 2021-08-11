@@ -26,11 +26,12 @@ def getCourseList(path_to_file):
     """
     Function to scrape the course list
     """
-    courses = []
+    old_course_list = []
     if os.path.isfile(path_to_file):
         with open(path_to_file, 'r') as file:
-            courses = json.load(file)
-    
+            old_course_list = json.load(file)
+    courses = set(old_course_list)
+
     try:
         response = requests.get(COURSE_LIST_URL)
     except requests.ConnectionError as e:
@@ -52,11 +53,10 @@ def getCourseList(path_to_file):
     for cell in cells:
         course_code = cell.text.strip()
         if validateCourseCode(course_code):
-            if course_code not in courses:
-                courses.append(course_code)
+            courses.add(course_code)
 
     with open(path_to_file, 'w') as file:
-        json.dump(courses, file, indent='\t')
+        json.dump(sorted(courses), file, indent='\t')
 
 def validateCourseCode(course_code):
     pattern = r'\b[a-zA-Z]{3}[0-9]{3}\b'
