@@ -52,16 +52,6 @@ class SSOMiddleware:
         self.cookies = None
         
     def __call__(self, request):
-        self.assign_user(request, {
-            'email': 'arpit.saxena2000000@yahoo.in',
-            'firstname': 'Arpit',
-            'lastname': 'Saxena',
-            'username': 'arpit.saxena20000000'
-        })
-
-        self.log(request, 'getting response')
-        response = self.get_response(request)
-        return response
         
         if (request.path == LOGOUT_PATH):
             return self.logout(request)
