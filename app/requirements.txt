@@ -1,3 +1,4 @@
+beautifulsoup4===4.9.3
 certifi==2020.6.20
 cffi==1.14.1
 chardet==3.0.4
@@ -7,6 +8,7 @@ django-crontab==0.7.1
 djangorestframework==3.9.1
 gunicorn==19.9.0
 idna==2.10
+pillow==8.3.1
 psycopg2-binary==2.7.5
 pycparser==2.20
 PyJWT==1.7.1

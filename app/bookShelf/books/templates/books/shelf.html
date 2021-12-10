@@ -1,4 +1,4 @@
-{% load static from staticfiles%}
+{% load static from staticfiles %}
 {% load extra_tags %}
 
 <!doctype html>
@@ -40,30 +40,42 @@
                     <li class="nav-item">
                     <a class="nav-link" href="/books/upload/">Upload</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books/requests">Requested Materials</a>
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books/approve">Approve</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books/bulk_approve">Bulk Approve</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books/finalize_approvals">Finalize Approvals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books/force_integrity">Force Integrity</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books/update_prof_list">Update Prof List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books/update_course_list">Update Course List</a>
+                    </li>
+                    {% endif %}
+                    
                     {% if user.is_authenticated %}
-                     <li class="nav-item">
-                    <a class="nav-link" href="/books/approve">Approve</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/books/bulk_approve">Bulk Approve</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/books/finalize_approvals">Finalize Approvals</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/books/force_integrity">Force Integrity</a>
-                    </li>
-                     <li class="nav-item">
+                    <li class="nav-item">  
                     <a class="nav-link" href="/books/userlogout">Logout</a>
                     </li>
-
                     {% endif %}
-<li class="nav-item">
-                    <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLScPwizIa6I62uZWx5IX3VxKFJKm8x-IH2j17eGkPl_woJMTeA/viewform" target="_blank">Suggestions</a>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLScPwizIa6I62uZWx5IX3VxKFJKm8x-IH2j17eGkPl_woJMTeA/viewform" target="_blank">Suggestions</a>
                     </li>
                
-<li class="nav-item">
-                    <a class="nav-link" href="http://www.cse.iitd.ac.in/devclub/" target="_blank">About Us</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://www.cse.iitd.ac.in/devclub/" target="_blank">About Us</a>
                     </li>
                 </ul>
                 <a href="/books/"><h3 class="text-muted">Citadel</h3></a>
@@ -87,8 +99,8 @@
             
 
             {% endblock %}
-            </div>
-              </div>  
+        </div>
+    </div>  
             
         <div id="footer">
             <div style="/*! margin: auto; */margin: 0,auto;" class="container mb-2">
@@ -96,7 +108,7 @@
                 <div class="col-md-6 mx-auto">
                     <a class="disabled" href="/books/upload" style="">
                         <button type="button" data-toggle="tooltip" data-placement="top" title="Upload and share your study material"
-                            class="btn btn-light btn-block md-6">Contribute</button>
+                            class="btn btn-primary btn-block md-6">Contribute</button>
                     </a>
                 </div>
             </div>
@@ -104,6 +116,5 @@
         <hr>
             <div class="text-muted text-center container footer-text">&copy;<a href="http://www.cse.iitd.ac.in/devclub/" target="_blank">Dev Club IIT Delhi</a></div>
         </div>
-    <script src="{% static 'js/browse.js' %}"></script>
 </body>
 </html>
