@@ -170,7 +170,7 @@ class SSOMiddleware:
         except:
             return False
 
-        superuser_role = 'admin'
+        superuser_role = SUPERUSER_ROLE
         for role in user_roles:
             if role == superuser_role:
                 return True
