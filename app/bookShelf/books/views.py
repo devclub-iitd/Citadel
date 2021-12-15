@@ -31,7 +31,7 @@ from books import scraper as scraper
 DATABASE_DIR = os.path.join('..', 'protected', 'database')
 DATABASE_URL = "/media/database"
 BULK_UP_DIR = os.path.join('..', 'media', 'bulk')
-UNAPPROVED_DIR = os.path.join('..', 'media', 'unapproved')
+UNAPPROVED_DIR = os.path.join('..', 'protected', 'unapproved')
 TREE_DIR = os.path.join('..', 'make_folder', 'DATA')
 MAKE_FOLDER_SCRIPT = os.path.join('..', 'make_folder', 'make_folder.py')
 DATABASE_DICT_FILE_NAME = "database.json"
