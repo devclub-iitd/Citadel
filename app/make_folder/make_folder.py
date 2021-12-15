@@ -29,6 +29,8 @@ for course in courses:
         os.makedirs('DATA/'+dept+'/'+course)
     if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers'):
         os.makedirs('DATA/'+dept+'/'+course+'/Question-Papers')
+    if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers/Quizzes'):
+        os.makedirs('DATA/'+dept+'/'+course+'/Question-Papers/Quizzes')
     if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers/Minor1'):
         os.makedirs('DATA/'+dept+'/'+course+'/Question-Papers/Minor1')
     if not os.path.exists('DATA/'+dept+'/'+course+'/Question-Papers/Minro2'):

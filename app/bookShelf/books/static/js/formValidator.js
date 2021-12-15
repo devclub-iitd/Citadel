@@ -86,7 +86,7 @@ function isValid(){
 	}
 
 
-	if(type.value=="Minor1" || type.value=="Minor2" || type =="Major"){
+	if(type.value=="Quizzes" || type.value=="Minor1" || type.value=="Minor2" || type =="Major"){
 		var required=[sem,year]
 	}
 

@@ -53,7 +53,7 @@ COURSE_FILE = 'courses.json'
 # file to store requested material details
 REQUESTS_FILE = 'requests.json'
 # tags to exclude from appearing in meta files
-EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Minor1', 'Minor2', 'Major', 'Books', 'Others', 'Professors',
+EXCLUDED_TAGS = ['Assignments', 'Question-Papers', 'Quizzes', 'Minor1', 'Minor2', 'Major', 'Books', 'Others', 'Professors',
                  'Tutorials', 'Notes', 'Lectures/Slides', 'Lectures', 'Slides']
 # handles for addition and removal of files to database_dir
 add = "additions"
@@ -87,7 +87,7 @@ def getFileName(course_code, sem, year, type_file, prof, filename, other):
     course_code = course_code.upper()
     dirPath = course_code[0:2] + SEPARATOR + course_code
 
-    if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
+    if (type_file == 'Quizzes' or type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major'):
         dirPath = dirPath + SEPARATOR + "Question-Papers" + SEPARATOR + type_file
         toWriteFileName = dirPath + SEPARATOR + fileNamePrefix + "-" + course_code + "-" + type_file + fileExtension
     elif (type_file == 'Books' or type_file == 'Others'):
@@ -800,7 +800,7 @@ def validator(course_code, sem, year, type_file, prof, filename, other):
     """
     pattern = r'\b[a-zA-Z]{3}[0-9]{3}\b'
     result = True
-    if (type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major') and (sem == "None" or year == "None"):
+    if (type_file == 'Quizzes' or type_file == 'Minor1' or type_file == 'Minor2' or type_file == 'Major') and (sem == "None" or year == "None"):
         result = False
     elif type_file == 'Books' or type_file == 'Others':
         result = True
